@@ -285,11 +285,17 @@
 		public var monkey:ChaosMonkey;
 		public var testingBlockExiting:Boolean;
 
+		public var kFLAGS_REF:*;
+
 		public function CoC()
 		{
 			// Cheatmode.
 			kGAMECLASS = this;
 			
+			this.kFLAGS_REF = kFLAGS; 
+			// cheat for the parser to be able to find kFLAGS
+			// If you're not the parser, DON'T USE THIS
+
 			// This is a flag used to prevent the game from exiting when running under the automated tester
 			// (the chaos monkey)
 			testingBlockExiting = false;
@@ -338,8 +344,8 @@
 			//model.debug = debug; // TODO: Set on model?
 
 			//Version NUMBER
-			ver = "0.8.3f4";
-			version = "v0.8.3f4 (<b>Fixes and Uma Blowjob Training</b>)";
+			ver = "0.8.3f8";
+			version = ver + " (<b>Fixes and Uma Blowjob Training</b>)";
 
 			//Indicates if building for mobile?
 			mobile = false;
@@ -360,9 +366,9 @@
 			//{ region PlayerVariables
 
 			//The Player object, used everywhere
-			player = new Player();
+			player = new Player(this);
 			model.player = player;
-			player2 = new Player();
+			player2 = new Player(this);
 
 			//Used in perk selection, mainly eventParser, input and engineCore
 			tempPerk = "";
