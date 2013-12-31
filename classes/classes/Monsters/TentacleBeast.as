@@ -24,22 +24,43 @@
 			}
 			if (hasStatusAffect("PhyllaFight") >= 0) {
 				removeStatusAffect("PhyllaFight");
-				mainClassPtr.phyllaTentacleDefeat();
+				game.phyllaTentacleDefeat();
 			}
 			else {
 				if(!hpVictory && player.gender > 0) {
 					outputText("  Perhaps you could use it to sate yourself?", true);
-					mainClassPtr.doYesNo(5078,5007);
+					game.doYesNo(5078,game.cleanupAfterCombat);
 				}
-				mainClassPtr.eventParser(5007);
+				game.cleanupAfterCombat();
+			}
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if (hpVictory) {
+				outputText("Overcome by your wounds, you turn to make a last desperate attempt to run...\n\n");
+				if (hasStatusAffect("PhyllaFight") >= 0) {
+					removeStatusAffect("PhyllaFight");
+					outputText("...and make it into the nearby tunnel.  ");
+					game.phyllaTentaclePCLoss();
+				} else
+					game.eventParser(5074);
+			} else {
+				outputText("You give up on fighting, too aroused to resist any longer.  Shrugging, you walk into the writhing mass...\n\n");
+				if(hasStatusAffect("PhyllaFight") >= 0) {
+					removeStatusAffect("PhyllaFight");
+					outputText("...but an insistent voice rouses you from your stupor.  You manage to run into a nearby tunnel.  ");
+					game.phyllaTentaclePCLoss();
+				} else
+					game.doNext(5074);
 			}
 		}
 
 		override protected function performCombatAction():void
 		{
 			//tentacle beasts have special AI
-			if (rand(2) == 0 || hasStatusAffect("TentacleCoolDown") >= 0) mainClassPtr.eventParser(special1);
-			else mainClassPtr.eventParser(special2);
+			if (rand(2) == 0 || hasStatusAffect("TentacleCoolDown") >= 0) game.eventParser(special1);
+			else game.eventParser(special2);
 		}
 
 		public function TentacleBeast(mainClassPtr:*)

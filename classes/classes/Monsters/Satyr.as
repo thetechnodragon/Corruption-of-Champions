@@ -2,6 +2,7 @@ package classes.Monsters
 {
 	import classes.Appearance;
 	import classes.Cock;
+	import classes.GlobalFlags.kFLAGS;
 	import classes.Monster;
 	import classes.CockTypesEnum;
 	
@@ -14,12 +15,23 @@ package classes.Monsters
 
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.satyrAI();
+			game.satyrAI();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.defeatASatyr();
+			game.defeatASatyr();
+		}
+
+
+		override public function won(hpVictory:Boolean,pcCameWorms:Boolean):void
+		{
+			if (pcCameWorms) {
+				outputText("\n\nThe satyr laughs heartily at your eagerness...");
+				game.doNext(game.endLustLoss);
+			} else {
+				game.loseToSatyr();
+			}
 		}
 
 		public function Satyr(mainClassPtr:*)

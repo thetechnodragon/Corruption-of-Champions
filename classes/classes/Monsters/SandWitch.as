@@ -17,9 +17,21 @@
 		override public function defeated(hpVictory:Boolean):void
 		{
 			if (player.lust >= 33){
-				mainClassPtr.beatSandwitch();
+				game.beatSandwitch();
 			} else {
-				mainClassPtr.finishCombat();
+				game.finishCombat();
+			}
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if (hpVictory){
+				game.finishCombat();
+			} else if (pcCameWorms){
+				outputText("\n\nThe witch blanches and backs away, leaving you to your fate.", false);
+				game.cleanupAfterCombat();
+			} else {
+				game.sandwitchRape();
 			}
 		}
 

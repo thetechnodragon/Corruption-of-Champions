@@ -17,12 +17,22 @@
 
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.impGangAI();
+			game.impGangAI();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.impGangVICTORY();
+			game.impGangVICTORY();
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if(pcCameWorms){
+				outputText("\n\nYour foes don't seem put off enough to leave...");
+				game.doNext(game.endLustLoss);
+			} else {
+				game.loseToImpMob();
+			}
 		}
 
 		public function ImpHorde(mainClassPtr:*)

@@ -11,7 +11,12 @@ package classes.Monsters
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.defeatTheSandMother();
+			game.defeatTheSandMother();
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			game.loseToTheSandMother();
 		}
 
 		public function SandMother(mainClassPtr:*)

@@ -12,13 +12,24 @@ package classes.Monsters
 
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.helAI();
+			game.helAI();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			if(hasStatusAffect("sparring") >= 0) mainClassPtr.PCBeatsUpSalamanderSparring();
-			else mainClassPtr.beatUpHel();
+			if(hasStatusAffect("sparring") >= 0) game.PCBeatsUpSalamanderSparring();
+			else game.beatUpHel();
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if (pcCameWorms){
+				outputText("\n\nHelia waits it out in stoic silence...");
+				game.doNext(game.endLustLoss);
+			} else {
+				if(hasStatusAffect("sparring") >= 0) game.loseToSparringHeliaLikeAButtRapedChump();
+				else game.loseToSalamander();
+			}
 		}
 
 		public function Hel(mainClassPtr:*)

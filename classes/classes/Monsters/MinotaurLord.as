@@ -14,17 +14,23 @@ package classes.Monsters
 
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.fidoAI();
+			game.fidoAI();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.clearOutput();
+			game.clearOutput();
 			outputText("The minotaur lord is defeated!  ");
 			outputText("  You could use him for a quick fuck to sate your lusts before continuing on.  Do you?");
-			mainClassPtr.menu();
-			mainClassPtr.addButton(0,"Fuck",mainClassPtr.winRapeAMinoLordAsUrta);
-			mainClassPtr.addButton(4,"Leave",mainClassPtr.beatMinoLordOnToSuccubi);
+			game.menu();
+			game.addButton(0,"Fuck",game.winRapeAMinoLordAsUrta);
+			game.addButton(4,"Leave",game.beatMinoLordOnToSuccubi);
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if (hpVictory) game.urtaLosesToMinotaurRoughVersion();
+			else game.urtaSubmitsToMinotaurBadEnd();
 		}
 
 		public function MinotaurLord(mainClassPtr:*)

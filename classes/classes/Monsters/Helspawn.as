@@ -12,13 +12,19 @@ package classes.Monsters
 
 		override public function doAI():void
 		{
-			mainClassPtr.helSpawnAI();
+			game.helSpawnAI();
 		}
 
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.beatUpYourDaughter();
+			game.beatUpYourDaughter();
+		}
+
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			game.loseSparringToDaughter();
 		}
 
 		public function Helspawn(mainClassPtr:*)

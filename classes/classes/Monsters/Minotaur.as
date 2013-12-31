@@ -22,10 +22,22 @@
 			if(hasStatusAffect("PhyllaFight") >= 0) {
 				removeStatusAffect("PhyllaFight");
 				outputText("You defeat a minotaur!  ", true);
-				mainClassPtr.phyllaBeatAMino();
+				game.phyllaBeatAMino();
 			} else {
-				mainClassPtr.minoVictoryRapeChoices();
+				game.minoVictoryRapeChoices();
 			}
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if(hasStatusAffect("PhyllaFight") >= 0) {
+				removeStatusAffect("PhyllaFight");
+				game.phyllaPCLostToMino();
+			} else if (pcCameWorms){
+				outputText("\n\nThe minotaur picks you up and forcibly tosses you from his cave, grunting in displeasure.", false);
+				game.cleanupAfterCombat();
+			} else
+				game.eventParser(5031);
 		}
 
 		override public function get long():String

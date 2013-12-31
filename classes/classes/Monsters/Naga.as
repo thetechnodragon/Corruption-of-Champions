@@ -15,7 +15,18 @@
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.nagaRapeChoice();
+			game.nagaRapeChoice();
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if(pcCameWorms){
+				outputText("\n\nThe naga's eyes go wide and she turns to leave, no longer interested in you.", false);
+				game.stats(0,0,0,0,0,0,-100,0);
+				game.doNext(game.cleanupAfterCombat);
+			} else {
+				game.nagaFUCKSJOOOOOO();
+			}
 		}
 
 		public function Naga(mainClassPtr:*)

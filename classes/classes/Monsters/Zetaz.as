@@ -14,13 +14,23 @@ package classes.Monsters
 
 		override public function doAI():void
 		{
-			mainClassPtr.zetazAI();
+			game.zetazAI();
 		}
 
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.defeatZetaz();
+			game.defeatZetaz();
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if (pcCameWorms){
+				outputText("\n\nYour foe doesn't seem put off enough to care...");
+				game.doNext(game.endLustLoss);
+			} else {
+				game.loseToZetaz();
+			}
 		}
 
 		public function Zetaz(mainClassPtr:*)

@@ -14,12 +14,22 @@ package classes.Monsters
 
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.driderAI();
+			game.driderAI();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.defeatDriderIntro();
+			game.defeatDriderIntro();
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if (pcCameWorms){
+				outputText("\n\nThe drider licks her lips in anticipation...");
+				game.doNext(game.endLustLoss);
+			} else {
+				game.loseToDrider();
+			}
 		}
 
 		public function CorruptedDrider(mainClassPtr:*)

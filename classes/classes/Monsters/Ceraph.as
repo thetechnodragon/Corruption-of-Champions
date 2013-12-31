@@ -17,13 +17,23 @@
 		override protected function performCombatAction():void
 		{
 			//Ceraph has special AI in ceraph.as
-			mainClassPtr.ceraphAI();
+			game.ceraphAI();
 		}
 
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.winRapeChoices();
+			game.winRapeChoices();
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if(pcCameWorms){
+				outputText("\n\nYour foe doesn't seem disgusted enough to leave...");
+				game.doNext(game.endLustLoss);
+			} else {
+				game.loseFUCKME();
+			}
 		}
 
 		public function Ceraph(mainClassPtr:*)

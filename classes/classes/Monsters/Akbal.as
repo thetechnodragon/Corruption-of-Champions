@@ -16,12 +16,22 @@
 
 		override public function eAttack():void
 		{
-			mainClassPtr.akabalAttack();
+			game.akabalAttack();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.victoryChoices();
+			game.victoryChoices();
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if(pcCameWorms){
+				outputText("\n\nYour foe doesn't seem disgusted enough to leave...");
+				game.doNext(game.endLustLoss);
+			} else {
+				game.loseToAckballllllz();
+			}
 		}
 
 		public function Akbal(mainClassPtr:*)

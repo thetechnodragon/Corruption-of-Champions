@@ -13,12 +13,17 @@ package classes.Monsters
 
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.cumWitchAI();
+			game.cumWitchAI();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.cumWitchDefeated();
+			game.cumWitchDefeated();
+		}
+
+		override public function won(hpVictory:Boolean,pcCameWorms:Boolean):void
+		{
+			game.defeatedByCumWitch();
 		}
 
 		public function CumWitch(mainClassPtr:*)

@@ -1,6 +1,7 @@
 package classes.Monsters 
 {
 	import classes.Cock;
+	import classes.GlobalFlags.kFLAGS;
 	import classes.Monster;
 	import classes.CockTypesEnum;
 	
@@ -14,13 +15,23 @@ package classes.Monsters
 		override protected function performCombatAction():void
 		{
 			if (hasStatusAffect("level") >= 0) {
-				mainClassPtr.sandTrapAI();
+				game.sandTrapAI();
 			} else super.performCombatAction();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.pcBeatsATrap();
+			game.pcBeatsATrap();
+		}
+
+		override public function won(hpVictory:Boolean,pcCameWorms:Boolean):void
+		{
+			if (pcCameWorms) {
+				outputText("\n\nThe sand trap seems bemused by the insects your body houses...");
+				game.doNext(game.endLustLoss);
+			} else {
+				game.sandtrapmentLoss(true);
+			}
 		}
 
 		public function SandTrap(mainClassPtr:*)

@@ -16,14 +16,24 @@
 
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.harpyAI();
+			game.harpyAI();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.harpyVictoryuuuuu();
+			game.harpyVictoryuuuuu();
 		}
 
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if(pcCameWorms){
+				outputText("\n\nYour foe doesn't seem disgusted enough to leave...");
+				game.doNext(game.endLustLoss);
+			} else {
+				game.harpyLossU();
+			}
+		}
 
 		override protected function outputPlayerDodged(dodge:int):void
 		{

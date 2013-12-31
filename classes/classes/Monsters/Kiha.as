@@ -32,18 +32,35 @@ package classes.Monsters
 
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.kihaAI();
+			game.kihaAI();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
 			if(hasStatusAffect("spiderfight") >= 0)
-				mainClassPtr.playerBeatsUpKihaPreSpiderFight();
+				game.playerBeatsUpKihaPreSpiderFight();
 			else if(hasStatusAffect("domfight") >= 0)
-				mainClassPtr.pcWinsDomFight();
+				game.pcWinsDomFight();
 			else if(hasStatusAffect("spar") >= 0)
-				mainClassPtr.winSparWithKiha();
-			else mainClassPtr.kihaVictoryIntroduction();
+				game.winSparWithKiha();
+			else game.kihaVictoryIntroduction();
+		}
+
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if(hasStatusAffect("spiderfight") >= 0)
+				game.loseKihaPreSpiderFight();
+			else if(hasStatusAffect("domfight") >= 0)
+				game.pcLosesDomFight();
+			else if(hasStatusAffect("spar") >= 0)
+				game.sparWithFriendlyKihaLose();
+			else if (pcCameWorms){
+				outputText("\n\nKiha seems visibly disturbed by your infection, enough that she turns to leave.");
+				game.doNext(game.endLustLoss);
+			} else {
+				game.kihaLossIntro();
+			}
 		}
 
 		public function Kiha(mainClassPtr:*)

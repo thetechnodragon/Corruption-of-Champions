@@ -12,7 +12,17 @@ package classes.Monsters
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.omnibusVictoryEvent();
+			game.omnibusVictoryEvent();
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if (pcCameWorms){
+				outputText("\n\nYour foe doesn't seem to care...");
+				game.doNext(game.endLustLoss);
+			} else {
+				game.eventParser(11046);
+			}
 		}
 
 		public function OmnibusOverseer(mainClassPtr:*)

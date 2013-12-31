@@ -18,24 +18,56 @@
 		override protected function performCombatAction():void
 		{
 			//Demon pack has different AI
-			mainClassPtr.eventParser((rand(2) == 0) ? special1 : special2);
+			game.eventParser((rand(2) == 0) ? special1 : special2);
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
 			if (hpVictory) {
 				outputText("You strike out and the last of the demons tumbles to the ground with a thud. You stand there for a second surrounded by dead or unconscious demons feeling like a god of battle. Then you realize that if a god of battle does exist he lives on a demonic plane like this, so to avoid insulting him you take your hands off your hips and your " + player.legs() + " off the head of the demon leader before you start to search the bodies.", true);
-				mainClassPtr.stats(0, 0, 0, 0, 0, 0, 1, 0);
+				game.stats(0, 0, 0, 0, 0, 0, 1, 0);
 			} else {
 				outputText("The demons stop attacking, and reach out to touch your body. Some are already masturbating like it's the only thing in the world and you know that right now, if you wanted to, you could make each and every one of them fuck you.");
 			}
 			if(hasStatusAffect("phyllafight") >= 0) {
-				mainClassPtr.doNext(mainClassPtr.consolePhylla);
+				game.doNext(game.consolePhylla);
 			} else if (hpVictory){
-				mainClassPtr.eventParser(5007);
+				game.cleanupAfterCombat();
 			} else {
 				outputText("  Do you rape them?", true);
-				mainClassPtr.doYesNo(5045, 5007);
+				game.doYesNo(5045, game.cleanupAfterCombat);
+			}
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if (player.gender == 0){
+				if (hpVictory) {
+					outputText("You collapse before the demons, who laugh at your utter lack of male or female endowments, beating you until you pass out.", true);
+				} else {
+					outputText("You offer yourself to the demons, who promptly begin laughing at your lack of endowments.  They fall on you as one, beating you into unconsciousness.", true);
+				}
+				game.cleanupAfterCombat();
+			} else if (hpVictory){
+				outputText("The demons finally beat you down and you collapse onto the sand of the oasis. Almost immediately you feel demonic hands pressing and probing your prone form. You hear the leader of the group say something in a strange tongue but you have a feeling you know what it means. The demons dive onto your inert body with intent and begin to press themselves against you...", true);
+				game.doNext(5048);
+			} else {
+				outputText("You struggle to keep your mind on the fight and fail to do so. ", true);
+				if (pcCameWorms){
+					outputText("\n\nThe demons joke and smile, obviously unconcerned with your state.\n\n", false);
+				}
+				if(player.cocks.length > 0) {
+					if(player.cockTotal() > 1) outputText("Each of y", false);
+					else outputText("Y", false);
+					outputText("our " + game.multiCockDescriptLight() + " throbs ", false);
+					if(player.hasVagina()) outputText(" and your ", false);
+				}
+				if(player.vaginas.length > 0) {
+					if(!player.hasCock()) outputText("Your ", false);
+					outputText(game.vaginaDescript(0) + " burns ", false);
+				}
+				outputText("with arousal.  You make a grab for the nearest demon and catch a handful of jiggly breast. You try desperately to use your other arm to pull her closer to slake your thirst but you both go tumbling to the ground. The demonic leader laughs out loud and the rest of the tribe falls on you, grabbing for anything it can find.", false);
+				game.doNext(5048);
 			}
 		}
 

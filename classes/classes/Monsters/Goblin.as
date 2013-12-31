@@ -16,14 +16,32 @@
 		override public function defeated(hpVictory:Boolean):void
 		{
 			if(short == "goblin") {
-				mainClassPtr.gobboRapeIntro();
+				game.gobboRapeIntro();
 			} else if(short == "goblin broodmother") {
-				mainClassPtr.clearOutput();
+				game.clearOutput();
 				outputText("The goblin broodmother is defeated!  You find a bottle of succubi milk on her.  That stuff is banned in Tel'Adre - and for good reason, but it might come in handy.  You pocket the foul fluid for now.");
 				outputText("  You could use her for a quick, willing fuck to sate your lusts before continuing on.  Do you?");
-				mainClassPtr.menu();
-				mainClassPtr.addButton(0,"Fuck",	mainClassPtr.winFuckAGoblinBroodmotherAsUrta);
-				mainClassPtr.addButton(4,"Leave",mainClassPtr.nagaPleaseNagaStoleMyDick);
+				game.menu();
+				game.addButton(0,"Fuck",	game.winFuckAGoblinBroodmotherAsUrta);
+				game.addButton(4,"Leave",game.nagaPleaseNagaStoleMyDick);
+			}
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if (short == "goblin") {
+				if (player.gender == 0) {
+					outputText("You collapse in front of the goblin, too wounded to fight.  She giggles and takes out a tube of lipstick smearing it whorishly on your face.  You pass into unconsciousness immediately.  It must have been drugged.", false);
+					game.cleanupAfterCombat();
+				} else if (pcCameWorms) {
+					outputText("\n\nThe goblin's eyes go wide and she turns to leave, no longer interested in you.", false);
+					game.stats(0, 0, 0, 0, 0, 0, -100, 0);
+					game.doNext(game.cleanupAfterCombat);
+				} else {
+					game.eventParser(5089);
+				}
+			} else if (short == "goblin broodmother"){
+				game.urtaLosesToGoblin();
 			}
 		}
 

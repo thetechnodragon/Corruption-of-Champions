@@ -21,14 +21,24 @@ package classes.Monsters
 		override public function eOneAttack():int
 		{
 			if (attackSucceeded()){
-				mainClassPtr.applyVenom(rand(4 + player.sens / 20) + 1);
+				game.applyVenom(rand(4 + player.sens / 20) + 1);
 			}
 			return 1;
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.defeatAnemone();
+			game.defeatAnemone();
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if(pcCameWorms){
+				outputText("\n\nYour foe doesn't seem to mind at all...");
+				game.doNext(game.endLustLoss);
+			} else {
+				game.loseToAnemone();
+			}
 		}
 
 		override public function outputAttack(damage:int):void

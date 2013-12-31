@@ -14,15 +14,25 @@ package classes.Monsters
 
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.chameleonAI();
+			game.chameleonAI();
 		}
 
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.defeatChameleonGirl();
+			game.defeatChameleonGirl();
 		}
 
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if (pcCameWorms){
+				outputText("\n\nThe chameleon girl recoils.  \"<i>Ew, gross!</i>\" she screetches as she runs away, leaving you to recover from your defeat alone.");
+				game.cleanupAfterCombat();
+			} else {
+				game.loseToChameleonGirl();
+			}
+		}
 
 		override protected function outputPlayerDodged(dodge:int):void
 		{

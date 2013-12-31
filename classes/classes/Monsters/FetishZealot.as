@@ -21,14 +21,25 @@
 				outputText("\nYou notice that some kind of unnatural heat is flowing into your body from the wound", false);
 				if (player.inte > 50) outputText(", was there some kind of aphrodisiac on the knife?", false);
 				else outputText(".", false);
-				mainClassPtr.stats(0, 0, 0, 0, 0, 0, (player.lib / 20 + 5), 0);
+				game.stats(0, 0, 0, 0, 0, 0, (player.lib / 20 + 5), 0);
 			}
 			super.postAttack(damage);
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.zealotDefeated();
+			game.zealotDefeated();
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if (pcCameWorms){
+				outputText("\n\nThe fetish cultist ignores the perverse display and continues on as if nothing had happened...", false);
+				game.stats(0,0,0,0,0,0,-100,0);
+				game.doNext(5106);
+			} else {
+				game.zealotLossRape();
+			}
 		}
 
 		public function FetishZealot(mainClassPtr:*)

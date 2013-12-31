@@ -14,12 +14,18 @@ package classes.Monsters
 
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.emberAI();
+			game.emberAI();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.beatEmberSpar();
+			game.beatEmberSpar();
+		}
+
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			game.loseToEmberSpar();
 		}
 
 		public function Ember(mainClassPtr:*)

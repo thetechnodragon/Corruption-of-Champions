@@ -11,12 +11,17 @@ package classes.Monsters
 
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.milkSuccubusAI();
+			game.milkSuccubusAI();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.urtaBeatsUpCowcubi();
+			game.urtaBeatsUpCowcubi();
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			game.urtaLosesToCowCubi();
 		}
 
 		public function MilkySuccubus(mainClassPtr:*)

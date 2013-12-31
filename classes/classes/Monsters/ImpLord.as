@@ -12,13 +12,18 @@ package classes.Monsters
 	{
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.impLordAI();
+			game.impLordAI();
 		}
 
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.defeatImpLord();
+			game.defeatImpLord();
+		}
+
+		override public function won(hpVictory:Boolean,pcCameWorms:Boolean):void
+		{
+			game.loseToAnImpLord();
 		}
 
 		public function ImpLord(mainClassPtr:*)

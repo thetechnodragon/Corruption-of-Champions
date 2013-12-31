@@ -9,15 +9,13 @@
 	 */
 	public class Monster extends Creature 
 	{
-		
-		protected var mainClassPtr:*;
-		
+
 		protected final function get player():Player
 		{
-			return mainClassPtr.player;
+			return game.player;
 		}
 		protected final function outputText(text:String,clear:Boolean=false):void{
-			mainClassPtr.outputText(text,clear);
+			game.outputText(text,clear);
 		}
 		//For enemies
 		public var bonusHP:Number = 0;
@@ -75,10 +73,10 @@
 			return pronoun3.substr(0,1).toUpperCase()+pronoun3.substr(1);
 		}
 
-		public function Monster(mainClassPtr:*)
+		public function Monster(game:CoC)
 		{
+			super(game);
 			// trace("Generic Monster Constructor!");
-			this.mainClassPtr = mainClassPtr;
 			this.gender = GENDER_NONE;
 
 			//// INSTRUCTIONS
@@ -205,7 +203,7 @@
 
 		protected function totalXP(playerLevel:Number=-1):Number
 		{
-			if (playerLevel == -1) playerLevel = mainClassPtr.player.level;
+			if (playerLevel == -1) playerLevel = game.player.level;
 			//
 			// 1) Nerf xp gains by 20% per level after first two level difference
 			// 2) No bonuses for underlevel!
@@ -554,7 +552,7 @@
 				var damage:int = eOneAttack();
 				outputAttack(damage);
 				postAttack(damage);
-				mainClassPtr.statScreenRefresh();
+				game.statScreenRefresh();
 				outputText("\n", false);
 				if (statusAffectv1("attacks") >= 0) {
 					addStatusValue("attacks", 1, -1);
@@ -562,7 +560,7 @@
 				attacks--;
 			}
 			removeStatusAffect("attacks");
-			if (!mainClassPtr.combatRoundOver()) mainClassPtr.doNext(1);
+			if (!game.combatRoundOver()) game.doNext(1);
 		}
 
 		/**
@@ -675,15 +673,15 @@
 				if (!handleFear()) return;
 			}
 			//Exgartuan gets to do stuff!
-			if (mainClassPtr.player.hasStatusAffect("Exgartuan") >= 0 && mainClassPtr.player.statusAffectv2("Exgartuan") == 0 && rand(3) == 0) {
-				if (mainClassPtr.exgartuanCombatUpdate()) mainClassPtr.outputText("\n\n", false);
+			if (game.player.hasStatusAffect("Exgartuan") >= 0 && game.player.statusAffectv2("Exgartuan") == 0 && rand(3) == 0) {
+				if (game.exgartuanCombatUpdate()) game.outputText("\n\n", false);
 			}
 			if (hasStatusAffect("Constricted") >= 0) {
 				if (!handleConstricted()) return;
 			}
 			//If grappling... TODO implement grappling
-			if (mainClassPtr.gameState == 2) {
-				mainClassPtr.gameState = 1;
+			if (game.gameState == 2) {
+				game.gameState = 1;
 				//temperment - used for determining grapple behaviors
 				//0 - avoid grapples/break grapple
 				//1 - lust determines > 50 grapple
@@ -709,13 +707,13 @@
 		protected function handleConstricted():Boolean
 		{
 			//Enemy struggles -
-			mainClassPtr.outputText("Your prey pushes at your tail, twisting and writhing in an effort to escape from your tail's tight bonds.", false);
+			game.outputText("Your prey pushes at your tail, twisting and writhing in an effort to escape from your tail's tight bonds.", false);
 			if (statusAffectv1("Constricted") <= 0) {
-				mainClassPtr.outputText("  " + capitalA + short + " proves to be too much for your tail to handle, breaking free of your tightly bound coils.", false);
+				game.outputText("  " + capitalA + short + " proves to be too much for your tail to handle, breaking free of your tightly bound coils.", false);
 				removeStatusAffect("Constricted");
 			}
 			addStatusValue("Constricted", 1, -1);
-			mainClassPtr.combatRoundOver();
+			game.combatRoundOver();
 			return false;
 		}
 
@@ -727,19 +725,19 @@
 			if (statusAffectv1("Fear") == 0) {
 				if (plural) {
 					removeStatusAffect("Fear");
-					mainClassPtr.outputText("Your foes shake free of their fear and ready themselves for battle.", false);
+					game.outputText("Your foes shake free of their fear and ready themselves for battle.", false);
 				}
 				else {
 					removeStatusAffect("Fear");
-					mainClassPtr.outputText("Your foe shakes free of its fear and readies itself for battle.", false);
+					game.outputText("Your foe shakes free of its fear and readies itself for battle.", false);
 				}
 			}
 			else {
 				addStatusValue("Fear", 1, -1);
-				if (plural) mainClassPtr.outputText(capitalA + short + " are too busy shivering with fear to fight.", false);
-				else mainClassPtr.outputText(capitalA + short + " is too busy shivering with fear to fight.", false);
+				if (plural) game.outputText(capitalA + short + " are too busy shivering with fear to fight.", false);
+				else game.outputText(capitalA + short + " is too busy shivering with fear to fight.", false);
 			}
-			mainClassPtr.combatRoundOver();
+			game.combatRoundOver();
 			return false;
 		}
 
@@ -748,11 +746,11 @@
 		 */
 		protected function handleStun():Boolean
 		{
-			if (plural) mainClassPtr.outputText("Your foes are too dazed from your last hit to strike back!", false);
-			else mainClassPtr.outputText("Your foe is too dazed from your last hit to strike back!", false);
+			if (plural) game.outputText("Your foes are too dazed from your last hit to strike back!", false);
+			else game.outputText("Your foe is too dazed from your last hit to strike back!", false);
 			if (statusAffectv1("Stunned") <= 0) removeStatusAffect("Stunned");
 			else addStatusValue("Stunned", 1, -1);
-			mainClassPtr.combatRoundOver();
+			game.combatRoundOver();
 			return false;
 		}
 
@@ -767,20 +765,43 @@
 			if (special2 > 0) select++;
 			if (special3 > 0) select++;
 			var rando:int = int(Math.random() * select);
-			if (rando == 0) mainClassPtr.eAttack();
-			if (rando == 1 && special1 > 0) mainClassPtr.eventParser(special1);
-			if (rando == 2 && special2 > 0) mainClassPtr.eventParser(special2);
-			if (rando == 3 && special3 > 0) mainClassPtr.eventParser(special3);
+			if (rando == 0) game.eAttack();
+			if (rando == 1 && special1 > 0) game.eventParser(special1);
+			if (rando == 2 && special2 > 0) game.eventParser(special2);
+			if (rando == 3 && special3 > 0) game.eventParser(special3);
 		}
 
 		/**
-		 * All branches of this method should end either with choose/doNext,
-		 * or with default 'awardPlayer' or 'finishCombat'. The latter displays
+		 * All branches of this method should end either with choose/doNext/menu,
+		 * or with default 'awardPlayer' or 'finishCombat'. The latter also displays
 		 * default message like "you defeat %s" or "%s falls and starts masturbating"
 		 */
 		public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.finishCombat();
+			game.finishCombat();
+		}
+
+		/**
+		 * All branches of this method should end either with choose/doNext/menu,
+		 * or with default 'cleanupAfterCombat', 'penalizePlayer' or 'finishCombat'. The latter also displays
+		 * default message like "you fall unconscious" or
+		 */
+		public function won(hpVictory:Boolean,pcCameWorms:Boolean):void
+		{
+			if (hpVictory){
+				player.HP = 1;
+				outputText("Your wounds are too great to bear, and you fall unconscious.", true);
+			} else {
+				outputText("Your desire reaches uncontrollable levels, and you Numberopenly masturbating.\n\nThe lust and pleasure cause you to black out for hours on end.", true);
+				player.lust = 0;
+			}
+			game.gameState = 0;
+			game.clearStatuses(false);
+			var temp:Number = rand(10) + 1;
+			if(temp > player.gems) temp = player.gems;
+			outputText("\n\nYou'll probably wake up in eight hours or so, missing " + temp + " gems.", false);
+			player.gems -= temp;
+			game.doNext(16);
 		}
 
 		public function generateDebugDescription():String{

@@ -33,12 +33,17 @@ package classes.Monsters
 
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.nagaSiriusRadioAI();
+			game.nagaSiriusRadioAI();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.urtaBeatsUpSiriusRadio();
+			game.urtaBeatsUpSiriusRadio();
+		}
+
+		override public function won(hpVictory:Boolean,pcCameWorms:Boolean):void
+		{
+			game.urtaLosesToSirriusSnakeRadio();
 		}
 
 		public function Sirius(mainClassPtr:*)

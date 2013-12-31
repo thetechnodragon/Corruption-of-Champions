@@ -12,13 +12,23 @@ package classes.Monsters
 
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.valaAI();
+			game.valaAI();
 		}
 
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.fightValaVictory();
+			game.fightValaVictory();
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if(pcCameWorms){
+				outputText("\n\nYour foe doesn't seem put off enough to leave...");
+				game.doNext(game.endLustLoss);
+			} else {
+				game.loseToVala();
+			}
 		}
 
 		public function Vala(mainClassPtr:*)

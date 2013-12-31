@@ -11,13 +11,24 @@ package classes.Monsters
 
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.gooArmorAI();
+			game.gooArmorAI();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			if (hasStatusAffect("spar") >= 0) mainClassPtr.pcWinsValeriaSpar();
-			else mainClassPtr.beatUpGooArmor();
+			if (hasStatusAffect("spar") >= 0) game.pcWinsValeriaSpar();
+			else game.beatUpGooArmor();
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if (pcCameWorms){
+				outputText("\n\nThe armored goo sighs while you exhaust yourself...");
+				game.doNext(game.endLustLoss);
+			} else {
+				if(hasStatusAffect("spar") >= 0) game.pcWinsValeriaSparDefeat();
+				else game.gooArmorBeatsUpPC();
+			}
 		}
 
 		public function GooArmor(mainClassPtr:*)

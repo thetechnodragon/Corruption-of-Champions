@@ -19,12 +19,22 @@ package classes.Monsters
 
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.IzmaAI();
+			game.IzmaAI();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.defeatIzma();
+			game.defeatIzma();
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			if (pcCameWorms){
+				outputText("\n\n\"<i>Gross!</i>\" Izma cries as she backs away, leaving you to recover alone.");
+				game.cleanupAfterCombat();
+			} else {
+				game.IzmaWins();
+			}
 		}
 
 		public function Izma(mainClassPtr:*)

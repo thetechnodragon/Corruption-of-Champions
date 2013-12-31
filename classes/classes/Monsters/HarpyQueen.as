@@ -11,12 +11,17 @@ package classes.Monsters
 
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.harpyQueenAI();
+			game.harpyQueenAI();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.harpyQueenDefeatedByPC();
+			game.harpyQueenDefeatedByPC();
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			game.harpyQueenBeatsUpPCBadEnd();
 		}
 
 		public function HarpyQueen(mainClassPtr:*)

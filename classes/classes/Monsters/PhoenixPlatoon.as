@@ -11,12 +11,17 @@ package classes.Monsters
 
 		override protected function performCombatAction():void
 		{
-			mainClassPtr.phoenixPlatoonAI();
+			game.phoenixPlatoonAI();
 		}
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			mainClassPtr.phoenixPlatoonLosesToPC();
+			game.phoenixPlatoonLosesToPC();
+		}
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			game.phoenixPlatoonMurdersPC();
 		}
 
 		public function PhoenixPlatoon(mainClassPtr:*)

@@ -17,9 +17,15 @@
 		override protected function performCombatAction():void
 		{
 			//Worms have different AI
-			mainClassPtr.eventParser((rand(2) == 0) ? special1 : special2);
+			game.eventParser((rand(2) == 0) ? special1 : special2);
 		}
 
+
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
+		{
+			outputText("Overcome by your "+(hpVictory?"wounds":"lust")+", you sink to your knees as the colony of worms swarms all over your body...\n\n", true);
+			game.infest1();
+		}
 
 		override public function eMaxHP():Number
 		{
