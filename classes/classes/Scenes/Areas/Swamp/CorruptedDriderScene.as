@@ -3,9 +3,10 @@
  */
 package classes.Scenes.Areas.Swamp
 {
-	import classes.BaseContent;
+	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
 	import classes.GlobalFlags.kGAMECLASS;
+	import classes.Items.Armors.LustyMaidensArmor;
 
 	use namespace kGAMECLASS;
 
@@ -76,7 +77,7 @@ package classes.Scenes.Areas.Swamp
 				if (player.cockThatFits(monster.vaginalCapacity()) >= 0) {
 					outputText("\nYou could fuck her pussy, though you'd be within easy reach of her lips.  If she gets any crazy ideas, it'd be hard to stop her.", false);
 					vagFuck = winDriderPCDickInSpiderCunt;
-					if (player.tailType == TAIL_TYPE_SPIDER_ADBOMEN || hasItem("T.SSilk", 1)) {
+					if (player.tailType == TAIL_TYPE_SPIDER_ADBOMEN || player.hasItem(useables.T_SSILK)) {
 						outputText("\nYou could bind her up with some webbing for some bondage.  Her lips are dangerous, after all.");
 						careful = driderVagSmartFuck;
 					}
@@ -91,7 +92,7 @@ package classes.Scenes.Areas.Swamp
 			var rideCock:Function =null;
 			var rideOvi:Function =null;
 			var bikiniTits:Function =null;
-			if (player.hasVagina() && player.biggestTitSize() >= 4 && player.armorName == "lusty maiden's armor") bikiniTits = kGAMECLASS.lustyMaidenPaizuri;
+			if (player.hasVagina() && player.biggestTitSize() >= 4 && player.armor is LustyMaidensArmor) bikiniTits = (player.armor as LustyMaidensArmor).lustyMaidenPaizuri;
 			if (player.hasVagina() && player.lust >= 33) {
 				rideCock = winVSDriderTakeItsCockInCunt;
 				rideOvi = victoryVSDriderRideOviVaginal;
@@ -217,7 +218,7 @@ package classes.Scenes.Areas.Swamp
 			else outputText("You mumble out a denial.  You're not a beast... you just like to take charge and fuck.  It's just so hard to resist jumping on a nice wet pussy and making it squirt while you pack it full... no!  That's not what...\n\n", false);
 
 			outputText("\"<i>Oooh, are you leaking out more pre-cum already?  You're insatiable!  I bet you start thinking about your next fuck before you even finish getting off, don't you?  You can deny it all you want, but I felt your dick puff up a little bit more as soon as I said it.  No matter what you think, your cock is a dumb, happy little tattle-tale that always tells the girls exactly what you're thinking.</i>\"", false);
-			if (player.statusAffectv1("Exgartuan") == 1) outputText("  Exgartuan mumbles telepathicaly, \"<i>Fuck yes I do, but I wanna see how this plays out.</i>\"", false);
+			if (player.statusAffectv1(StatusAffects.Exgartuan) == 1) outputText("  Exgartuan mumbles telepathicaly, \"<i>Fuck yes I do, but I wanna see how this plays out.</i>\"", false);
 			outputText("  She adds, \"<i>Face the music - there's nothing you love more than defeating someone and letting your dick tell you what to do.  You dumb... domineering... beast...</i>\"\n\n", false);
 
 			outputText("Gods!  It's getting so hard to think with that tight cunt clutching at your cock and the soft, feminine enunciations constantly interrupting your thoughts.  How can she concentrate with the stink of sex hanging so thick in the air?  Your " + cockDescript(x) + " is so horny, why aren't you fucking her yet?  You shudder weakly and remember ", false);
@@ -906,7 +907,7 @@ package classes.Scenes.Areas.Swamp
 				driderTiedUpPartTwo(false);
 			}
 			//(Champion has some Tough Spider Silk on them)
-			else if (hasItem("T.SSilk", 1)) {
+			else if (player.hasItem(useables.T_SSILK)) {
 				outputText("\n\nRemembering the bundle of silk that you have with you, it doesn't take long to come up with a very enticing idea for dealing with the drider.  However, you have a feeling that you won't be able to do much else with the silk if you go through with your plan.  Are you sure you want to use it on her?");
 				//[Yes] [No]
 				doYesNo(createCallBackFunction(driderTiedUpPartTwo,true), dontSilkRapeDrider);
@@ -931,7 +932,7 @@ package classes.Scenes.Areas.Swamp
 			var y:Number = x + 1;
 			if (useItem) {
 				clearOutput();
-				consumeItem("T.SSilk", 1);
+				player.consumeItem(useables.T_SSILK);
 				outputText("Smirking to yourself, you advance on the collapsed girl, [cock " + y + "] straining against your clothing in anticipation of what's to come.");
 			}
 			outputText("\n\nDarting forwards suddenly, you seize her wrists, pulling her arms above her head");

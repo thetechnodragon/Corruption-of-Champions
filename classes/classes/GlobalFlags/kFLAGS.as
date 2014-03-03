@@ -239,7 +239,7 @@ public static const UNKNOWN_FLAG_NUMBER_00230:int                               
 public static const IZMA_TIMES_FOUGHT_AND_WON:int                                   =  231; // Izma fight
 public static const UNKNOWN_FLAG_NUMBER_00232:int                                   =  232; // Times Talked At shark pussy
 public static const UNKNOWN_FLAG_NUMBER_00233:int                                   =  233; // Izma worm scare (1 = Izma has been scared off by worms)
-public static const UNKNOWN_FLAG_NUMBER_00234:int                                   =  234; // Izma loot storage - Izma saved loot status
+public static const BONUS_ITEM_AFTER_COMBAT_ID:int                                     =  234; // Izma loot storage - Izma saved loot status
 public static const UNKNOWN_FLAG_NUMBER_00235:int                                   =  235; // Taken Izma gloves
 public static const UNKNOWN_FLAG_NUMBER_00236:int                                   =  236; // Izma + Amily Freakout Status = (-1 = done, 0 = nothing yet, 1 = queued for camp prog)
 public static const UNKNOWN_FLAG_NUMBER_00237:int                                   =  237; // Izma + Marble Freakout Status = (Above)
@@ -273,8 +273,8 @@ public static const UNKNOWN_FLAG_NUMBER_00264:int                               
 public static const UNKNOWN_FLAG_NUMBER_00265:int                                   =  265; // Talk Nancy
 public static const UNKNOWN_FLAG_NUMBER_00266:int                                   =  266; // Times boned
 public static const UNKNOWN_FLAG_NUMBER_00267:int                                   =  267; // Lilium Timed Boned
-public static const UNKNOWN_FLAG_NUMBER_00268:int                                   =  268; // weapon storage
-public static const UNKNOWN_FLAG_NUMBER_00269:int                                   =  269; // weapon damage
+public static const PLAYER_DISARMED_WEAPON_ID:int                                   =  268; // weapon storage
+public static const PLAYER_DISARMED_WEAPON_ATTACK:int                                   =  269; // weapon damage
 public static const UNKNOWN_FLAG_NUMBER_00270:int                                   =  270; // Times encountered spiderbitches
 public static const UNKNOWN_FLAG_NUMBER_00271:int                                   =  271; // Spider Preggo Timer
 public static const UNKNOWN_FLAG_NUMBER_00272:int                                   =  272; // Times Explored Swamp
@@ -462,7 +462,7 @@ public static const TIMES_MET_ANEMONE:int                                       
 public static const ANEMONE_KID:int                                                 =  454; // 
 public static const KID_ITEM_FIND_HOURS:int                                         =  455; // 
 public static const ANEMONE_WATCH:int                                               =  456; // 
-public static const ANEMONE_WEAPON:int                                              =  457; // 
+public static const ANEMONE_WEAPON_ID:int                                           =  457; //
 public static const MURBLE_FARM_TALK_LEVELS:int                                     =  458; // 
 public static const BROKE_UP_WITH_MARBLE:int                                        =  459; // 
 public static const MARBLE_PLAYED_WITH_KIDS_TODAY:int                               =  460; // 
@@ -1036,22 +1036,22 @@ public static const LYNNETTE_ANNOUNCED_APPROVAL:int                             
 public static const LYNNETTE_FUCK_COUNTER:int                                   	= 1028;
 public static const UMA_TIMES_SEXED:int                                  			= 1029;
 public static const UMA_TIMES_MASSAGED:int                                  		= 1030;
-public static const UMA_TIMES_ACUPUNCTURE_UNDO:int                                 = 1031;
+public static const UMA_TIMES_ACUPUNCTURE_UNDO:int                                  = 1031;
 public static const UMA_TIMES_SUCKED_YOU:int	                                    = 1032;
-public static const TIMES_RUT_FUCKED_URTAS_CUNT:int                                  = 1033;
-public static const UNKNOWN_FLAG_NUMBER_01034:int                                   = 1034;
-public static const UNKNOWN_FLAG_NUMBER_01035:int                                   = 1035;
-public static const UNKNOWN_FLAG_NUMBER_01036:int                                   = 1036;
-public static const UNKNOWN_FLAG_NUMBER_01037:int                                   = 1037;
-public static const UNKNOWN_FLAG_NUMBER_01038:int                                   = 1038;
-public static const UNKNOWN_FLAG_NUMBER_01039:int                                   = 1039;
-public static const UNKNOWN_FLAG_NUMBER_01040:int                                   = 1040;
-public static const UNKNOWN_FLAG_NUMBER_01041:int                                   = 1041;
-public static const UNKNOWN_FLAG_NUMBER_01042:int                                   = 1042;
-public static const UNKNOWN_FLAG_NUMBER_01043:int                                   = 1043;
-public static const UNKNOWN_FLAG_NUMBER_01044:int                                   = 1044;
-public static const UNKNOWN_FLAG_NUMBER_01045:int                                   = 1045;
-public static const UNKNOWN_FLAG_NUMBER_01046:int                                   = 1046;
+public static const TIMES_RUT_FUCKED_URTAS_CUNT:int                                 = 1033;
+public static const TIMES_KIHA_ANALED:int                                           = 1034;
+public static const TIMES_ENCOUNTERED_GOBLIN_ASSASSIN:int                           = 1035;
+public static const IZUMI_MET:int                                  					= 1036; // Player has had the introduction/meeting scene with Izumi
+public static const IZUMI_LAST_ENCOUNTER:int                                   		= 1037; // Outcome of the last enouncter with Izumi, 0 = Unset, 1 = PC Lost in a fight, 2 = PC ran away, 3 = PC Won in a fight
+public static const IZUMI_TIMES_SUBMITTED:int                                  		= 1038; // Times the player has voluntarily submitted to Izumi's demands
+public static const IZUMI_TIMES_GRABBED_THE_HORN:int                                = 1039; // Times the player has beaten Izumi in a fight, and touched her horn.
+public static const IZUMI_TIMES_LOST_FIGHT:int                                   	= 1040; // Times the player has been beaten by Izumi in a fight
+public static const IZUMI_SEEN_PC_GENDER:int                                   		= 1041; // Indicates if Izumi knows the PCs true gender/equipment (val in the last gender int that izumi knows the player was)
+public static const CUSTOM_FONT_SIZE:int                                   			= 1042; // Defines the currently set font size for output text elements. (Hacky, need to do something better, but this works for now.)
+public static const FERRET_BAD_END_WARNING:int                           	        = 1043;
+public static const TIMES_TALKED_WITH_JOJO:int                                   	= 1044; // Number of times the player has talked with Pure Jojo.
+public static const TIMES_TRAINED_WITH_JOJO:int                                   	= 1045; // Number of times the player has trained with Jojo
+public static const UNLOCKED_JOJO_TRAINING:int                                   	= 1046;
 public static const UNKNOWN_FLAG_NUMBER_01047:int                                   = 1047;
 public static const UNKNOWN_FLAG_NUMBER_01048:int                                   = 1048;
 public static const UNKNOWN_FLAG_NUMBER_01049:int                                   = 1049;

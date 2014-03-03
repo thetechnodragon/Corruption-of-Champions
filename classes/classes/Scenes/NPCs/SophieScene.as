@@ -1,10 +1,10 @@
 ﻿package classes.Scenes.NPCs{
-import classes.GlobalFlags.kFLAGS;
-import classes.BaseContent;
+	import classes.*;
+	import classes.GlobalFlags.kFLAGS;
 	import classes.GlobalFlags.kGAMECLASS;
 	import classes.Scenes.Areas.HighMountains.Harpy;
-	import classes.CoC_Settings;
-public class SophieScene extends BaseContent {
+
+	public class SophieScene extends BaseContent {
 
 	public function SophieScene()
 	{
@@ -394,9 +394,9 @@ private function cramANippleInIt():void {
 	if(gameState == 1 || gameState == 2) cleanupAfterCombat();
 	else doNext(13);
 	//You've now been milked, reset the timer for that
-	if(player.hasStatusAffect("Feeder") >= 0) {
-		player.addStatusValue("Feeder",1,1);
-		player.changeStatusValue("Feeder",2,0);
+	if(player.findStatusAffect(StatusAffects.Feeder) >= 0) {
+		player.addStatusValue(StatusAffects.Feeder,1,1);
+		player.changeStatusValue(StatusAffects.Feeder,2,0);
 	}
 }
 
@@ -408,7 +408,7 @@ private function consensualHotSophieDickings():void {
 	var x:Number = player.cockThatFits(232);
 	if(x < 0) 
 	{
-		if (CoC_Settings.haltOnErrors) throw new Error("");
+		CoC_Settings.error("");
 		outputText("ERROR: No cock found that fits, yet 'fits' scene was called.", true);
 		doNext(1);
 		gameState = 0;
@@ -416,7 +416,7 @@ private function consensualHotSophieDickings():void {
 	}
 	else if(x > player.cocks.length-1) 
 	{
-		if (CoC_Settings.haltOnErrors) throw new Error("");
+		CoC_Settings.error("");
 		outputText("ERROR: Cock above max cocks selected for Sophie sex.  Please report bug on fen's bug report forum.", true);
 		doNext(1);
 		gameState = 0;
@@ -558,7 +558,7 @@ private function postSophieSexSnuggle():void {
 	if(player.cor > 50) outputText("nearly give her a good-bye kiss, but catch yourself at the last moment.  She quips, \"<i>Too bad, it was nice.</i>\"\n\n", false);
 	else outputText("give her a kiss on the cheek, knowing all-too-well the dangers of her lips.  She quips, \"<i>Ohh, too bad.  I wanted to stroke you to sleep.</i>\"\n\n", false);
 	//Remove luststick
-	player.removeStatusAffect("Luststick");
+	player.removeStatusAffect(StatusAffects.Luststick);
 	//(+sensitivity, +libido
 	dynStats("lib", 1, "sen", 1);
 	
@@ -688,29 +688,29 @@ private function sophieFucked(dicked:Boolean = true):void {
 
 public function luststickApplication(hours:Number = 4):void {
 	//Immune to luststick?
-	if(player.hasPerk("Luststick Adapted") >= 0) return;
+	if(player.findPerk(PerkLib.LuststickAdapted) >= 0) return;
 	//Increment luststick resistance
 	flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00285] += Math.floor(hours/2);
 	if(!player.hasCock()) return;
 	//Max of 20.
 	if(hours > 20) hours = 20;
 	//Add duration if under effects
-	if(player.hasStatusAffect("Luststick") >= 0) {
+	if(player.findStatusAffect(StatusAffects.Luststick) >= 0) {
 		//Max?
-		if(player.statusAffectv1("Luststick") >= 20) 
+		if(player.statusAffectv1(StatusAffects.Luststick) >= 20)
 		{}
 		//Not maxed - increase duration
 		else {
 			//lower hours if it pushes it too high.
-			if(player.statusAffectv1("Luststick") + hours > 20) {
-				hours = 20 - player.statusAffectv1("Luststick");
+			if(player.statusAffectv1(StatusAffects.Luststick) + hours > 20) {
+				hours = 20 - player.statusAffectv1(StatusAffects.Luststick);
 			}
 			//increase!
-			player.addStatusValue("Luststick",1,hours);
+			player.addStatusValue(StatusAffects.Luststick,1,hours);
 		}
 	}
 	//Apply a little of doctor L (thats Dr Lipstick you tard!)
-	else player.createStatusAffect("Luststick",hours,0,0,0);
+	else player.createStatusAffect(StatusAffects.Luststick,hours,0,0,0);
 }
 
 
@@ -743,7 +743,7 @@ internal function sophieLostCombat():void {
 			//big clit girls
 			if(player.clitLength >= 5) clitFuck = fuckDatClit;
 		}
-		if(hasItem("BimboLq",1)) bimbo = sophieBimbo.bimbotizeMeCaptainSophie;
+		if(player.hasItem(consumables.BIMBOLQ)) bimbo = sophieBimbo.bimbotizeMeCaptainSophie;
 	}
 	if(dickRape != null || cuntFuck != null || clitFuck != null || bimbo != null) {
 		outputText("  What do you do to her?", false);

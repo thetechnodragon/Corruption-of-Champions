@@ -99,7 +99,7 @@ public function agreeToHelpHeliaDungeon():void {
 	outputText("\n\nResigned to your fate, you curl up with Helia; who throws her cloak over the two of you.");
 	
 	//[If Marble is in camp:]
-	if(player.hasStatusAffect("Camp Marble") >= 0 && silly()) {
+	if(player.findStatusAffect(StatusAffects.CampMarble) >= 0 && silly()) {
 		outputText("\n\nJust as you and Hel start to get intimate, you hear a familiar clopping of hooves. You poke your head out of the blanket, rather alarmed to see Marble standing over you.");
 		outputText("\n\n\"<i>S-Sweetie?</i>\" Marble says, aghast at Hel's presence in your arms.  \"<i>What... just what do you think you're doing!?</i>\"");
 		outputText("\n\nThis could be ba--");
@@ -182,7 +182,7 @@ public function takeGooArmor4Realz():void {
 
 public function gooArmorAI():void {
 	spriteSelect(79);
-	if(rand(2) == 0 && player.hasStatusAffect("GooArmorSilence") < 0) gooSilenceAttack();
+	if(rand(2) == 0 && player.findStatusAffect(StatusAffects.GooArmorSilence) < 0) gooSilenceAttack();
 	else if(rand(3) > 0) gooArmorAttackPhysical();
 	else gooArmorAttackTwoGooConsume();
 }
@@ -213,7 +213,7 @@ public function gooArmorAttackPhysical():void {
 //ATTACK TWO: Goo Consume
 public function gooArmorAttackTwoGooConsume():void {
 	outputText("Suddenly, the goo-girl leaks half-way out of her heavy armor and lunges at you.  You attempt to dodge her attack, but she doesn't try and hit you - instead, she wraps around you, pinning your arms to your chest.  More and more goo latches onto you - you'll have to fight to get out of this.");
-	player.createStatusAffect("GooArmorBind",0,0,0,0);
+	player.createStatusAffect(StatusAffects.GooArmorBind,0,0,0,0);
 	combatRoundOver();
 }
 //(Struggle)
@@ -223,9 +223,9 @@ public function struggleAtGooBind():void {
 	if(rand(10) > 0 && player.str/5 + rand(20) < 23) {
 		outputText("You try and get out of the goo's grasp, but every bit of goop you pull off you seems to be replaced by twice as much!");
 		//(If fail 5 times, go to defeat scene)
-		player.addStatusValue("GooArmorBind",1,1);
-		if(player.statusAffectv1("GooArmorBind") >= 5) {
-			if(monster.hasStatusAffect("spar") >= 0) valeria.pcWinsValeriaSparDefeat();
+		player.addStatusValue(StatusAffects.GooArmorBind,1,1);
+		if(player.statusAffectv1(StatusAffects.GooArmorBind) >= 5) {
+			if(monster.findStatusAffect(StatusAffects.Spar) >= 0) valeria.pcWinsValeriaSparDefeat();
 			else gooArmorBeatsUpPC();
 			return;
 		}
@@ -233,7 +233,7 @@ public function struggleAtGooBind():void {
 	//If succeed: 
 	else {
 		outputText("You finally pull the goop off of you and dive out of her reach before the goo-girl can re-attach herself to you.  Pouting, she refills her suit of armor and reassumes her fighting stance.");
-		player.removeStatusAffect("GooArmorBind");
+		player.removeStatusAffect(StatusAffects.GooArmorBind);
 	}
 	combatRoundOver();
 }
@@ -241,7 +241,7 @@ public function struggleAtGooBind():void {
 public function gooSilenceAttack():void {
 	outputText("The goo pulls a hand off her greatsword and shoots her left wrist out towards you.  You recoil as a bit of goop slaps onto your mouth, preventing you from speaking - looks like you're silenced until you can pull it off!");
 	//(No spells until PC passes a moderate STR check or burns it away)
-	player.createStatusAffect("GooArmorSilence",0,0,0,0);
+	player.createStatusAffect(StatusAffects.GooArmorSilence,0,0,0,0);
 	combatRoundOver();
 }
 
@@ -255,7 +255,7 @@ public function gooArmorBeatsUpPC():void {
 		outputText("\n\nShe begins to use her goo to peel back your [armor], soon revealing your defenseless [vagina], and makes a show of licking her lips as tendrils of goo seep into your cunt, filling you utterly.  You writhe and struggle against your gooey bonds, but your efforts are futile.  The goo-girl inside the armor only shakes her head at you, and withdraws herself from your [vagina].");
 		outputText("\n\nYou have only a moment to figure out what's coming before her goo -- now perfectly shaped like the inside of your cunt -- slams back into you like a stiff cock. You can't help yourself as a moan escapes your lips, barely audible through the goop covering your mouth."); 
 		outputText("\n\n\"<i>Oh, you like that do you?</i>\" the armor-goo asks, smiling evilly.  \"<i>Well, maybe this can be mutually... beneficial.</i>\"  Still grinning, she begins to hammer her cock-like appendage into your pussy, fucking you fast and hard with her goo-dildo.");
-		cuntChange(25,true,true,false);
+		player.cuntChange(25,true,true,false);
 		//[If PC has breasts > A-cups: 
 		if(player.biggestTitSize() > 1) {
 			outputText("  As she hammers your cunny, bits of her goo swirl around your [chest], squeezing and massaging your tits.  You squirm as she roughly teases your boobs, pinching at your nipples and squeezing your tender flesh roughly.");
@@ -372,7 +372,7 @@ public function takeGooArmorAndWearIt():void {
 	//(\"<i>You put a (previous armorName) in your X pouch)
 	outputText("\n\nTo your surprise, you feel rather invigorated after the battle, thanks to Valeria's strange healing properties, and with a smirk, you turn your attention back to the dungeon ahead.\n\n");
 	//(PC regains HP)
-	equipArmor("goo armor", false);
+	armors.GOOARMR.equip(player,true,false);
 	flags[kFLAGS.MET_VALERIA] = 1;
 	HPChange(1000,false);
 	flags[kFLAGS.TOOK_GOO_ARMOR] = 1;
@@ -382,7 +382,7 @@ public function takeGooArmorAndWearIt():void {
 public function harpyHordeClawFlurry():void {
 	outputText("The harpies lunge at you, a veritable storm of talons and claws raining down around you.  You stumble back, trying desperately to deflect some of the attacks, but there are simply too many to block them all!  Only a single harpy in the brood seems to be holding back...\n");
 	//(Effect: Multiple light attacks)
-	monster.createStatusAffect("attacks",3+rand(3),0,0,0);
+	monster.createStatusAffect(StatusAffects.Attacks,3+rand(3),0,0,0);
 	monster.eAttack();
 	combatRoundOver();
 }
@@ -390,7 +390,7 @@ public function harpyHordeClawFlurry():void {
 //ATTACK TWO: Gangbang
 public function harpyHordeGangBangAttack():void {
 	outputText("Suddenly, a pair of harpies grabs you from behind, holding your arms to keep you from fighting back! Taking advantage of your open state, the other harpies leap at you, hammering your chest with punches and kicks - only one hangs back from the gang assault.\n\n");
-	player.createStatusAffect("HarpyBind",0,0,0,0);
+	player.createStatusAffect(StatusAffects.HarpyBind,0,0,0,0);
 	//(PC must struggle:
 	harpyHordeGangBangStruggle(false);
 }
@@ -406,7 +406,7 @@ public function harpyHordeGangBangStruggle(clearDisp:Boolean = true):void {
 	}
 	//Success: 
 	else {
-		player.removeStatusAffect("HarpyBind");
+		player.removeStatusAffect(StatusAffects.HarpyBind);
 		outputText("With a mighty roar, you throw off the harpies grabbing you and return to the fight!");
 	}
 	combatRoundOver();
@@ -415,7 +415,7 @@ public function harpyHordeGangBangStruggle(clearDisp:Boolean = true):void {
 //ATTACK THREE: LUSTY HARPIES!
 public function harpyHordeLustAttack():void {
 	outputText("The harpies back off for a moment, giving you room to breathe - only to begin a mini strip-tease, pulling off bits of clothing to reveal their massive asses and hips or bearing their small, perky tits.  They caress themselves and each other, moaning lewdly.  Distracted by the burlesque, you don't notice a lipstick-wearing harpy approach you until it's too late!  She plants a kiss right on your lips, ");
-	if(player.hasPerk("Luststick Adapted") >= 0) outputText("doing relatively little thanks to your adaptation");
+	if(player.findPerk(PerkLib.LuststickAdapted) >= 0) outputText("doing relatively little thanks to your adaptation");
 	else {
 		outputText("sending shivers of lust up your spine");
 		dynStats("lus", 5);
@@ -652,7 +652,7 @@ public function phoenixPlatoonRush():void {
 	outputText("You fall back under a hail of scimitar attacks.  The sheer number of phoenixes attacking is bad enough, but their attacks are perfectly coordinated, leaving virtually no room for escape or maneuver without getting hit!\n");
 	//(Effect: Multiple medium-damage attacks)
 	//(Effect: Multiple light attacks)
-	monster.createStatusAffect("attacks",2+rand(3),0,0,0);
+	monster.createStatusAffect(StatusAffects.Attacks,2+rand(3),0,0,0);
 	monster.eAttack();
 	combatRoundOver();
 }
@@ -675,17 +675,17 @@ public function phoenixPlatoonLustbang():void {
 }
 
 public function phoenixPlatoonAI():void {
-	if(monster.hasStatusAffect("platoon") < 0) {
+	if(monster.findStatusAffect(StatusAffects.Platoon) < 0) {
 		phoenixPlatoonRush();
-		monster.createStatusAffect("platoon",0,0,0,0);
+		monster.createStatusAffect(StatusAffects.Platoon,0,0,0,0);
 	}
-	else if(monster.statusAffectv1("platoon") == 0) {
+	else if(monster.statusAffectv1(StatusAffects.Platoon) == 0) {
 		phoenixPlatoonFireBreath();
-		monster.addStatusValue("platoon",1,1);
+		monster.addStatusValue(StatusAffects.Platoon,1,1);
 	}
 	else {
 		phoenixPlatoonLustbang()
-		monster.removeStatusAffect("platoon");
+		monster.removeStatusAffect(StatusAffects.Platoon);
 	}
 }
 
@@ -826,7 +826,7 @@ public function gitButtRoadPhoenix():void {
 	outputText("\n\nYou quickly discard your [armor] and, pushing the girl back onto her back, squat over your prize.  You wrap your hand around her stiff lizard prick and start to stroke it, running your hand along her bulbous purple shaft.  The phoenix makes a pleasured gasp as you start to jerk her off, idly playing with her lush tits or slick pussy as you stroke her to full hardness.");
 
 	outputText("\n\nOnce you're satisfied that she's completely rigid, you shift your [hips] so that your [asshole] is hovering over the phoenix's thick twelve-incher.  You allow her to put her hands on your hips and guide you down, until you can feel her narrow head pressed against your backdoor.  Biting your lip to stifle a cry of pain and pleasure, you do the honors, guiding her wide prick to slip past your relaxed sphincter and into your bowels.");
-	buttChange(30,true,true,false);
+	player.buttChange(30,true,true,false);
 
 	outputText("\n\nYou grunt as she bottoms out inside you, leaving you with a feeling of intense fullness and warmth, grinning down at the phoenix-girl and pleased to see the look of rapture on her face as your ass muscles squeeze down on her stiff lizard-cock.  You feel her hands digging into your [hips], and in return you give her soft breasts a playful squeeze.  You start to rock your hips, letting an inch or two of her dick spill out of you before your stretched [asshole] sucks it back up.");
 
@@ -855,12 +855,12 @@ public function phoenixAginal():void {
 
 	outputText("\n\n");
 	//[If Broodmother, not pregnant: 
-	if(player.hasPerk("Broodmother") >= 0) outputText("You assure her she will be soon");
+	if(player.findPerk(PerkLib.BroodMother) >= 0) outputText("You assure her she will be soon");
 	else outputText("You grin at her");
 	outputText(" and strip out of your [armor]. The phoenix, a bit more dominant than you might have liked, roughly grabs your [chest], pinching your nipples as she takes over wringing her cock from you. Oh well. You decide to roll with it and slide a hand down to your [vagina], stroking your pussy as your lover warms up.");
 
 	outputText("\n\nWhen she's nice and hard, you give the phoenix a little push onto her back and clamber into her lap, lining her lizard prick up with your [vagina].  Before you can get properly situated, though, the girl pulls you down onto her cock, impaling you up to her hilt in one massive thrust.  You roll your head back and scream, a mix of pleasure and burning pain shooting through you as her white-hot rod slams into your innermost depths.");
-	cuntChange(12,true,true,false);
+	player.cuntChange(12,true,true,false);
 
 	outputText("\n\nBy the time you're somewhat recovered from her surprise attack, the phoenix-girl has started rocking her hips into yours, grinding her long prick into you.  You give her hefty tits a rough squeeze and push her back down, holding her down by her mammaries as you start to ride her cock.  Having gotten her thrill, the phoenix-girl submits to you, only venturing to hold onto your [hips] as you fuck her.  For your part, you bask in the sensation of her thick dick sliding in and out of your well-lubricated depths, rubbing and stroking your sensitive inner walls with its bulbous length."); 
 
@@ -873,7 +873,7 @@ public function phoenixAginal():void {
 	//v1 = egg type.
 	//v2 = size - 0 for normal, 1 for large
 	//v3 = quantity
-	player.createStatusAffect("eggs",rand(6),0,(5+rand(3)),0);
+	player.createStatusAffect(StatusAffects.Eggs,rand(6),0,(5+rand(3)),0);
 	//(Return to Mezzanine main menu)
 	dynStats("lus=", 0);
 	doNext(1);
@@ -891,7 +891,7 @@ public function eldritchRopes():void {
 	var damage:int = 25 + rand(10);
 	damage = takeDamage(damage);
 	outputText(" (" + damage + ")");
-	monster.createStatusAffect("QueenBind",0,0,0,0);
+	monster.createStatusAffect(StatusAffects.QueenBind,0,0,0,0);
 	combatRoundOver();
 }
 
@@ -906,7 +906,7 @@ public function ropeStruggles(wait:Boolean = false):void {
 	}
 	else {
 		outputText("With supreme effort, you pull free of the magic ropes, causing the queen to tumble to her hands and knees.");
-		monster.removeStatusAffect("QueenBind");
+		monster.removeStatusAffect(StatusAffects.QueenBind);
 	}
 	combatRoundOver();
 }
@@ -1120,8 +1120,7 @@ public function takeQueensStaff():void {
 	clearOutput();
 	outputText("You pick up the Harpy Queen's staff.  It is a tall whitewood staff, nearly six feet in length, and covered in glowing eldritch runes, with a singular shimmering sphere of crystal at its head, which seems to have a swirling mist within.");
 	//(New Weapon: EldritchStaff)
-	shortName = "E.Staff";
-	takeItem();
+	inventory.takeItem(weapons.E_STAFF);
 	//Similar stats to the Wizard's Staff, but with a better Fatigue reduction and a bonus to Magic damage/effect.
 	flags[kFLAGS.TOOK_QUEEN_STAFF] = 1;
 }

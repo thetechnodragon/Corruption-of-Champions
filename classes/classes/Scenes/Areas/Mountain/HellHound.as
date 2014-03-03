@@ -1,40 +1,31 @@
 ﻿package classes.Scenes.Areas.Mountain
 {
-	import classes.CoC;
-	import classes.Cock;
-	import classes.Creature;
-	import classes.Monster;
-	import classes.CockTypesEnum;
-	
-	/**
-	 * ...
-	 * @author Fake-Name
-	 */
-
+	import classes.*;
+	import classes.internals.*;
 
 	public class HellHound extends Monster
 	{
 		protected function hellhoundFire():void {
 			//Blind dodge change
-			if(hasStatusAffect("Blind") >= 0) {
+			if(findStatusAffect(StatusAffects.Blind) >= 0) {
 				outputText(capitalA + short + " completely misses you with a wave of dark fire! Thank the gods it's blind!", false);
 				combatRoundOver();
 				return;
 			}
-			/*if(player.hasStatusAffect("Web-Silence") >= 0) {
+			/*if(player.hasStatusAffect(StatusAffects.Web_dash_Silence) >= 0) {
 				outputText("You reach inside yourself to breathe flames, but as you ready to release a torrent of fire, it backs up in your throat, blocked by the webbing across your mouth.  It causes you to cry out as the sudden, heated force explodes in your own throat.\n", false);
 				changeFatigue(10);
 				takeDamage(10+rand(20));
 				enemyAI();
 				return;
 			}*/
-			if(player.hasPerk("Evade") >= 0 && player.spe >= 35 && rand(3) != 0) {
+			if(player.findPerk(PerkLib.Evade) >= 0 && player.spe >= 35 && rand(3) != 0) {
 				outputText("Both the hellhound's heads breathe in deeply before blasting a wave of dark fire at you.  You easily avoid the wave, diving to the side and making the most of your talents at evasion.", false);
 			}
-			else if(player.hasPerk("Misdirection") >= 0 && rand(100) < 20 && player.armorName == "red, high-society bodysuit") {
+			else if(player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 20 && player.armorName == "red, high-society bodysuit") {
 				outputText("Using Raphael's teachings and the movement afforded by your bodysuit, you anticipate and sidestep " + a + short + "'s fire.\n", false);
 			}
-			else if(player.hasPerk("Flexibility") >= 0 && player.spe > 30 && rand(10) != 0) {
+			else if(player.findPerk(PerkLib.Flexibility) >= 0 && player.spe > 30 && rand(10) != 0) {
 				outputText("Both the hellhound's heads breathe in deeply before blasting a wave of dark fire at you.  You twist and drop with incredible flexibility, watching the fire blow harmlessly overhead.", false);
 			}
 			else {
@@ -56,7 +47,7 @@
 			doNext(1);	
 		}
 		protected function hellhoundScent():void {
-			if(player.hasStatusAffect("NoFlee") >= 0) {
+			if(player.findStatusAffect(StatusAffects.NoFlee) >= 0) {
 				if(spe == 100) {
 					hellhoundFire();
 					return;
@@ -69,7 +60,7 @@
 			else {
 				spe += 40;
 				outputText("The hellhound keeps his four eyes on you as he sniffs the ground where you were moments ago. He raises his heads back up and gives you a fiery grin - he seems to have acquired your scent!  It'll be hard to get away now...", false);
-				player.createStatusAffect("NoFlee",0,0,0,0);
+				player.createStatusAffect(StatusAffects.NoFlee,0,0,0,0);
 			}
 			combatRoundOver();
 			/*if(spe >= 80) {
@@ -143,21 +134,51 @@
 		{
 			if (noInit) return;
 			trace("HellHound Constructor!");
-			init01Names("the ", "hellhound", "hellhound", "It looks like a large demon on all fours with two heads placed side-by-side. The heads are shaped almost like human heads, but they have dog ears on the top and have a long dog snout coming out where their mouths and noses would be.  Its eyes and mouth are filled with flames and its hind legs capped with dog paws, but its front ones almost look like human hands.  Its limbs end in large, menacing claws. A thick layer of dark fur covers his entire body like armor.  Both heads look at you hungrily as the hellhound circles around you. You get the feeling that reasoning with this beast will be impossible.");
-			init02Male([new Cock(8,2,CockTypesEnum.DOG),new Cock(8,2,CockTypesEnum.DOG)],2,4,5);
-			init03BreastRows([0],[0],[0]);
-			init04Ass(ANAL_LOOSENESS_NORMAL,ANAL_WETNESS_NORMAL);
-			init05Body(47,HIP_RATING_AVERAGE,BUTT_RATING_AVERAGE+1,LOWER_BODY_TYPE_DOG);
-			init06Skin("black",SKIN_TYPE_FUR);
-			init07Hair("red",3);
-			init08Face();
-			init09PrimaryStats(55,60,40,1,95,20,100);
-			init10Weapon("claws","claw",10);
-			init11Armor("thick fur");
-			init12Combat(0,25,1,Monster.TEMPERMENT_LOVE_GRAPPLES);
-			init13Level(5,10+rand(10));
-			initX_Tail(TAIL_TYPE_DOG);
-			initX_Specials(hellhoundFire,hellhoundScent);
+			this.a = "the ";
+			this.short = "hellhound";
+			this.imageName = "hellhound";
+			this.long = "It looks like a large demon on all fours with two heads placed side-by-side. The heads are shaped almost like human heads, but they have dog ears on the top and have a long dog snout coming out where their mouths and noses would be.  Its eyes and mouth are filled with flames and its hind legs capped with dog paws, but its front ones almost look like human hands.  Its limbs end in large, menacing claws. A thick layer of dark fur covers his entire body like armor.  Both heads look at you hungrily as the hellhound circles around you. You get the feeling that reasoning with this beast will be impossible.";
+			// this.plural = false;
+			this.createCock(8,2,CockTypesEnum.DOG);
+			this.createCock(8,2,CockTypesEnum.DOG);
+			this.balls = 2;
+			this.ballSize = 4;
+			this.cumMultiplier = 5;
+			// this.hoursSinceCum = 0;
+			this.createBreastRow();
+			this.createBreastRow();
+			this.createBreastRow();
+			this.ass.analLooseness = ANAL_LOOSENESS_NORMAL;
+			this.ass.analWetness = ANAL_WETNESS_NORMAL;
+			this.tallness = 47;
+			this.hipRating = HIP_RATING_AVERAGE;
+			this.buttRating = BUTT_RATING_AVERAGE+1;
+			this.lowerBody = LOWER_BODY_TYPE_DOG;
+			this.skinTone = "black";
+			this.skinType = SKIN_TYPE_FUR;
+			//this.skinDesc = Appearance.Appearance.DEFAULT_SKIN_DESCS[SKIN_TYPE_FUR];
+			this.hairColor = "red";
+			this.hairLength = 3;
+			initStrTouSpeInte(55, 60, 40, 1);
+			initLibSensCor(95, 20, 100);
+			this.weaponName = "claws";
+			this.weaponVerb="claw";
+			this.weaponAttack = 10;
+			this.armorName = "thick fur";
+			this.lust = 25;
+			this.temperment = TEMPERMENT_LOVE_GRAPPLES;
+			this.level = 5;
+			this.gems = 10+rand(10);
+			this.drop = new WeightedDrop().add(consumables.CANINEP, 3)
+					.addMany(1, consumables.BULBYPP,
+							consumables.KNOTTYP,
+							consumables.BLACKPP,
+							consumables.DBLPEPP,
+							consumables.LARGEPP);
+			this.tailType = TAIL_TYPE_DOG;
+			this.special1 = hellhoundFire;
+			this.special2 = hellhoundScent;
+			checkMonster();
 		}
 
 	}

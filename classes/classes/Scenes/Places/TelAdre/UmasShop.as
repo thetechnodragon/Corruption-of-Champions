@@ -1,10 +1,8 @@
 ﻿package classes.Scenes.Places.TelAdre
 {
-	import classes.BaseContent;
+	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
 	import classes.GlobalFlags.kGAMECLASS;
-	import classes.GlobalFlags.kGAMECLASS;
-	import classes.Scenes.Places.TelAdre;
 
 	/**
 	 * Whee!
@@ -466,18 +464,13 @@
 			menu();
 			doNext(13);
 		}
-		
+
+	public static const MAX_MASSAGE_BONUS_DURATION:int = 24;			// Duration of the bonus
 		/**
 		 * Apply massage bonus. Bonuses are replaced when a new effect is placed on the player.
-		 * StatusAffect for all bonuses
-		 * StatusAffect Values:
-		 * v1 = bonus index
-		 * v2 = bonus value
-		 * v3 = remaining time
+		 * StatusAffects.UmasMassage for all bonuses
 		 * @param	selectedMassage
 		 */
-		public static const MASSAGE_BONUS_NAME:String = "Uma's Massage";	// StatusAffect name
-		public static const MAX_MASSAGE_BONUS_DURATION:int = 24;			// Duration of the bonus
 		public function applyMassageBonus(selectedMassage:int):void
 		{
 			if (selectedMassage < 0 || selectedMassage > 4)
@@ -486,13 +479,13 @@
 			}
 			else
 			{
-				var statIndex:int = player.hasStatusAffect(MASSAGE_BONUS_NAME);
+				var statIndex:int = player.findStatusAffect(StatusAffects.UmasMassage);
 				var bonusValue:*;
 				
 				// Remove the old massage bonus if present
 				if (statIndex >= 0)
 				{
-					player.removeStatusAffect(MASSAGE_BONUS_NAME);
+					player.removeStatusAffect(StatusAffects.UmasMassage);
 				}
 				
 				if (selectedMassage == MASSAGE_RELIEF)
@@ -523,7 +516,7 @@
 				
 				if (bonusValue != undefined)
 				{
-					player.createStatusAffect(MASSAGE_BONUS_NAME, selectedMassage, bonusValue, MAX_MASSAGE_BONUS_DURATION, 0);
+					player.createStatusAffect(StatusAffects.UmasMassage, selectedMassage, bonusValue, MAX_MASSAGE_BONUS_DURATION, 0);
 					flags[kFLAGS.UMA_TIMES_MASSAGED]++;
 				}
 			}
@@ -535,13 +528,13 @@
 		 */
 		public function updateBonusDuration(hours:int):void
 		{
-			var statIndex:int = player.hasStatusAffect(MASSAGE_BONUS_NAME);
+			var statIndex:int = player.findStatusAffect(StatusAffects.UmasMassage);
 			
 			if (statIndex >= 0)
 			{
-				player.statusAffects[statIndex].value3 -= hours;
+				player.statusAffect(statIndex).value3 -= hours;
 				
-				if (player.statusAffects[statIndex].value3 <= 0)
+				if (player.statusAffect(statIndex).value3 <= 0)
 				{
 					bonusExpired();
 				}
@@ -555,7 +548,7 @@
 		{
 			outputText("\n<b>You groan softly as a feeling of increased tension washes over you, no longer as loose as you were before.  It looks like the effects of Uma's massage have worn off.</b>\n");
 			
-			player.removeStatusAffect(MASSAGE_BONUS_NAME);
+			player.removeStatusAffect(StatusAffects.UmasMassage);
 		}
 		
 		/**
@@ -573,37 +566,32 @@
 		public static const NEEDLEWORK_DEFENSE:int = 2;
 		public static const NEEDLEWORK_MAGIC:int = 3;
 		public static const NEEDLEWORK_ATTACK:int = 4;
-		
-		public static const NEEDLEWORK_SPEED_PERK_NAME:String = "Chi Reflow - Speed";
+
+		public const NEEDLEWORK_SPEED_PERK:PerkType = PerkLib.ChiReflowSpeed;
 		public static const NEEDLEWORK_SPEED_PERK_DESC:String = "Uma's Acupuncture Needlework has gifted you with the 'Chi Reflow - Speed' perk. As a result your strength is capped but speed reductions are halved.";
-		public static const NEEDLEWORK_SPEED_PERK_SHORT_DESC:String = "Speed reductions are halved but caps strength";
 		public static const NEEDLEWORK_SPEED_STRENGTH_CAP:int = 60;
 		public static const NEEDLEWORK_SPEED_SPEED_MULTI:Number = 0.5;
 		
-		public static const NEEDLEWORK_LUST_PERK_NAME:String = "Chi Reflow - Lust";
+		public const NEEDLEWORK_LUST_PERK:PerkType = PerkLib.ChiReflowLust;
 		public static const NEEDLEWORK_LUST_PERK_DESC:String = "Uma's Acupuncture Needlework has gifted you with the 'Chi Reflow - Lust' perk. As a result your Lust resistance and Tease attack are enhanced, but Libido and Sensitivity gains are increased.";
-		public static const NEEDLEWORK_LUST_PERK_SHORT_DESC:String = "Lust resistance and Tease are enhanced, but Libido and Sensitivity gains increased.";
 		public static const NEEDLEWORK_LUST_LUST_RESIST:int = 10;
 		public static const NEEDLEWORK_LUST_TEASE_MULTI:Number = 10;
 		public static const NEEDLEWORK_LUST_TEASE_DAMAGE_MULTI:Number = 1.1;
 		public static const NEEDLEWORK_LUST_LIBSENSE_MULTI:Number = 1.1;
 		
-		public static const NEEDLEWORK_DEFENSE_PERK_NAME:String = "Chi Reflow - Defense";
+		public const NEEDLEWORK_DEFENSE_PERK:PerkType = PerkLib.ChiReflowDefense;
 		public static const NEEDLEWORK_DEFENSE_PERK_DESC:String = "Uma's Acupuncture Needlework has gifted you with the 'Chi Reflow - Defense' perk. As a result your body has gained passive damage resistance and extra health, but speed is capped.";
-		public static const NEEDLEWORK_DEFENSE_PERK_SHORT_DESC:String = "Passive damage resistance, but caps speed";
 		public static const NEEDLEWORK_DEFENSE_DEFENSE_MULTI:Number = 1.1;
 		public static const NEEDLEWORK_DEFENSE_EXTRA_HP:int = 50;
 		public static const NEEDLEWORK_DEFENSE_SPEED_CAP:int = 60;
 		
-		public static const NEEDLEWORK_MAGIC_PERK_NAME:String = "Chi Reflow - Magic";
+		public const NEEDLEWORK_MAGIC_PERK:PerkType = PerkLib.ChiReflowMagic;
 		public static const NEEDLEWORK_MAGIC_PERK_DESC:String = "Uma's Acupuncture Needlework has gifted you with the 'Chi Reflow - Magic' perk. As a result your spells are now more powerful, but regular attacks are weaker.";
-		public static const NEEDLEWORK_MAGIC_PERK_SHORT_DESC:String = "Magic attacks boosted, but regular attacks are weaker.";
 		public static const NEEDLEWORK_MAGIC_SPELL_MULTI:Number = 0.25; // Additive bonus to the other magic damage bonuses
 		public static const NEEDLEWORK_MAGIC_REGULAR_MULTI:Number = 0.75; // Multiplier tagged onto the end of damage calculations for the player.
 		
-		public static const NEEDLEWORK_ATTACK_PERK_NAME:String = "Chi Reflow - Attack";
+		public const NEEDLEWORK_ATTACK_PERK:PerkType = PerkLib.ChiReflowAttack;
 		public static const NEEDLEWORK_ATTACK_PERK_DESC:String = "Uma's Acupuncture Needlework has gifted you with the 'Chi Reflow - Attack' perk. As a result your regular attacks are more powerful, but your damage reduction is decreased.";
-		public static const NEEDLEWORK_ATTACK_PERK_SHORT_DESC:String = "Regular attacks boosted, but damage resistance decreased.";
 		public static const NEEDLEWORK_ATTACK_REGULAR_MULTI:Number = 1.1;
 		public static const NEEDLEWORK_ATTACK_DEFENSE_MULTI:Number = 0.9;
 		
@@ -640,7 +628,7 @@
 		
 		/**
 		 * To save having to bullshit around with the perk list description stuff, the functions been modified to call this function to get
-		 * descriptions about accpuncture perks. Let's us contain all of the related content together in a neater manner.
+		 * descriptions about accpuncture PerkLib. Let's us contain all of the related content together in a neater manner.
 		 * @param	perkName	PerkName currently being searched for
 		 * @return				Description of what the perk does.
 		 */
@@ -648,20 +636,20 @@
 		{
 			switch(perkName)
 			{
-				case NEEDLEWORK_SPEED_PERK_NAME:
-					return NEEDLEWORK_SPEED_PERK_SHORT_DESC;
+				case PerkLib.ChiReflowAttack.name:
+					return PerkLib.ChiReflowAttack.desc();
 					break;
-				case NEEDLEWORK_LUST_PERK_NAME:
-					return NEEDLEWORK_LUST_PERK_SHORT_DESC;
+				case PerkLib.ChiReflowDefense.name:
+					return PerkLib.ChiReflowDefense.desc();
 					break;
-				case NEEDLEWORK_DEFENSE_PERK_NAME:
-					return NEEDLEWORK_DEFENSE_PERK_SHORT_DESC;
+				case PerkLib.ChiReflowLust.name:
+					return PerkLib.ChiReflowLust.desc();
 					break;
-				case NEEDLEWORK_MAGIC_PERK_NAME:
-					return NEEDLEWORK_MAGIC_PERK_SHORT_DESC;
+				case PerkLib.ChiReflowMagic.name:
+					return PerkLib.ChiReflowMagic.desc();
 					break;
-				case NEEDLEWORK_ATTACK_PERK_NAME:
-					return NEEDLEWORK_ATTACK_PERK_SHORT_DESC;
+				case PerkLib.ChiReflowSpeed.name:
+					return PerkLib.ChiReflowSpeed.desc();
 					break;
 				default:
 					return "";
@@ -692,42 +680,36 @@
 		 */
 		public function hasNeedleworkPerk():Boolean
 		{
-			var pName:String = this.getNeedleworkPerkName();
-			return pName != "";
-			
-
+			var pType:PerkType = this.getNeedleworkPerk();
+			if (pType != null)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		
 		/**
 		 * Figure out exactly WHICH needlework perk the player has
 		 * @return	Perk name that the player currently has
 		 */
-		public function getNeedleworkPerkName():String
+		public function getNeedleworkPerk():PerkType
 		{
-			if (player.hasPerk(NEEDLEWORK_SPEED_PERK_NAME) >= 0)
-			{
-				return NEEDLEWORK_SPEED_PERK_NAME;
+			for each(var perk:PerkType in [
+					PerkLib.ChiReflowAttack,
+					PerkLib.ChiReflowDefense,
+					PerkLib.ChiReflowLust,
+					PerkLib.ChiReflowMagic,
+					PerkLib.ChiReflowSpeed
+			]){
+				if (player.findPerk(perk) >= 0)
+				{
+					return perk;
+				}
 			}
-			else if (player.hasPerk(NEEDLEWORK_LUST_PERK_NAME) >= 0)
-			{
-				return NEEDLEWORK_LUST_PERK_NAME;
-			}
-			else if (player.hasPerk(NEEDLEWORK_DEFENSE_PERK_NAME) >= 0)
-			{
-				return NEEDLEWORK_DEFENSE_PERK_NAME;
-			}
-			else if (player.hasPerk(NEEDLEWORK_MAGIC_PERK_NAME) >= 0)
-			{
-				return NEEDLEWORK_MAGIC_PERK_NAME;
-			}
-			else if (player.hasPerk(NEEDLEWORK_ATTACK_PERK_NAME) >= 0)
-			{
-				return NEEDLEWORK_ATTACK_PERK_NAME;
-			}
-			else
-			{
-				return "";
-			}
+			return null;
 		}
 		
 		/**
@@ -740,32 +722,32 @@
 		{
 			if (selectedSession == NEEDLEWORK_UNDO)
 			{
-				player.removePerk(this.getNeedleworkPerkName());
+				player.removePerk(this.getNeedleworkPerk());
 				flags[kFLAGS.UMA_TIMES_ACUPUNCTURE_UNDO]++;
 			}
 			else if (selectedSession == NEEDLEWORK_SPEED)
 			{
-				player.createPerk(NEEDLEWORK_SPEED_PERK_NAME, 0, 0, 0, 0, NEEDLEWORK_SPEED_PERK_SHORT_DESC);
+				player.createPerk(PerkLib.ChiReflowSpeed, 0, 0, 0, 0);
 				outputText("<b>" + NEEDLEWORK_SPEED_PERK_DESC + "</b>");
 			}
 			else if (selectedSession == NEEDLEWORK_LUST)
 			{
-				player.createPerk(NEEDLEWORK_LUST_PERK_NAME, 0, 0, 0, 0, NEEDLEWORK_LUST_PERK_SHORT_DESC);
+				player.createPerk(PerkLib.ChiReflowLust, 0, 0, 0, 0);
 				outputText("<b>" + NEEDLEWORK_LUST_PERK_DESC + "</b>");
 			}
 			else if (selectedSession == NEEDLEWORK_DEFENSE)
 			{
-				player.createPerk(NEEDLEWORK_DEFENSE_PERK_NAME, 0, 0, 0, 0, NEEDLEWORK_DEFENSE_PERK_SHORT_DESC);
+				player.createPerk(PerkLib.ChiReflowDefense, 0, 0, 0, 0);
 				outputText("<b>" + NEEDLEWORK_DEFENSE_PERK_DESC + "</b>");
 			}
 			else if (selectedSession == NEEDLEWORK_MAGIC)
 			{
-				player.createPerk(NEEDLEWORK_MAGIC_PERK_NAME, 0, 0, 0, 0, NEEDLEWORK_MAGIC_PERK_SHORT_DESC);
+				player.createPerk(PerkLib.ChiReflowMagic, 0, 0, 0, 0);
 				outputText("<b>" + NEEDLEWORK_MAGIC_PERK_DESC + "</b>");
 			}
 			else if (selectedSession == NEEDLEWORK_ATTACK)
 			{
-				player.createPerk(NEEDLEWORK_ATTACK_PERK_NAME, 0, 0, 0, 0, NEEDLEWORK_ATTACK_PERK_SHORT_DESC);
+				player.createPerk(PerkLib.ChiReflowAttack, 0, 0, 0, 0);
 				outputText("<b>" + NEEDLEWORK_ATTACK_PERK_DESC + "</b>");
 			}
 		}

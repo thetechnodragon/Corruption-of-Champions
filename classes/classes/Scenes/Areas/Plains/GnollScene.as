@@ -3,9 +3,7 @@
  */
 package classes.Scenes.Areas.Plains
 {
-	import classes.Appearance;
-	import classes.BaseContent;
-	import classes.CockTypesEnum;
+	import classes.*;
 
 	public class GnollScene extends BaseContent
 	{
@@ -27,7 +25,7 @@ package classes.Scenes.Areas.Plains
 		public function getRapedByGnoll():void
 		{
 			//Oh shit get anal raped.
-			if (hasItem("S.Dream", 1)) {
+			if (player.hasItem(consumables.S_DREAM)) {
 				yoDawgIHeardULiekGNollBallzzzdahdakjldh();
 				return;
 			}
@@ -275,7 +273,7 @@ package classes.Scenes.Areas.Plains
 		internal function yoDawgIHeardULiekGNollBallzzzdahdakjldh():void
 		{
 			outputText("", true);
-			consumeItem("S.Dream", 1);
+			player.consumeItem(consumables.S_DREAM);
 			//[either Gnoll loss, if the player has a succubi's dream in inventory]
 
 			outputText("A rolling, harsh laughter surrounds you as you sink to ground, no longer strong enough to remain upright.  The gnoll's mocking bark fills the air as she disposes of your " + player.armorName, false);

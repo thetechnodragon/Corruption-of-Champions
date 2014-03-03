@@ -1,7 +1,8 @@
 ﻿package classes.Scenes.NPCs{
-import classes.GlobalFlags.kFLAGS;
-import classes.CockTypesEnum;
-public class IsabellaFollowerScene extends NPCAwareContent {
+	import classes.*;
+	import classes.GlobalFlags.kFLAGS;
+
+	public class IsabellaFollowerScene extends NPCAwareContent {
 
 	public function IsabellaFollowerScene()
 	{
@@ -162,7 +163,7 @@ public function callForFollowerIsabella():void {
 	var milk:Function = null;
 	if(flags[kFLAGS.ISABELLA_MILKED_YET] < 0) milk = getMilk;
 	var pro:Function = null;
-	if(hasItem("ProBova",1) && player.gender > 0) {
+	if(player.hasItem(consumables.PROBOVA) && player.gender > 0) {
 		pro = isabellaBurps;
 		outputText("\n\n<b>Isabella would probably drink a bottle of Pro Bova if you gave it to her.</b>", false);
 	}
@@ -759,10 +760,9 @@ private function AllowIzzyMilkerUse():void {
 	outputText(", as she assures you you'll always come first while she's with you.\n\n", false);
 	if(player.hasCock()) outputText("(You have a hunch that you might be able to catch her using the milkers at the farm if you 'explore' there, provided she hasn't been recently milked.)\n\n");
 	//get 1 Izzit Milk or Cream? item, set Izzy Milked Yet flag to -1, which adds [GetMilk] button to follower menu
-	shortName = "IzyMilk";
 	flags[kFLAGS.ISABELLA_MILKED_YET] = -1;
 	menuLoc = 2;
-	takeItem();
+	inventory.takeItem(consumables.IZYMILK);
 }
 
 //[Mine Mine MINE!]
@@ -776,10 +776,9 @@ private function noMilkingMilky():void {
 	if(player.cor > 50) outputText("painful ", false);
 	outputText("arousal at your touch, blushing at putting on such a show in front of Whitney.  The farmer shrugs.  \"<i>Y'all please yourselves.  Milker'll be here if you need it.</i>\"\n\n", false);
 	//get 1 Izzit Milk or Cream? item, set Izzy Milked Yet flag to -2, which adds [GetMilk] button to follower menu
-	shortName = "IzyMilk";
 	flags[kFLAGS.ISABELLA_MILKED_YET] = -2;
 	menuLoc = 2;
-	takeItem();
+	inventory.takeItem(consumables.IZYMILK);
 }
 
 //[GetMilk] 
@@ -815,11 +814,10 @@ private function getMilk():void {
 		outputText(" felt gooood... thank you!</i>\" Isabella says, breathily; the telltale wet spot is back on the front of her skirt.  You manage not to get caught staring at it, but the aroma of her arousal combined with her quivering, grateful breastflesh makes you consider sticking around for more fun...\n\n", false);
 	}
 	//get 1 Izzit Milk or Cream? item, lose some fatigue and gain some lust if Izzy Milked Yet flag = -2
-	shortName = "IzyMilk";
 	flags[kFLAGS.ISABELLA_MILKED_YET] = -2;
 	flags[kFLAGS.ISABELLA_MILK_COOLDOWN] = 7 + rand(4);
 	menuLoc = 2;
-	takeItem();
+	inventory.takeItem(consumables.IZYMILK);
 }
 //TDM's Angry Murble
 public function angryMurble():void {
@@ -866,7 +864,7 @@ private function sparring(type:int = 1):void {
 	outputText("Isabella lifts her shield and raps her knuckles against the solid steel, making a loud, gong-like sound that carries for some distance.  You raise your " + player.weaponName + " and prepare to fight.  It's on!", false);
 	if(type == 1) outputText("  The knowledge that you're playing for keeps makes your heart beat faster.", false);
 	startCombat(new Isabella());
-	monster.createStatusAffect("sparring",type,0,0,0);
+	monster.createStatusAffect(StatusAffects.Sparring,type,0,0,0);
 	//No gems.
 	monster.gems = 0;
 	//Nerf XP if light mode
@@ -879,7 +877,7 @@ private function sparring(type:int = 1):void {
 
 //first time (Z)
 private function isabellaBurps():void {
-	consumeItem("ProBova",1);
+	player.consumeItem(consumables.PROBOVA);
 	spriteSelect(31);
 	outputText("", true);
 	//First time
@@ -1055,7 +1053,7 @@ private function getIzzyBurped():void {
 		}
 		//'sorry for burping in your face bro'
 		outputText("For a while the busty woman simply shuffles from hoof to hoof, kicking the ground and fiddling with her hair.  \"<i>... I suppose an apology is in order,</i>\" she finally mumbles between pursed and pouty lips.  She approaches slowly, but in lieu of any actual begs of forgiveness, she slips a hand around your head and brings you in for a lingering smooch.  Her eyes twinkle with undeniable lust as she slowly draws back, tongue licking up the small bridge of drool between your lips.  \"<i>Do you accept my apology?</i>\" she asks wryly.\n\n", false);
-		if(changed) player.createStatusAffect("Burp Changed",0,0,0,0);
+		if(changed) player.createStatusAffect(StatusAffects.BurpChanged,0,0,0,0);
 	}
 	else {
 		//let's go Izzy I can dig it
@@ -1085,9 +1083,9 @@ private function declineIzzysCowBurpApology():void {
 	spriteSelect(31);
 	if(flags[kFLAGS.ISABELLA_PROBOVA_BURP_COUNT] == 1) {
 		outputText("As strange as the situation is, you're too weirded out to reassure Isabella, at least for now, and you relay that to her.  Though crestfallen, she takes the news well, apologizing - sincerely and soberly - once more before moving back to her designated camping spot.  ", false);
-		if(player.hasStatusAffect("Burp Changed") >= 0) {
+		if(player.findStatusAffect(StatusAffects.BurpChanged) >= 0) {
 			outputText("  Happily, after about an hour, you go back to your old form, leaving the belch-borne bovine bounty behind.", false);
-			player.removeStatusAffect("Burp Changed");
+			player.removeStatusAffect(StatusAffects.BurpChanged);
 		}
 	}
 	//no
@@ -1102,8 +1100,8 @@ private function acceptCowpology():void {
 	outputText("", true);
 	spriteSelect(31);
 	//Clear burps!
-	if(player.hasStatusAffect("Burp Changed") >= 0) 
-		player.removeStatusAffect("Burp Changed");
+	if(player.findStatusAffect(StatusAffects.BurpChanged) >= 0)
+		player.removeStatusAffect(StatusAffects.BurpChanged);
 	dynStats("sen", -1, "lus=", 0);
 	//FIRST TIME
 	if(flags[kFLAGS.ISABELLA_PROBOVA_BURP_COUNT] == 1) {

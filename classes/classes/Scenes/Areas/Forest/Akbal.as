@@ -1,17 +1,7 @@
 ﻿package classes.Scenes.Areas.Forest
 {
-	import classes.CoC;
-	import classes.Cock;
-	import classes.Creature;
-	import classes.GlobalFlags.kFLAGS;
-	import classes.Monster;
-	import classes.CockTypesEnum;
-
-	/**
-	 * ...
-	 * @author Fake-Name
-	 */
-
+	import classes.*;
+	import classes.internals.WeightedDrop;
 
 	public class Akbal extends Monster
 	{
@@ -21,7 +11,7 @@
 			//Chances to miss:
 			var damage:Number = 0;
 			//Blind dodge change
-			if (hasStatusAffect("Blind") >= 0) {
+			if (findStatusAffect(StatusAffects.Blind) >= 0) {
 				outputText(capitalA + short + " seems to have no problem guiding his attacks towards you, despite his blindness.\n", false);
 			}
 			//Determine if dodged!
@@ -36,13 +26,13 @@
 				return;
 			}
 			//Determine if evaded
-			if (player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			if (player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.", false);
 				game.combatRoundOver();
 				return;
 			}
 			//Determine if flexibilitied
-			if (player.hasPerk("Flexibility") >= 0 && rand(100) < 10) {
+			if (player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 10) {
 				outputText("Using your cat-like agility, you twist out of the way of " + a + short + "'s attack.", false);
 				game.combatRoundOver();
 				return;
@@ -93,11 +83,12 @@
 		public function akbalLustAttack():void
 		{
 			//*Lust Attack - 
-			if (player.hasStatusAffect("Whispered") < 0)
+			if (player.findStatusAffect(StatusAffects.Whispered) < 0)
 			{
 				outputText("You hear whispering in your head. Akbal begins speaking to you as he circles you, telling all the ways he'll dominate you once he beats the fight out of you.", false);
 				//(Lust increase)
 				game.dynStats("lus", 7 + (100 - player.inte) / 10);
+				player.createStatusAffect(StatusAffects.Whispered,0,0,0,0);
 			}
 			//Continuous Lust Attack - 
 			else
@@ -118,10 +109,10 @@
 				outputText("Akbal's eyes fill with light, and a strange sense of fear begins to paralyze your limbs.", false);
 				//(Speed decrease)
 				game.dynStats("spe", speedChange);
-				if (player.hasStatusAffect("Akbal Speed") >= 0)
-					player.addStatusValue("Akbal Speed", 1, speedChange);
+				if (player.findStatusAffect(StatusAffects.AkbalSpeed) >= 0)
+					player.addStatusValue(StatusAffects.AkbalSpeed, 1, speedChange);
 				else
-					player.createStatusAffect("Akbal Speed", speedChange, 0, 0, 0);
+					player.createStatusAffect(StatusAffects.AkbalSpeed, speedChange, 0, 0, 0);
 			}
 			//*Special Attack B - 
 			else
@@ -141,14 +132,14 @@
 					return;
 				}
 				//Determine if evaded
-				if (player.hasPerk("Evade") >= 0 && rand(100) < 20)
+				if (player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 20)
 				{
 					outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s fire-breath.", false);
 					game.combatRoundOver();
 					return;
 				}
 				//Determine if flexibilitied
-				if (player.hasPerk("Flexibility") >= 0 && rand(100) < 10)
+				if (player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 10)
 				{
 					outputText("Using your cat-like agility, you contort your body to avoid " + a + short + "'s fire-breath.", false);
 					game.combatRoundOver();
@@ -175,21 +166,52 @@
 		public function Akbal()
 		{
 			trace("Akbal Constructor!");
-			init01Names("", "Akbal", "akbal", "Akbal, 'God of the Terrestrial Fire', circles around you. His sleek yet muscular body is covered in tan fur, with dark spots that seem to dance around as you look upon them.  His mouth holds two ivory incisors that glint in the sparse sunlight as his lips tremble to the sound of an unending growl.  Each paw conceals lethal claws capable of shredding men and demons to ribbons.  His large and sickeningly alluring bright green eyes promise unbearable agony as you look upon them.");
-			init02Male([new Cock(15,2.5,CockTypesEnum.DOG)],2,4,6,400);
-			init03BreastRows([0],[0],[0],[0]);
-			init04Ass(ANAL_LOOSENESS_TIGHT,ANAL_WETNESS_NORMAL);
-			init05Body("4'",HIP_RATING_SLENDER,BUTT_RATING_TIGHT);
-			init06Skin("spotted",SKIN_TYPE_FUR);
-			init07Hair("black",5);
-			init08Face();
-			init09PrimaryStats(55,53,50,75,50,50,100);
-			init10Weapon("claws","claw-slash",5);
-			init11Armor("shimmering pelt",5);
-			init12Combat(20,30,0.8,TEMPERMENT_LUSTY_GRAPPLES);
-			init13Level(6,15);
-			initX_Specials(akbalLustAttack,akbalSpecial,akbalHeal);
-			initX_Tail(TAIL_TYPE_DOG);
+			this.a = "";
+			this.short = "Akbal";
+			this.imageName = "akbal";
+			this.long = "Akbal, 'God of the Terrestrial Fire', circles around you. His sleek yet muscular body is covered in tan fur, with dark spots that seem to dance around as you look upon them.  His mouth holds two ivory incisors that glint in the sparse sunlight as his lips tremble to the sound of an unending growl.  Each paw conceals lethal claws capable of shredding men and demons to ribbons.  His large and sickeningly alluring bright green eyes promise unbearable agony as you look upon them.";
+			// this.plural = false;
+			this.createCock(15,2.5,CockTypesEnum.DOG);
+			this.balls = 2;
+			this.ballSize = 4;
+			this.cumMultiplier = 6;
+			this.hoursSinceCum = 400;
+			createBreastRow();
+			createBreastRow();
+			createBreastRow();
+			createBreastRow();
+			this.ass.analLooseness = ANAL_LOOSENESS_TIGHT;
+			this.ass.analWetness = ANAL_WETNESS_NORMAL;
+			this.tallness = 4*12;
+			this.hipRating = HIP_RATING_SLENDER;
+			this.buttRating = BUTT_RATING_TIGHT;
+			this.skinTone = "spotted";
+			this.skinType = SKIN_TYPE_FUR;
+			//this.skinDesc = Appearance.Appearance.DEFAULT_SKIN_DESCS[SKIN_TYPE_FUR];
+			this.hairColor = "black";
+			this.hairLength = 5;
+			initStrTouSpeInte(55, 53, 50, 75);
+			initLibSensCor(50, 50, 100);
+			this.weaponName = "claws";
+			this.weaponVerb="claw-slash";
+			this.weaponAttack = 5;
+			this.armorName = "shimmering pelt";
+			this.armorDef = 5;
+			this.bonusHP = 20;
+			this.lust = 30;
+			this.lustVuln = 0.8;
+			this.temperment = TEMPERMENT_LUSTY_GRAPPLES;
+			this.level = 6;
+			this.gems = 15;
+			this.drop = new WeightedDrop().
+					add(consumables.INCUBID,6).
+					add(consumables.W_FRUIT,3).
+					add(weapons.PIPE,1);
+			this.special1 = akbalLustAttack;
+			this.special2 = akbalSpecial;
+			this.special3 = akbalHeal;
+			this.tailType = TAIL_TYPE_DOG;
+			checkMonster();
 		}
 
 	}

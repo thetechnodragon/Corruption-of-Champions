@@ -1,7 +1,8 @@
 ﻿package classes.Scenes{
+	import classes.*;
+	import classes.GlobalFlags.kFLAGS;
 	import classes.GlobalFlags.kGAMECLASS;
 	import classes.Scenes.NPCs.NPCAwareContent;
-	import classes.GlobalFlags.kFLAGS;
 
 	public class FollowerInteractions extends NPCAwareContent {
 
@@ -94,7 +95,7 @@ public function fixJojoOOOOHYEEEEAHSNAPINTOASLIMJIM():void {
 	outputText("", true);
 	outputText("\"<i>You brought it!  Yes!</i>\" cheers Amily.  She reaches into your pouches and pulls out the bottle of pure honey and takes off for the woods.  You're forced to chase after her, and by the time you catch up, she's already hit Jojo with a knock-out dart.  The corrupted mouse is still hard and dripping with spunk, even while unconscious.  Amily moans, \"<i>You poor dear... here, drink up.  This will help make you better.</i>\"\n\n", false);
 	//She noms your honey
-	consumeItem("PurHony",1);
+	player.consumeItem(consumables.PURHONY);
 	
 	outputText("She only gives him a few sips before she turns back to you and says, \"<i>This is going to take me a few hours.  It would be best if you weren't here when he wakes up.  I doubt he'll want anything to do with you after this.  I'll give him directions to find our children.  I'm sure they'll be able to help him recover the rest of the way.</i>\"\n\n", false);
 	
@@ -364,7 +365,7 @@ private function marbleIsPissyAndYourTooDumbToTalk():void {
 	outputText("You can't think of anything to say to her at this point, and can do nothing but stare.  Marble then turns to Amily and yells, \"<i>I'm " + player.mf("his","her") + " lover too.  " + player.mf("He","She") + " didn't tell you about me, did " + player.mf("he","she") + "?</i>\"  Amily looks at Marble for a few moments before looking back at you with tears in her eyes.  She says, \"<i>I know what kind of world this is, but I'd think you'd at least tell me about someone like her.  Did our kids together mean nothing to you?</i>\"  At this point, Marble's hammer flies to the ready in her hands.  She practically screams, \"<i>YOU HAD KIDS TOGETHER?!?!</i>\" her hammer flying to the ready in her hands.\n\n", false);
 	
 	//If PC was addicted (A2), if PC had kids with Marble and is not addicted (A3), otherwise (A4)
-	if(player.hasPerk("Marble's Milk") >= 0) {
+	if(player.findPerk(PerkLib.MarblesMilk) >= 0) {
 		//Silent -> PC is addicted (A2)
 		//outputText("Marble moves in front of you and faces towards Amily.  \"<i>This " + player.mf("man","woman") + " is mine!  " + player.mf("He","She") + " needs me to survive, and I will do anything to protect them.</i>\" Marble declares before saying in a dangerous low voice towards Amily \"<i>Leave now, or I will kill you.</i>\" Amily tries to look at you through her tear filled eyes for a moment, but Marble softly says to you \"<i>" + player.short + ", put your arms around me.</i>\"  It wasn't a request, and without hesitation you put your arms around her.  Amily gives one last horrified look at you before grabbing her things and running away from the camp.  You doubt that you'll see her again.\n\n", false);
 		outputText("Marble moves protectively in front of you and turns to Amily.  \"<i>This " + player.race() + " is mine!  " + player.mf("He","She") + " needs me to survive, and I will do anything to protect " + player.mf("him","her") + ",</i>\"  Marble declares.  Then, in a dangerously gentle voice, says, \"<i>Leave now, or I will kill you.</i>\"  Amily tries to look at you through her tear-filled eyes, but Marble softly whispers,  \"<i>" + player.short + ", put your arms around me.</i>\"  Though soft, her words had nothing in them to suggest a request rather than a command.  You hesitate for a  moment, but, remembering that an angry Marble is a Marble that could revoke milk privileges, you decide that making her mad is something you just can't afford.  You take a deep breath and wrap your arms around Marble.  Amily gives one last anguished look at you before she turns to pack her things.  As she scurries away from the site of her former bed, you doubt that you'll see her again.\n\n");
@@ -376,7 +377,7 @@ private function marbleIsPissyAndYourTooDumbToTalk():void {
 		//Silent -> PC has had kid(s) with Marble and is not addicted (A3)
 		outputText("Marble suddenly bursts into tears herself and, between sobs, yells \"<i>Why " + player.short + "?  Did none of our kids mean anything to you?</i>\"  In frustration she slams her hammer against the ground, causing a tremor that almost knocks you and Amily onto your asses.  However, at this point the two of them have broken down and collapsed on their knees sobbing.  You have no idea what you can say at this point, or what you should do.  After a few minutes pass, the two of them each give you a sad look in turn before collecting their things (and in Marble's case, her kids) and leaving the camp.  You doubt that you'll ever see either of them again.", false);
 		//end event, Amily and Marble leave the camp for good
-		player.removeStatusAffect("Camp Marble");
+		player.removeStatusAffect(StatusAffects.CampMarble);
 		flags[kFLAGS.AMILY_FOLLOWER] = 0;
 		flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
 	}
@@ -384,7 +385,7 @@ private function marbleIsPissyAndYourTooDumbToTalk():void {
 	else {
 		outputText("Turning to face you with her hammer raised, Marble says to you \"<i>So I guess that I'm nothing but a fuck to you then, hun?!  After all I sacrificed to help you get over your addiction, just so that you could be with someone else?!</i>\"  She swings her hammer at you and you barely dodge it in time and look back at the angry cowgirl.  \"<i>" + player.short + "!</i>\" Amily calls out to you while rushing to your side and wiping her tears.  \"<i>Fine!</i>\"  Marble yells at the two of you. \"<i>You two can be together and have as many kids with each other as you want!  I'm leaving " + player.short + ", don't come looking for me.</i>\" she declares before collecting her things and leaving the camp.  You doubt you'll see her again.", false);
 		//end event, Marble leaves the camp for good
-		player.removeStatusAffect("Camp Marble");
+		player.removeStatusAffect(StatusAffects.CampMarble);
 	}
 	doNext(13);
 }
@@ -396,7 +397,7 @@ private function beAPimpMarbleLovesIt():void {
 	//Can go to B2 if the PC is addicted to Marble, otherwise B3
 
 	//Pimp -> PC is addicted (B2)
-	if(player.hasPerk("Marble's Milk") >= 0) {
+	if(player.findPerk(PerkLib.MarblesMilk) >= 0) {
 		outputText("Marble blinks before saying \"<i>" + player.short + ", try again, I know you're better then that.</i>\"  You blink in response and wonder yourself what possessed you to say that.\n\n", false);
 		//Player chooses stay silent (A1) or explain (C1)
 		simpleChoices("StaySilent",marbleIsPissyAndYourTooDumbToTalk,"Explain",LucyYouGotSomeSplainingToDo,"",0,"",0,"",0);
@@ -415,18 +416,14 @@ private function srslyPimpinGuyz():void {
 	
 	outputText("You wake up several hours later to find that neither of the two girls are still around, your camp is in shambles, and most of your equipment is gone.  After looking around camp, you realize that all of your expendable items, gems, and even your weapons and armor have been taken.  All that is left is a suit of comfortable clothes that you put on.  You also find a note in a rough script that says: <i>This is what you get for being an asshole.</i>  Those damn bitches.", false);
 	player.gems = 0;
-	itemSlot1.quantity = 0;
-	itemSlot2.quantity = 0;
-	itemSlot3.quantity = 0;
-	itemSlot4.quantity = 0;
-	itemSlot5.quantity = 0;
-	player.armorName = "comfortable clothes";
-	player.weaponName = "fists";
-	player.armorValue = 0;
-	player.weaponValue = 0;
-	player.weaponAttack = 0;
-	player.armorDef = 0;
-	player.removeStatusAffect("Camp Marble");
+	player.itemSlot1.quantity = 0;
+	player.itemSlot2.quantity = 0;
+	player.itemSlot3.quantity = 0;
+	player.itemSlot4.quantity = 0;
+	player.itemSlot5.quantity = 0;
+	player.armor = armors.C_CLOTH;
+	player.weapon.unequip(player,false,true);
+	player.removeStatusAffect(StatusAffects.CampMarble);
 	outputText("\n\nNo doubt Amily ran back to the ruins.  Perhaps you could gather some appropriate drugs to teach her a lesson?", false);
 	if(player.inte >= 45) outputText("  Goblin ale and lust drafts might do the trick.", false);
 	//Follower off
@@ -461,7 +458,7 @@ private function LucyYouGotSomeSplainingToDo():void {
 	else {
 		var y:Number = 2512;
 		outputText("After a while it becomes apparent to both yourself and the others that you have no idea what you're talking about.  Marble then says to you, \"<i>Well, do you have anything else to say?</i>\" At this point it probably isn't possible to say something to make both of them happy, will you stay silent or turn on one of them to try and keep the other?\n\n", false);
-		if(player.hasPerk("Marble's Milk") >= 0) {
+		if(player.findPerk(PerkLib.MarblesMilk) >= 0) {
 			outputText("Since you need Marble's milk to live, there's no way you can blame her.  It would be tantamount to suicide.", false);
 			y = 0;
 		}
@@ -478,9 +475,9 @@ public function BlameMarblezSweetVagoozle():void {
 	else if(flags[kFLAGS.MARBLE_KIDS] > 1) outputText("and her children", false);
 	outputText(" before slowly walking away from the camp without looking back.  \"<i>I'm going back to the farm, I guess I'll see you around.</i>\"\n\n", false);
 	//end event, Marble leaves the camp and returns to the farm, she can now be encountered if she had not joined you in the camp.
-	player.removeStatusAffect("Camp Marble");
+	player.removeStatusAffect(StatusAffects.CampMarble);
 	//Marble goes back to farm
-	player.removeStatusAffect("No More Marble");
+	player.removeStatusAffect(StatusAffects.NoMoreMarble);
 	doNext(13);
 }
 

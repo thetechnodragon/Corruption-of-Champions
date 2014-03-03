@@ -42,7 +42,7 @@ public function dreamSelect():Boolean {
 	if(player.minotaurAddicted()) {
 		choices[choices.length] = 6;
 		choices[choices.length] = 6;
-		if(player.hasPerk("Minotaur Cum Addict") >= 0) choices[choices.length] = 6;
+		if(player.findPerk(PerkLib.MinotaurCumAddict) >= 0) choices[choices.length] = 6;
 	}
 	//Akbal
 	if(flags[kFLAGS.AKBAL_SUBMISSION_COUNTER] > 4) {
@@ -54,13 +54,13 @@ public function dreamSelect():Boolean {
 		choices[choices.length] = 7;
 	}
 	//Exgartuboobs
-	if(player.statusAffectv1("Exgartuan") == 2) {
+	if(player.statusAffectv1(StatusAffects.Exgartuan) == 2) {
 		choices[choices.length] = 8;
 		choices[choices.length] = 8;
 		choices[choices.length] = 8;
 	}
 	//Exgartucock
-	if(player.statusAffectv1("Exgartuan") == 1 && player.hasCock()) {
+	if(player.statusAffectv1(StatusAffects.Exgartuan) == 1 && player.hasCock()) {
 		choices[choices.length] = 9;
 		choices[choices.length] = 9;
 		choices[choices.length] = 9;
@@ -111,12 +111,19 @@ public function dreamSelect():Boolean {
 	if(dreamtemp <= 5) outputText("\nYour rest is somewhat troubled with dirty dreams.\n", false);
 	else if(dreamtemp < 15) outputText("\nYou have trouble relaxing as your mind wanders, dreaming of ", false);
 	else outputText("\nYou barely rest, spending most of the time touching yourself and dreaming of ", false);
+	
 	//LUST CHANGES
 	//Well adjusted cuts gain in half!
-	if(player.hasPerk("Well Adjusted") < 0) dynStats("lus", (-dreamtemp/2));
-	//Lust change!
-	dynStats("lus", dreamtemp);
-	if(player.hasPerk("Lusty") >= 0) dynStats("lus", dreamtemp/3);
+	var dreamLust:Number = dreamtemp;
+	
+	// Lusty increases by 1/3rd
+	if (player.findPerk(PerkLib.Lusty) >= 0) dreamLust += (dreamtemp / 3);
+	
+	// Well Adjusted cuts by half
+	if (player.findPerk(PerkLib.WellAdjusted) >= 0) dreamLust = (dreamLust / 2);
+
+	if (dreamLust > 0) dynStats("lus", dreamLust);
+	
 	//ACTUAL DREAM TEXTS
 	if(dreamtemp > 5) {
 		//Roll for dream!
@@ -152,7 +159,7 @@ public function dreamSelect():Boolean {
 			//female
 			else {
 				//heat dream!
-				if(player.hasStatusAffect("heat") >= 0) {
+				if(player.findStatusAffect(StatusAffects.Heat) >= 0) {
 					outputText("being pregnant, your belly bulging obscenely with the fruits of all your frequent copulations, and your breasts swollen with breast milk.  You imagine your condition enhancing your libido, driving you seek out sexual partners willing to pleasure your distorted form.  ", false);
 				}
 				//normal dream

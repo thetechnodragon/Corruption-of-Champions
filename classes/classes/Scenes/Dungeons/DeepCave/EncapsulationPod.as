@@ -1,10 +1,8 @@
 ﻿package classes.Scenes.Dungeons.DeepCave
 {
-	import classes.CoC;
-	import classes.Creature;
-	import classes.Monster;
-	import classes.CockTypesEnum;
-	
+	import classes.*;
+	import classes.internals.*;
+
 	/**
 	 * ...
 	 * @author Fake-Name
@@ -12,6 +10,7 @@
 
 	// This doesn't work, because there is some obnoxious issues with the fact that we only have one instance of monster at any time, and static evaluation
 	// of the game leads the compiler to not know if setDescriptionForPlantPot() is available, therefore resulting in an error
+
 
 	public class EncapsulationPod extends Monster
 	{
@@ -29,16 +28,16 @@
 		override public function get long():String {
 			//[Round 1 Description]
 			var _long:String;
-			if(hasStatusAffect("Round") < 0) _long = "You're totally trapped inside a pod!  The walls are slimy and oozing moisture that makes the air sickeningly sweet.  It makes you feel a little dizzy.  Tentacles are climbing up your " + game.player.legs() + " towards your crotch, doing their best to get under you " + game.player.armorName + ".  There's too many to try to pull away.  You're only chance of escape is to create a way out!";
+			if(findStatusAffect(StatusAffects.Round) < 0) _long = "You're totally trapped inside a pod!  The walls are slimy and oozing moisture that makes the air sickeningly sweet.  It makes you feel a little dizzy.  Tentacles are climbing up your " + game.player.legs() + " towards your crotch, doing their best to get under you " + game.player.armorName + ".  There's too many to try to pull away.  You're only chance of escape is to create a way out!";
 			//[Round 2 Description]
-			else if(statusAffectv1("Round") == 2) {
+			else if(statusAffectv1(StatusAffects.Round) == 2) {
 				_long = "You're still trapped inside the pod!  By now the walls are totally soaked with some kind of viscous slime.  The smell of it is unbearably sweet and you have to put a hand against the wall to steady yourself.  Warm tentacles are curling and twisting underneath your armor, caressing every ";
 				if(player.skinType == SKIN_TYPE_FUR) _long += "furry ";
 				if(player.skinType == SKIN_TYPE_SCALES) _long += "scaley ";
 				_long += "inch of your " + player.legs() + ", crotch, and " + game.assDescript() + ".";
 			}
 			//[Round 3 Description]
-			else if(statusAffectv1("Round") == 3) {
+			else if(statusAffectv1(StatusAffects.Round) == 3) {
 				_long = "You're trapped inside the pod and being raped by it's many tentacles!   The pooling slime is constantly rising, and in a few moments it will have reached your groin.  The viscous sludge makes it hard to move and the smell of it is making it even harder to think or stand up.  The tentacles assaulting your groin don't stop moving for an instant, and in spite of yourself, some part of you wants them to make you cum quite badly.";
 			}
 			//[Round 4 Description]
@@ -77,20 +76,38 @@
 
 		public function EncapsulationPod()
 		{
-			init01Names("the ", "pod", "pod", "");
-			init02Genderless();
-			init03BreastRows([0,0]);
-			init04Ass();
-			init05Body(120,HIP_RATING_SLENDER,BUTT_RATING_BUTTLESS);
-			init06Skin("purple",SKIN_TYPE_PLAIN,"covering");
-			init07Hair("black",0);
-			init08Face();
-			init09PrimaryStats(90,1,1,1,1,1,100);
-			init10Weapon("","");
-			init11Armor("pod");
-			init12Combat(450,10,0,TEMPERMENT_RANDOM_GRAPPLES);
-			init13Level(12,1,80);
-			initX_Specials(special1,special2,special3);
+			this.a = "the ";
+			this.short = "pod";
+			this.imageName = "pod";
+			this.long = "";
+			// this.plural = false;
+			initGenderless();
+			createBreastRow(0,0);
+			this.tallness = 120;
+			this.hipRating = HIP_RATING_SLENDER;
+			this.buttRating = BUTT_RATING_BUTTLESS;
+			this.skinTone = "purple";
+			this.skinType = SKIN_TYPE_PLAIN;
+			this.skinDesc = "covering";
+			this.hairColor = "black";
+			this.hairLength = 0;
+			initStrTouSpeInte(90, 1, 1, 1);
+			initLibSensCor(1, 1, 100);
+			this.weaponName = "pod";
+			this.weaponVerb="pod";
+			this.armorName = "pod";
+			this.bonusHP = 450;
+			this.lust = 10;
+			this.lustVuln = 0;
+			this.temperment = TEMPERMENT_RANDOM_GRAPPLES;
+			this.level = 12;
+			this.gems = 1;
+			this.additionalXP = 80;
+			this.drop = new WeightedDrop(weapons.JRAPIER, 1);
+			this.special1 = special1;
+			this.special2 = special2;
+			this.special3 = special3;
+			checkMonster();
 		}
 
 	}

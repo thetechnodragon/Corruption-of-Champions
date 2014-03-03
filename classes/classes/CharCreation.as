@@ -1,8 +1,17 @@
-﻿import classes.DefaultDict;
+﻿package classes{
+	import classes.GlobalFlags.kFLAGS;
+	import classes.GlobalFlags.kGAMECLASS;
+	import classes.Items.WeaponLib;
+
+	import coc.view.MainView;
+
+	import flash.events.MouseEvent;
+
+	public class CharCreation extends BaseContent{
 
 public function newGameGo(e:MouseEvent = null):void {
-	funcs = new Array();
-	args = new Array();
+	funcs = [];
+	args = [];
 	mainView.eventTestInput.x = -10207.5;
 	mainView.eventTestInput.y = -1055.1;
 	hideStats();
@@ -20,17 +29,17 @@ public function newGameGo(e:MouseEvent = null):void {
 	var easy:Boolean = false;
 	var sprite:Boolean = false;
 	//If at initial title
-	if(flags[kFLAGS.SHOW_SPRITES_FLAG]) 
+	if(flags[kFLAGS.SHOW_SPRITES_FLAG])
 		sprite = true;
-	if(flags[kFLAGS.EASY_MODE_ENABLE_FLAG]) 
+	if(flags[kFLAGS.EASY_MODE_ENABLE_FLAG])
 		easy = true;
-	if(flags[kFLAGS.SILLY_MODE_ENABLE_FLAG]) 
+	if(flags[kFLAGS.SILLY_MODE_ENABLE_FLAG])
 		silly = true;
 	mainView.setButtonText( 0, "Newgame" ); // b1Text.text = "Newgame";
 	flags[kFLAGS.CUSTOM_PC_ENABLED] = 0;
-	
+
 	outputText("You grew up in the small village of Ingnam, a remote village with rich traditions, buried deep in the wilds.  Every year for as long as you can remember, your village has chosen a champion to send to the cursed Demon Realm.  Legend has it that in years Ingnam has failed to produce a champion, chaos has reigned over the countryside.  Children disappear, crops wilt, and disease spreads like wildfire.  This year, <b>you</b> have been selected to be the champion.\n\nWhat is your name?", true);
-	
+
 	/*CODE FROM CMACLOAD HERE
 	Multiple line case. A text field GeneralTextField, positioning a movieclip AskQuestions below it
 	GeneralTextField.wordWrap = true;
@@ -40,23 +49,23 @@ public function newGameGo(e:MouseEvent = null):void {
 	AskQuestions._y = GeneralTextField._y + 3 + GeneralTextField._height;
 	again replace _x, _y, _width with x, y, width*/
 	//mainView.mainText.autoSize = true;
-	
+
 	//mainView.mainText.autoSize = TextFieldAutoSize.LEFT;
 	simpleChoices("OK",10034,"",0,"",0,"",0,"",0);
 	mainView.nameBox.x = mainView.mainText.x + 5;
 	mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
-	
+
 	//OLD
 	//mainView.nameBox.x = 510;
 	//mainView.nameBox.y = 265;
 	mainView.nameBox.text = "";
-	
+
 	//Reset autosave
 	player.slotName = "VOID";
 	player.autoSave = false;
 	//RESET DUNGEOn
-	inDungeon = false;
-	dungeonLoc = 0;
+	kGAMECLASS.inDungeon = false;
+	kGAMECLASS.dungeonLoc = 0;
 	//Hold onto old data for NG+
 	var oldPlayer:Player = player;
 	//Reset all standard stats
@@ -69,11 +78,11 @@ public function newGameGo(e:MouseEvent = null):void {
 	player.sens = 15;
 	player.lib = 15;
 	player.cor = 0;
-	notes = "No Notes Available.";
+	kGAMECLASS.notes = "No Notes Available.";
 	player.lust = 15;
 	player.XP = flags[kFLAGS.NEW_GAME_PLUS_BONUS_STORED_XP];
 	player.level = 1;
-	player.HP = maxHP();
+	player.HP = player.maxHP();
 	player.gems = flags[kFLAGS.NEW_GAME_PLUS_BONUS_STORED_ITEMS];
 	player.hairLength = 5;
 	player.skinType = SKIN_TYPE_PLAIN;
@@ -109,23 +118,23 @@ public function newGameGo(e:MouseEvent = null):void {
 	player.exploredMountain = 0;
 	player.exploredLake = 0;
 	//Inventory clear
-	itemSlot1.unlocked = true;
-	itemSlot1.emptySlot();
-	itemSlot2.unlocked = true;
-	itemSlot2.emptySlot();
-	itemSlot3.unlocked = true;
-	itemSlot3.emptySlot();
-	itemSlot4.unlocked = false;
-	itemSlot4.emptySlot();
-	itemSlot5.unlocked = false;
-	itemSlot5.emptySlot();
+	player.itemSlot1.unlocked = true;
+	player.itemSlot1.emptySlot();
+	player.itemSlot2.unlocked = true;
+	player.itemSlot2.emptySlot();
+	player.itemSlot3.unlocked = true;
+	player.itemSlot3.emptySlot();
+	player.itemSlot4.unlocked = false;
+	player.itemSlot4.emptySlot();
+	player.itemSlot5.unlocked = false;
+	player.itemSlot5.emptySlot();
 	//PIERCINGS
 	player.nipplesPierced = 0;
 	player.nipplesPShort = "";
 	player.nipplesPLong = "";
 	player.lipPierced = 0;
 	player.lipPShort = "";
-	player.lipPLong = ""; 
+	player.lipPLong = "";
 	player.tonguePierced = 0;
 	player.tonguePShort = "";
 	player.tonguePLong = "";
@@ -139,11 +148,11 @@ public function newGameGo(e:MouseEvent = null):void {
 	player.nosePShort = "";
 	player.nosePLong = "";
 	//PLOTZ
-	monk = 0;
-	whitney = 0;
-	sand = 0;
-	beeProgress = 0;
-	giacomo = 0;
+	kGAMECLASS.monk = 0;
+	kGAMECLASS.whitney = 0;
+	kGAMECLASS.sand = 0;
+	kGAMECLASS.beeProgress = 0;
+	kGAMECLASS.giacomo = 0;
 	//Lets get this bitch started
 	gameState = 0;
 	//NG+ Clothes reset
@@ -151,32 +160,17 @@ public function newGameGo(e:MouseEvent = null):void {
 		//Clear Raphael's training variable so it does not effect
 		//Weapon strength post-newgame.
 		flags[kFLAGS.RAPHAEL_RAPIER_TRANING] = 0;
-		player.armorName= oldPlayer.armorName;
-		player.weaponName= oldPlayer.weaponName;
-		player.weaponVerb= oldPlayer.weaponVerb;
-		player.armorDef= oldPlayer.armorDef;
-		player.armorPerk= oldPlayer.armorPerk;
-		player.weaponAttack= fixedDamage(player.weaponName);
-		player.weaponPerk= oldPlayer.weaponPerk;
-		player.weaponValue= oldPlayer.weaponValue;
-		player.armorValue= oldPlayer.armorValue;
-		applyArmorStats(player.armorName, false);
+		player.armor= oldPlayer.armor;
+		player.weapon= oldPlayer.weapon;
 	}
 	//Clothes clear
 	else {
-		player.armorName= "comfortable clothes";
-		player.weaponName= "fists";
-		player.weaponVerb= "punch";
-		player.armorDef= 0;
-		player.armorPerk= "";
-		player.weaponAttack= 0;
-		player.weaponPerk= "";
-		player.weaponValue= 0;
-		player.armorValue= 0;
+		player.setArmorHiddenField(armors.C_CLOTH);
+		player.setWeaponHiddenField(WeaponLib.FISTS);
 	}
 	//Clear plot storage array!
 	flags = new DefaultDict();
-	
+
 	//Remember silly/sprite/etc
 	if(sprite) flags[kFLAGS.SHOW_SPRITES_FLAG] = 1;
 	if(easy) flags[kFLAGS.EASY_MODE_ENABLE_FLAG] = 1;
@@ -192,7 +186,7 @@ public function newGameGo(e:MouseEvent = null):void {
 	{
 		player.removeCock(0,1);
 		trace("1 cock purged.");
-	}	
+	}
 	//Clear vaginas
 	while(player.vaginas.length > 0)
 	{
@@ -210,16 +204,16 @@ public function newGameGo(e:MouseEvent = null):void {
 		player.removeStatuses();
 	}
 	//Clear old camp slots
-	clearStorage();
-	clearGearStorage();
+	inventory.clearStorage();
+	inventory.clearGearStorage();
 	//Initialize gearStorage
-	initializeGearStorage();
+	inventory.initializeGearStorage();
 }
 
 
 public function doCreation(eventNo:Number):void {
 	var e:MouseEvent;
-	var historyPerk:String = "";
+	var historyPerk:PerkType;
 	//MAN
 	if(eventNo == 10000) {
 		player.str+=3;
@@ -468,91 +462,91 @@ public function doCreation(eventNo:Number):void {
 	}
 	//Wet pussy
 	if(eventNo == 10032) {
-		outputText("Does your pussy get particularly wet?  (+1 Vaginal Wetness)\n\nVaginal wetness will make it easier to take larger cocks, in turn helping you bring the well-endowed to orgasm quicker.\n", true);				   
+		outputText("Does your pussy get particularly wet?  (+1 Vaginal Wetness)\n\nVaginal wetness will make it easier to take larger cocks, in turn helping you bring the well-endowed to orgasm quicker.\n", true);
 		doYesNo(10033, 10020);
 		temp = 12;
 	}
-	if(eventNo == 10033) 
+	if(eventNo == 10033)
 	{
-		
+
 
 		if(temp == 1) {
 			player.str += 5;
 			player.tone += 7;
 			player.thickness += 3;
 			//Add bonus +25% strength gain
-			player.createPerk("Strong", 0.25, 0, 0, 0,"Gain strength 25% faster.");
+			player.createPerk(PerkLib.Strong, 0.25, 0, 0, 0);
 		}
 		if(temp == 2) {
 			player.tou += 5;
 			player.tone += 5;
 			player.thickness += 5;
-			player.createPerk("Tough", 0.25, 0, 0, 0,"Gain toughness 25% faster.");
-			player.HP = maxHP();
+			player.createPerk(PerkLib.Tough, 0.25, 0, 0, 0);
+			player.HP = kGAMECLASS.maxHP();
 		}
 		if(temp == 3) {
 			player.spe += 5;
 			player.tone += 10;
-			player.createPerk("Fast", 0.25, 0, 0, 0,"Gain speed 25% faster.");
+			player.createPerk(PerkLib.Fast, 0.25, 0, 0, 0);
 		}
 		if(temp == 4) {
 			player.inte += 5;
 			player.thickness -= 5;
-			player.createPerk("Smart", 0.25, 0, 0, 0,"Gain intelligence 25% faster.");
+			player.createPerk(PerkLib.Smart, 0.25, 0, 0, 0);
 		}
 		if(temp == 5) {
 			player.lib += 5;
-			player.createPerk("Lusty", 0.25, 0, 0, 0,"Gain lust 25% faster.");
+			player.createPerk(PerkLib.Lusty, 0.25, 0, 0, 0);
 		}
 		if(temp == 6) {
 			player.sens += 5;
-			player.createPerk("Sensitive", 0.25, 0, 0, 0,"Gain sensitivity 25% faster.");
+			player.createPerk(PerkLib.Sensitive, 0.25, 0, 0, 0);
 		}
 		if(temp == 7) {
 			player.femininity -= 5;
 			player.cocks[0].cockLength = 8;
 			player.cocks[0].cockThickness = 1.5;
 			trace("Creation - cock modded to 8inches");
-			player.createPerk("Big Cock", 1.25, 0, 0, 0,"Gain cock size 25% faster and grow larger easier.");
+			player.createPerk(PerkLib.BigCock, 1.25, 0, 0, 0);
 		}
 		if(temp == 8) {
 			player.femininity -= 2;
 			player.cumMultiplier = 1.5;
-			player.createPerk("Messy Orgasms", 1.25, 0, 0, 0,"Produces 50% more cum volume.");
+			player.createPerk(PerkLib.MessyOrgasms, 1.25, 0, 0, 0);
 		}
 		if(temp == 9) {
 			player.femininity += 5;
 			player.breastRows[0].breastRating += 2;
-			player.createPerk("Big Tits", 1.5, 0, 0, 0,"Makes your tits grow larger more easily.");
+			player.createPerk(PerkLib.BigTits, 1.5, 0, 0, 0);
 		}
 		if(temp == 10) {
 			player.femininity -= 5;
 			player.clitLength = 1;
-			player.createPerk("Big Clit", 1.25, 0, 0, 0,"Allows your clit to grow larger faster.");
+			player.createPerk(PerkLib.BigClit, 1.25, 0, 0, 0);
 		}
 		if(temp == 11) {
 			player.femininity += 5;
 			player.fertility += 25;
 			player.hipRating+=2;
-			player.createPerk("Fertile", 1.5, 0, 0, 0,"Makes you 15% more likely to become pregnant.");
+			player.createPerk(PerkLib.Fertile, 1.5, 0, 0, 0);
 		}
 		if(temp == 12) {
 			player.femininity += 7;
 			player.vaginas[0].vaginalWetness = VAGINA_WETNESS_WET;
-			player.createPerk("Wet Pussy",2,0,0,0,"Keeps your pussy from ever being anything less than wet.");
+			player.createPerk(PerkLib.WetPussy,2,0,0,0);
 		}
 		eventParser(10036);
 	}
-	//Choose name 
-	if(eventNo == 10034) 
+	//Choose name
+	if(eventNo == 10034)
 	{
-		if (this.testingBlockExiting)
+		if (kGAMECLASS.testingBlockExiting)
 		{
 			// We're running under the testing script.
 			// Stuff a name in the box and go go go
 			mainView.nameBox.text = "Derpy"
 		}
-		else if(mainView.nameBox.text == "") 
+		else if(mainView.nameBox.text == "")
 		{
 
 			//If part of newgame+, don't fully wipe.
@@ -582,7 +576,7 @@ public function doCreation(eventNo:Number):void {
 		player.short = mainView.nameBox.text;
 		mainView.nameBox.visible = false;
 		outputText("\n\n\n\nAre you a man or a woman?", true);
-		simpleChoices("Man", 10000, "Woman", 10001, "", 0, "", 0, "", 0); 
+		simpleChoices("Man", 10000, "Woman", 10001, "", 0, "", 0, "", 0);
 	}
 	//New Game+
 	if(eventNo == 10035) {
@@ -655,14 +649,14 @@ public function doCreation(eventNo:Number):void {
 	}
 	if(eventNo == 10044) {
 		//Alchemist
-		if(temp == 10037) historyPerk = "History: Alchemist";
-		else if(temp == 10038) historyPerk = "History: Fighter";
-		else if(temp == 10039) historyPerk = "History: Healer";
-		else if(temp == 10040) historyPerk = "History: Religious";
-		else if(temp == 10041) historyPerk = "History: Scholar";
-		else if(temp == 10042) historyPerk = "History: Slacker";
+		if(temp == 10037) historyPerk = PerkLib.HistoryAlchemist;
+		else if(temp == 10038) historyPerk = PerkLib.HistoryFighter;
+		else if(temp == 10039) historyPerk = PerkLib.HistoryHealer;
+		else if(temp == 10040) historyPerk = PerkLib.HistoryReligious;
+		else if(temp == 10041) historyPerk = PerkLib.HistoryScholar;
+		else if(temp == 10042) historyPerk = PerkLib.HistorySlacker;
 		else if(temp == 10046) {
-			historyPerk = "History: Slut";
+			historyPerk = PerkLib.HistorySlut;
 			if(player.hasVagina()) {
 				player.vaginas[0].virgin = false;
 				player.vaginas[0].vaginalLooseness = VAGINA_LOOSENESS_LOOSE;
@@ -670,15 +664,15 @@ public function doCreation(eventNo:Number):void {
 			player.ass.analLooseness = 1;
 		}
 		else if(temp == 10047) {
-			historyPerk = "History: Whore";
+			historyPerk = PerkLib.HistoryWhore;
 			if(player.hasVagina()) {
 				player.vaginas[0].virgin = false;
 				player.vaginas[0].vaginalLooseness = VAGINA_LOOSENESS_LOOSE;
 			}
 			player.ass.analLooseness = 1;
 		}
-		else historyPerk = "History: Smith";
-		player.createPerk(historyPerk,0,0,0,0,"YOU GOT HISTORY BRO!");
+		else historyPerk = PerkLib.HistorySmith;
+		player.createPerk(historyPerk,0,0,0,0);
 		if(flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00418] == 0) {
 			eventParser(10045);
 			flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00418] = 1;
@@ -693,17 +687,17 @@ public function doCreation(eventNo:Number):void {
 		if(flags[kFLAGS.CUSTOM_PC_ENABLED] == 1) {
 			clearOutput();
 			flags[kFLAGS.CUSTOM_PC_ENABLED] = 0;
-			customPCSetup();
+			kGAMECLASS.customPCSetup();
 			doNext(10045);
 			return;
 		}
 		statScreenRefresh();
-		model.time.hours = 11
+		model.time.hours = 11;
 		outputText("You are prepared for what is to come.  Most of the last year has been spent honing your body and mind to prepare for the challenges ahead.  You are the Champion of Ingnam.  The one who will journey to the demon realm and guarantee the safety of your friends and family, even though you'll never see them again.  You wipe away a tear as you enter the courtyard and see Elder Nomur waiting for you.  You are ready.\n\n", true);
 		outputText("The walk to the tainted cave is long and silent.  Elder Nomur does not speak.  There is nothing left to say.  The two of you journey in companionable silence.  Slowly the black rock of Mount Ilgast looms closer and closer, and the temperature of the air drops.   You shiver and glance at the Elder, noticing he doesn't betray any sign of the cold.  Despite his age of nearly 80, he maintains the vigor of a man half his age.  You're glad for his strength, as assisting him across this distance would be draining, and you must save your energy for the trials ahead.\n\n", false);
 		outputText("The entrance of the cave gapes open, sharp stalactites hanging over the entrance, giving it the appearance of a monstrous mouth.  Elder Nomur stops and nods to you, gesturing for you to proceed alone.\n\n", false);
 		outputText("The cave is unusually warm and damp, ", false);
-		if(player.gender == 2) outputText("and your body seems to feel the same way, flushing as you feel a warmth and dampness between your thighs. ", false);  
+		if(player.gender == 2) outputText("and your body seems to feel the same way, flushing as you feel a warmth and dampness between your thighs. ", false);
 		else outputText("and your body reacts with a sense of growing warmth focusing in your groin, your manhood hardening for no apparent reason. ", false);
 		outputText("You were warned of this and press forward, ignoring your body's growing needs.  A glowing purple-pink portal swirls and flares with demonic light along the back wall.  Cringing, you press forward, keenly aware that your body seems to be anticipating coming in contact with the tainted magical construct.  Closing your eyes, you gather your resolve and leap forwards.  Vertigo overwhelms you and you black out...", false);
 		showStats();
@@ -726,18 +720,18 @@ public function doCreation(eventNo:Number):void {
 		return;
 	}
 	if(eventNo == 10048) {
-		
+
 		return;
 	}
 	if(eventNo == 10049) {
-		
+
 		return;
 	}
 	if(eventNo == 10050) {
-		
+
 		return;
 	}
-	
+
 }
 
 public function useCustomProfile():void {
@@ -748,13 +742,13 @@ public function useCustomProfile():void {
 	if(specialName(mainView.nameBox.text)) {
 		outputText("Your name defines everything about you, and as such, it is time to wake...\n\n");
 		flags[kFLAGS.CUSTOM_PC_ENABLED] = 0;
-		customPCSetup();
+		kGAMECLASS.customPCSetup();
 		doNext(10045);
 	}
 	else {
 		outputText("There is something different about you, but first, what is your basic gender?  An individual such as you may later overcome this, of course...");
 		outputText("\n\n\n\nAre you a man or a woman?", true);
-		simpleChoices("Man", 10000, "Woman", 10001, "", 0, "", 0, "", 0); 
+		simpleChoices("Man", 10000, "Woman", 10001, "", 0, "", 0, "", 0);
 	}
 }
 
@@ -764,7 +758,7 @@ public function noCustomProfile():void {
 	player.short = mainView.nameBox.text;
 	mainView.nameBox.visible = false;
 	outputText("Your name carries little significance beyond it being your name.  What is your gender?");
-	simpleChoices("Male", 10000, "Female", 10001, "", 0, "", 0, "", 0); 
+	simpleChoices("Male", 10000, "Female", 10001, "", 0, "", 0, "", 0);
 }
 
 //Determines if has character creation bonuses
@@ -799,6 +793,7 @@ public function customName(arg:String):Boolean {
 		case "Lukaz":
 		case "Leah":
 		case "Vahdunbrii":
+		case "TestChar":
 			return true;
 		default:
 			return false;
@@ -825,6 +820,7 @@ public function specialName(arg:String):Boolean {
 		case "Lukaz":
 		case "Leah":
 		case "Vahdunbrii":
+		case "TestChar":
 			return true;
 		default:
 			return false;
@@ -834,64 +830,7 @@ public function specialName(arg:String):Boolean {
 
 
 
-//Create a storage slot
-public function createStorage():Boolean {
-	if(itemStorage.length >= 16) return false;
-	var newSlot:* = new ItemSlotClass();
-	itemStorage.push(newSlot);
-	return true;
-}
-//Clear storage slots
-public function clearStorage():void {
-	//Various Errors preventing action
-	if(itemStorage == null) trace("ERROR: Cannot clear storage because storage does not exist.");
-	else {
-		trace("Attempted to remove " + itemStorage.length + " storage slots.");
-		itemStorage.splice(0, itemStorage.length);
-	}
-}
-public function clearGearStorage():void {
-	//Various Errors preventing action
-	if(gearStorage == null) trace("ERROR: Cannot clear storage because storage does not exist.");
-	else {
-		trace("Attempted to remove " + gearStorage.length + " storage slots.");
-		gearStorage.splice(0, gearStorage.length);
-	}
-}
 
-public function initializeGearStorage():void {
-	//Completely empty storage array
-	if(gearStorage == null) trace("ERROR: Cannot clear gearStorage because storage does not exist.");
-	else {
-		trace("Attempted to remove " + gearStorage.length + " gearStorage slots.");
-		gearStorage.splice(0, gearStorage.length);
-	}
-	//Rebuild a new one!
-	var newSlot:*;
-	while(gearStorage.length < 18) {
-		newSlot = new ItemSlotClass();
-		gearStorage.push(newSlot);
-	}
+
 }
-
-// This should really be in a "utilities" class or similar. 
-// It's just in this file because I didn't know where else to stick it.
-// Basically, you pass an arbitrary-length list of arguments, and it returns one of them at random.
-// Accepts any type.
-// Can also accept a *single* array of items, in which case it picks from the array instead.
-// This lets you pre-construct the argument, to make things cleaner
-public function randomChoice(...args):*
-{
-	var choice:Number;
-	if ((args.length == 1) && (args[0] is Array))
-	{
-		choice = int(Math.round(Math.random() * (args[0].length - 1)));
-		return args[0][choice];
-	}
-	else
-	{
-		choice = int(Math.round(Math.random() * (args.length - 1)));
-		return args[choice];
-	}
-
 }

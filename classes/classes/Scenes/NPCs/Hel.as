@@ -1,21 +1,18 @@
 package classes.Scenes.NPCs
 {
-	import classes.Monster;
+	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
-	
-	/**
-	 * ...
-	 * @author aimozg
-	 */
-	public class Hel extends Monster 
+	import classes.internals.*;
+
+	public class Hel extends Monster
 	{
 
 		private function helAttack():void {
-			var damage:Number = 0;
+			var damage:Number;
 			//return to combat menu when finished
 			doNext(1);
 			//Blind dodge change
-			if(hasStatusAffect("Blind") >= 0 && rand(3) < 1) {
+			if(findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 1) {
 				outputText(capitalA + short + " completely misses you with a blind attack!\n", false);
 				return;
 			}
@@ -25,17 +22,17 @@ package classes.Scenes.NPCs
 				return;
 			}
 			//Determine if evaded
-			if(player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			if(player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.\n", false);
 				return;
 			}
 			//("Misdirection"
-			if(player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+			if(player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 				outputText("Using Raphael's teachings, you anticipate and sidestep " + a + short + "' attacks.\n", false);
 				return;
 			}
 			//Determine if cat'ed
-			if(player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
+			if(player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
 				outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "", false);
 				return;
 			}
@@ -65,11 +62,11 @@ package classes.Scenes.NPCs
 		//Attack 2 – Tail Slap (Hit)
 		//low dodge chance, lower damage
 		private function helAttack2():void {
-			var damage:Number = 0;
+			var damage:Number;
 			//return to combat menu when finished
 			doNext(1);
 			//Blind dodge change
-			if(hasStatusAffect("Blind") >= 0 && rand(3) < 1) {
+			if(findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 1) {
 				outputText(capitalA + short + " completely misses you with a blind attack!\n", false);
 				return;
 			}
@@ -79,17 +76,17 @@ package classes.Scenes.NPCs
 				return;
 			}
 			//Determine if evaded
-			if(player.hasPerk("Evade") >= 0 && rand(100) < 5) {
+			if(player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 5) {
 				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s tail-swipe.\n", false);
 				return;
 			}
 			//("Misdirection"
-			if(player.hasPerk("Misdirection") >= 0 && rand(100) < 5 && player.armorName == "red, high-society bodysuit") {
+			if(player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 5 && player.armorName == "red, high-society bodysuit") {
 				outputText("Using Raphael's teachings, you anticipate and sidestep " + a + short + "' tail-swipe.\n", false);
 				return;
 			}
 			//Determine if cat'ed
-			if(player.hasPerk("Flexibility") >= 0 && rand(100) < 3) {
+			if(player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 3) {
 				outputText("With your incredible flexibility, you squeeze out of the way of a tail-swipe!", false);
 				return;
 			}
@@ -118,7 +115,7 @@ package classes.Scenes.NPCs
 
 		private function helCleavage():void {
 			//FAIL
-			if((player.hasPerk("Flexibility") >= 0 && rand(100) < 6) || (player.hasPerk("Evade") >= 0 && rand(100) < 10) || (player.spe - spe > 0 && int(Math.random()*(((player.spe-spe)/4)+80)) > 80)) {
+			if((player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) || (player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) || (player.spe - spe > 0 && int(Math.random()*(((player.spe-spe)/4)+80)) > 80)) {
 				outputText("To your surprise, the salamander suddenly pulls up her top, letting her hefty breasts hang free in the air; her small, bright pink nipples quickly harden from either arousal or temperature.  Before you can take your eyes off her impressive rack, she jumps at you.  One of her scaled arms reaches around your waist, and the other toward your head, but you roll away from her grip and push her bodily away.  She staggers a moment, but then quickly yanks the jangling bikini top back down with a glare.\n", false);
 			}
 			//Attack 3 – Lust – Cleavage (Failure)
@@ -152,7 +149,7 @@ package classes.Scenes.NPCs
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			if(hasStatusAffect("sparring") >= 0) game.helFollower.PCBeatsUpSalamanderSparring();
+			if(findStatusAffect(StatusAffects.Sparring) >= 0) game.helFollower.PCBeatsUpSalamanderSparring();
 			else game.helScene.beatUpHel();
 		}
 
@@ -162,29 +159,56 @@ package classes.Scenes.NPCs
 				outputText("\n\nHelia waits it out in stoic silence...");
 				doNext(game.endLustLoss);
 			} else {
-				if(hasStatusAffect("sparring") >= 0) game.helFollower.loseToSparringHeliaLikeAButtRapedChump();
+				if(findStatusAffect(StatusAffects.Sparring) >= 0) game.helFollower.loseToSparringHeliaLikeAButtRapedChump();
 				else game.helScene.loseToSalamander();
 			}
 		}
 
 		public function Hel()
 		{
-			var met:Boolean = game.flags[kFLAGS.HEL_TALKED_ABOUT_HER] == 1;
-			init01Names(met?"":"the ",met?"Hel":"salamander","hel","You are fighting a (literally) smoking hot salamander – a seven foot tall woman with crimson scales covering her legs, back, and forearms, with a tail swishing menacingly behind her, ablaze with a red-hot fire.  Her red hair whips wildly around her slender shoulders, occasionally flitting over her hefty E-cup breasts, only just concealed within a scale-covered bikini top.  Bright red eyes focus on you from an almost-human face as she circles you, ready to close in for the kill.  Her brutal, curved sword is raised to her side, feinting at you between genuine attacks.");
-			init02Female(VAGINA_WETNESS_NORMAL,VAGINA_LOOSENESS_NORMAL,85);
-			init03BreastRows("E+");
-			init04Ass(ANAL_LOOSENESS_VIRGIN,ANAL_WETNESS_DRY,85);
-			init05Body(90,HIP_RATING_CURVY+2, BUTT_RATING_LARGE+1);
-			init06Skin("dusky");
-			init07Hair("red",13);
-			init08Face();
-			init09PrimaryStats(80,70,75,60,65,25,30);
-			init10Weapon("sword","slashing blade",20);
-			init11Armor("scales",14,"",50);
-			init12Combat(275,30,.35,Monster.TEMPERMENT_RANDOM_GRAPPLES);
-			init13Level(16,10 + rand(5));
-			initX_Tail(TAIL_TYPE_LIZARD,0,0);
-			this.createStatusAffect("keen",0,0,0,0);
+			if (game.flags[kFLAGS.HEL_TALKED_ABOUT_HER] == 1) {
+				this.a = "";
+				this.short = "Hel";
+			} else {
+				this.a = "the ";
+				this.short = "salamander";
+			}
+			this.imageName = "hel";
+			this.long = "You are fighting a (literally) smoking hot salamander – a seven foot tall woman with crimson scales covering her legs, back, and forearms, with a tail swishing menacingly behind her, ablaze with a red-hot fire.  Her red hair whips wildly around her slender shoulders, occasionally flitting over her hefty E-cup breasts, only just concealed within a scale-covered bikini top.  Bright red eyes focus on you from an almost-human face as she circles you, ready to close in for the kill.  Her brutal, curved sword is raised to her side, feinting at you between genuine attacks.";
+			createVagina(true,VAGINA_WETNESS_NORMAL,VAGINA_LOOSENESS_NORMAL);
+			createStatusAffect(StatusAffects.BonusVCapacity,85,0,0,0);
+			createBreastRow(Appearance.breastCupInverse("E+"));
+			this.ass.analLooseness = ANAL_LOOSENESS_VIRGIN;
+			this.ass.analWetness = ANAL_WETNESS_DRY;
+			this.createStatusAffect(StatusAffects.BonusACapacity,85,0,0,0);
+			this.tallness = 90;
+			this.hipRating = HIP_RATING_CURVY+2;
+			this.buttRating = BUTT_RATING_LARGE+1;
+			this.skinTone = "dusky";
+			this.hairColor = "red";
+			this.hairLength = 13;
+			initStrTouSpeInte(80, 70, 75, 60);
+			initLibSensCor(65, 25, 30);
+			this.weaponName = "sword";
+			this.weaponVerb="slashing blade";
+			this.weaponAttack = 20;
+			this.armorName = "scales";
+			this.armorDef = 14;
+			this.armorPerk = "";
+			this.armorValue = 50;
+			this.bonusHP = 275;
+			this.lust = 30;
+			this.lustVuln = .35;
+			this.temperment = TEMPERMENT_RANDOM_GRAPPLES;
+			this.level = 16;
+			this.gems = 10 + rand(5);
+			this.drop = new ChainedDrop().
+					add(armors.CHBIKNI,1/20).
+					add(consumables.REPTLUM,0.7);
+			this.tailType = TAIL_TYPE_LIZARD;
+			this.tailRecharge = 0;
+			this.createStatusAffect(StatusAffects.Keen,0,0,0,0);
+			checkMonster();
 		}
 		
 	}

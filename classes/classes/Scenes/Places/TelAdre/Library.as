@@ -1,7 +1,8 @@
 ﻿package classes.Scenes.Places.TelAdre{
-import classes.GlobalFlags.kFLAGS;
-import classes.GlobalFlags.kGAMECLASS;
-public class Library extends TelAdreAbstractContent{
+	import classes.*;
+	import classes.GlobalFlags.kFLAGS;
+
+	public class Library extends TelAdreAbstractContent{
 
 	public function Library()
 	{
@@ -87,38 +88,38 @@ private function studyInTA():void {
 			dynStats("int", 3+rand(4));
 			//(Intelligence increase)
 			//Smart enough for arouse and doesnt have it
-			if(player.inte >= 25 && player.hasStatusAffect("Knows Arouse") < 0) {
+			if(player.inte >= 25 && player.findStatusAffect(StatusAffects.KnowsArouse) < 0) {
 				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Arouse.</b>", false);
-				player.createStatusAffect("Knows Arouse",0,0,0,0);
+				player.createStatusAffect(StatusAffects.KnowsArouse,0,0,0,0);
 			}
 			//Smart enough for arouse and doesnt have it
-			else if(player.inte >= 30 && player.hasStatusAffect("Knows Heal") < 0) {
+			else if(player.inte >= 30 && player.findStatusAffect(StatusAffects.KnowsHeal) < 0) {
 				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Heal.</b>", false);
-				player.createStatusAffect("Knows Heal",0,0,0,0);
+				player.createStatusAffect(StatusAffects.KnowsHeal,0,0,0,0);
 			}
 			//Smart enough for arouse and doesnt have it
-			else if(player.inte >= 40 && player.hasStatusAffect("Knows Might") < 0) {
+			else if(player.inte >= 40 && player.findStatusAffect(StatusAffects.KnowsMight) < 0) {
 				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Might.</b>", false);
-				player.createStatusAffect("Knows Might",0,0,0,0);
+				player.createStatusAffect(StatusAffects.KnowsMight,0,0,0,0);
 			}
 			//Smart enough for arouse and doesnt have it
-			else if(player.inte >= 25 && player.hasStatusAffect("Knows Charge") < 0) {
+			else if(player.inte >= 25 && player.findStatusAffect(StatusAffects.KnowsCharge) < 0) {
 				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Charge Weapon.</b>", false);
-				player.createStatusAffect("Knows Charge",0,0,0,0);
+				player.createStatusAffect(StatusAffects.KnowsCharge,0,0,0,0);
 			}
 			//Smart enough for arouse and doesnt have it
-			else if(player.inte >= 30 && player.hasStatusAffect("Knows Blind") < 0) {
+			else if(player.inte >= 30 && player.findStatusAffect(StatusAffects.KnowsBlind) < 0) {
 				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Blind.</b>", false);
-				player.createStatusAffect("Knows Blind",0,0,0,0);
+				player.createStatusAffect(StatusAffects.KnowsBlind,0,0,0,0);
 			}
 			//Smart enough for arouse and doesnt have it
-			else if(player.inte >= 40 && player.hasStatusAffect("Knows Whitefire") < 0) {
+			else if(player.inte >= 40 && player.findStatusAffect(StatusAffects.KnowsWhitefire) < 0) {
 				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Whitefire.</b>", false);
-				player.createStatusAffect("Knows Whitefire",0,0,0,0);
+				player.createStatusAffect(StatusAffects.KnowsWhitefire,0,0,0,0);
 			}
 		}
 		//OR (player is bimbo/bimbro/whatever) 
-		else if((player.lib > 75 || player.cor > 75 || player.hasPerk("Bimbo Brains") >= 0 || player.hasPerk("Futa Faculties") >= 0 || player.hasPerk("Bro Brains") >= 0) && rand(2) == 0) outputText("\n\nYou pick up a book from a table randomly and open it up.  Incredibly disappointed, you soon realize that there are no pictures of people fucking at all.  Reading sucks.  You eventually toss the book aside and resolve to go do something more fun.");
+		else if((player.lib > 75 || player.cor > 75 || player.findPerk(PerkLib.BimboBrains) >= 0 || player.findPerk(PerkLib.FutaFaculties) >= 0 || player.findPerk(PerkLib.BroBrains) >= 0) && rand(2) == 0) outputText("\n\nYou pick up a book from a table randomly and open it up.  Incredibly disappointed, you soon realize that there are no pictures of people fucking at all.  Reading sucks.  You eventually toss the book aside and resolve to go do something more fun.");
 		//OR (history) 
 		else outputText("\n\nSelecting a book randomly from the scattered tomes, you find a historical text documenting life in Mareth.  It's dreadfully dull, and though you do your best to learn what you can the dry work is putting you to sleep.  Eventually you close the book and accept that you're not going to be learning anything tonight.");
 		menu();
@@ -169,7 +170,7 @@ private function talkToMali():void {
 		doNext(13);
 	}	
 	//[[Mali], player has spellblade]
-	else if((player.weaponName == "inscribed spellblade" || hasItem("S.Blade",1)) && flags[kFLAGS.MALI_TAKEN_BLADE] == 0) {
+	else if((player.weaponName == "inscribed spellblade" || player.hasItem(weapons.S_BLADE)) && flags[kFLAGS.MALI_TAKEN_BLADE] == 0) {
 		outputText("You tell Quinn you're here to see Mali.  He seems intrigued by the wrapped blade you're carrying, but doesn't ask any questions.  Unlocking the second floor as usual, he escorts you to Mali's quarters.");
 		outputText("\n\n\"<i>What's that?</i>\" Mali asks, curious when you pull out the inscribed spellblade.  You place it down on the desk and explain that you got it from... from...  Mali's eyes light up at your strained inability to explain.  \"<i>Yes!</i>\" she says excitedly, reaching over the desk and grabbing your cheeks.  She plants a quick and enthusiastic kiss on your lips in thanks, looking back down at the sword and running her hands over it.");
 		
@@ -178,15 +179,12 @@ private function talkToMali():void {
 		outputText("\n\n\"<i>I'm going to use this to track her,</i>\" she explains, \"<i>Then gather up some guards and find out just what she's up to.  You should rest up, prepare for lethal danger, then come back.</i>\"  The grin on her face doesn't seem to be going anywhere.  \"<i>I can't imagine doing this without your help now.</i>\"");
 		outputText("\n\n\"<i>Please, come back soon.</i>\"");
 		outputText("\n\n(<b>Conclusion not yet complete...</b>)");
-		if(player.weaponName == "inscribed spellblade") {
-			player.removePerk("Wizard's Focus");
-			player.weaponPerk = "";
-			player.weaponAttack = 0;
-			player.weaponValue = 0;
-			player.weaponName = "fists";
+		if(player.weapon == weapons.S_BLADE) {
+			player.weapon.unequip(player,false,true);
+			player.removePerk(PerkLib.WizardsFocus);
 		}
 		else {
-			consumeItem("S.Blade",1);
+			player.consumeItem(weapons.S_BLADE);
 		}
 		flags[kFLAGS.MALI_TAKEN_BLADE] = 1;
 		doNext(13);

@@ -1,15 +1,10 @@
 package classes.Scenes.Areas.HighMountains
 {
-	import classes.CoC;
-	import classes.Cock;
+	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
-	import classes.Monster;
-	
-	/**
-	 * ...
-	 * @author aimozg
-	 */
-	public class Minerva extends Monster 
+	import classes.internals.*;
+
+	public class Minerva extends Monster
 	{
 
 		//Normal Attacks for all Minerva Types
@@ -18,7 +13,7 @@ package classes.Scenes.Areas.HighMountains
 		{
 			outputText("The siren paces around you in circles, waiting for the right moment to strike.  Unexpectedly quick thanks to her clawed feet, she propels herself toward you at full speed.  Her maw opens wide to chomp on you, showing off multiple rows of glinting, razor-sharp teeth.");
 			var damage:int = int((str + 85) - rand(player.tou) - player.armorDef);
-			if (combatMiss() && combatEvade() && combatFlexibility() && combatMisdirect()) {
+			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) {
 				outputText("  You get out of the way just in time, Minerva making a loud chomping sound as she only catches the air.");
 			}
 			//[else block]
@@ -39,7 +34,7 @@ package classes.Scenes.Areas.HighMountains
 
 			var damage:int = int((str + weaponAttack + 100) - rand(player.tou) - player.armorDef);
 			spe -= 70;
-			if (combatMiss() && combatEvade() && combatFlexibility() && combatMisdirect()) {
+			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) {
 				outputText("  You jump out of the landing zone just in time, piles of dirt exploding in all directions as Minerva slams into the ground.");
 			}
 			//[else block]
@@ -70,8 +65,8 @@ package classes.Scenes.Areas.HighMountains
 				outputText("!");
 				damage = player.takeDamage(damage);
 				outputText(" (" + damage + ")");
-				if (hasStatusAffect("Tail Whip") >= 0) addStatusValue("Tail Whip", 1, 10);
-				else createStatusAffect("Tail Whip", 10, 0, 0, 0);
+				if (findStatusAffect(StatusAffects.TailWhip) >= 0) addStatusValue(StatusAffects.TailWhip, 1, 10);
+				else createStatusAffect(StatusAffects.TailWhip, 10, 0, 0, 0);
 			}
 			combatRoundOver();
 		}
@@ -82,7 +77,7 @@ package classes.Scenes.Areas.HighMountains
 			outputText("Minerva charges at you, brandishing her halberd's sharp tip toward you.");
 			var damage:int = int((str + weaponAttack) - rand(player.tou));
 
-			if (combatMiss() && combatEvade() && combatFlexibility() && combatMisdirect()) outputText("  You sidestep the attack just as she thrusts the point past your face.");
+			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) outputText("  You sidestep the attack just as she thrusts the point past your face.");
 
 			//[else block]
 			else if (damage < 0) outputText("  With all your strength, you swing your [weapon], the blow landing on the side of Minerva's halberd and deflecting the goring strike away from you.");
@@ -102,7 +97,7 @@ package classes.Scenes.Areas.HighMountains
 			outputText("She moves in close, practically right in front of you and raises the halberd.");
 			var damage:int = int((str + 100) - rand(player.tou) - player.armorDef);
 
-			if (combatMiss() && combatEvade() && combatFlexibility() && combatMisdirect()) outputText("  You get out of the way quickly, her attack chopping deeply into the earth. ");
+			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) outputText("  You get out of the way quickly, her attack chopping deeply into the earth. ");
 
 			//[else block]
 			else if (damage < 0) outputText("  In a mad show of pure skill, you lift your hands, clamping them down on the cheeks of the halberd blade and stop Minerva's attack cold, bewildering the siren in the process.");
@@ -149,9 +144,9 @@ package classes.Scenes.Areas.HighMountains
 		{
 			//The Siren's Song (2-part attack) (Rarely used or when she's desperate aka: Less than 10% hp)
 			//[part 1]
-			if (hasStatusAffect("Siren Song") < 0) {
+			if (findStatusAffect(StatusAffects.SirenSong) < 0) {
 				outputText("Minerva begins to hum a pleasant tune.  It might be better to stand back to see what she's up to!");
-				createStatusAffect("Siren Song", 0, 0, 0, 0);
+				createStatusAffect(StatusAffects.SirenSong, 0, 0, 0, 0);
 			}
 			//[part 2]
 			else {
@@ -163,14 +158,14 @@ package classes.Scenes.Areas.HighMountains
 					outputText("  Your mind clouds over as the song flows through your ears and fills your mind with sweet bliss.  You lower your [weapon] and dreamily walk into the siren's sweet embrace.  You absent-mindedly disrobe yourself as you move in closer, the song getting louder with each step you take, until you finally bury yourself into the siren's soft bosom and she wraps her feathery arms around your body.  She stops singing her beautiful song and whispers into your ear, \"<i>You're all mine now.</i>\"");
 					player.lust = 100;
 				}
-				removeStatusAffect("Siren Song");
+				removeStatusAffect(StatusAffects.SirenSong);
 			}
 			combatRoundOver();
 		}
 
 		override protected function performCombatAction():void
 		{
-			if (hasStatusAffect("Siren Song") >= 0) sirensSong();
+			if (findStatusAffect(StatusAffects.SirenSong) >= 0) sirensSong();
 			else if (rand(25) == 0 || (HP < 100 && rand(2) == 0)) sirensSong();
 			//Else choose randomly!
 			else {
@@ -198,23 +193,48 @@ package classes.Scenes.Areas.HighMountains
 
 		public function Minerva()
 		{
-			init01Names("", "Minerva", "minerva", "You're fighting the tainted siren, Minerva.  Standing around eight feet and wielding a weapon just as tall, she is a force to be reckoned with.  Her skin is a dark navy blue, though her belly, neck and inner thighs are as white as the clouds in the sky, and a golden piecing decorates her navel.  Orange and white stripes adorn her legs, tail and back.  Two large wings sprout from her back, their feathers an attention-grabbing red and orange mix.  She wears a tube-top that hold back her double d-cups, and short shorts around her wide waist that seem to be holding back a huge bulge.\n\nHer weapon is a halberd, made from a shiny, silvery metal, and seems to have an unnatural glow to it.");
-			init02Male(new Cock(16,3),2,3,3);
-			init02Female(VAGINA_WETNESS_SLICK,VAGINA_LOOSENESS_NORMAL);
-			init03BreastRows("DD");
-			init04Ass(ANAL_LOOSENESS_TIGHT,ANAL_WETNESS_DRY);
-			init05Body("8'4",HIP_RATING_CURVY,BUTT_RATING_LARGE+1);
-			init06Skin("blue");
-			init07Hair("red",25);
-			init08Face();
-			init09PrimaryStats(50,65,95,75,30,25,45);
-			init10Weapon("halberd","slash",30,"",150);
-			init11Armor("comfortable clothes",1,"",5);
-			init12Combat(470,20,.2,Monster.TEMPERMENT_LOVE_GRAPPLES);
-			init13Level(16,rand(25)+10,50);
-			initX_Wings(WING_TYPE_HARPY,"fluffy feathery");
-			initX_Specials(11020,11021,11022);
-
+			this.a = "";
+			this.short = "Minerva";
+			this.imageName = "minerva";
+			this.long = "You're fighting the tainted siren, Minerva.  Standing around eight feet and wielding a weapon just as tall, she is a force to be reckoned with.  Her skin is a dark navy blue, though her belly, neck and inner thighs are as white as the clouds in the sky, and a golden piecing decorates her navel.  Orange and white stripes adorn her legs, tail and back.  Two large wings sprout from her back, their feathers an attention-grabbing red and orange mix.  She wears a tube-top that hold back her double d-cups, and short shorts around her wide waist that seem to be holding back a huge bulge.\n\nHer weapon is a halberd, made from a shiny, silvery metal, and seems to have an unnatural glow to it.";
+			// this.plural = false;
+			this.createCock(16,3);
+			this.balls = 2;
+			this.ballSize = 3;
+			this.cumMultiplier = 3;
+			// this.hoursSinceCum = 0;
+			this.createVagina(false, VAGINA_WETNESS_SLICK, VAGINA_LOOSENESS_NORMAL);
+			createBreastRow(Appearance.breastCupInverse("DD"));
+			this.ass.analLooseness = ANAL_LOOSENESS_TIGHT;
+			this.ass.analWetness = ANAL_WETNESS_DRY;
+			this.tallness = 8*12+4;
+			this.hipRating = HIP_RATING_CURVY;
+			this.buttRating = BUTT_RATING_LARGE+1;
+			this.skinTone = "blue";
+			this.hairColor = "red";
+			this.hairLength = 25;
+			initStrTouSpeInte(50, 65, 95, 75);
+			initLibSensCor(30, 25, 45);
+			this.weaponName = "halberd";
+			this.weaponVerb="slash";
+			this.weaponAttack = 30;
+			this.weaponPerk = "";
+			this.weaponValue = 150;
+			this.armorName = "comfortable clothes";
+			this.armorDef = 1;
+			this.armorPerk = "";
+			this.armorValue = 5;
+			this.bonusHP = 470;
+			this.lust = 20;
+			this.lustVuln = .2;
+			this.temperment = TEMPERMENT_LOVE_GRAPPLES;
+			this.level = 16;
+			this.gems = rand(25)+10;
+			this.additionalXP = 50;
+			this.drop = new WeightedDrop(consumables.PURPEAC, 1);
+			this.wingType = WING_TYPE_HARPY;
+			this.wingDesc = "fluffy feathery";
+			checkMonster();
 		}
 		
 	}

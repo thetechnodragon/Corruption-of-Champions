@@ -3,10 +3,10 @@
  */
 package classes.Scenes.Areas.Forest
 {
-	import classes.BaseContent;
-	import classes.CockTypesEnum;
+	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
 	import classes.GlobalFlags.kGAMECLASS;
+	import classes.Items.Armors.LustyMaidensArmor;
 
 	public class AkbalScene extends BaseContent
 	{
@@ -41,8 +41,8 @@ package classes.Scenes.Areas.Forest
 						vagoo = girlsRapeAkbal;
 						vagooLick = rapeAkbalForcedFemaleOral;
 					}
-					if (player.hasVagina() && player.biggestTitSize() >= 4 && player.armorName == "lusty maiden's armor")
-						bikiniTits = kGAMECLASS.lustyMaidenPaizuri;
+					if (player.hasVagina() && player.biggestTitSize() >= 4 && player.armor is LustyMaidensArmor)
+						bikiniTits = (player.armor as LustyMaidensArmor).lustyMaidenPaizuri;
 					if (player.hasCock())
 						buttFuck = rapeAkbal;
 					outputText("\n\nDo you rape him?", false);
@@ -408,7 +408,7 @@ package classes.Scenes.Areas.Forest
 				outputText("You grin as you flip him over onto his back, staring down at his breeding tool between his legs, firmly erect as it rests on his rather full set of balls. Quite clearly, this \"<i>God</i>\" hasn't had much action for quite some time, hence his aggressive nature towards you. You finger yourself slightly as you examine his feline shaft, coated with layers of barbs that look as though they would be quite painful. Leaning down, you run your fingers over them, smirking as they bend slightly. They may not be enough to harm you, but sex would definitely be unpleasant... Unless you happened to have a source of suitable lube nearby.\n\n", false);
 				outputText("Remembering the cats back home", false);
 				//({If player has the flexibility Perk}
-				if (player.hasPerk("Flexibility") >= 0)
+				if (player.findPerk(PerkLib.Flexibility) >= 0)
 					outputText(" and your own experience with such matters", false);
 				outputText(", you figure you have a pretty good idea where a reliable source of lube could be. You grin as you grab the demon cat by the scruff of his neck, ", false);
 				//({If strength >60}
@@ -856,7 +856,7 @@ package classes.Scenes.Areas.Forest
 					outputText("\n\nIn your sleep, your ass plumps up slightly, growing to accomodate the demon's wishes...", false);
 					player.buttRating++;
 				}
-				player.createStatusAffect("Post Akbal Submission", 0, 0, 0, 0);
+				player.createStatusAffect(StatusAffects.PostAkbalSubmission, 0, 0, 0, 0);
 				doNext(16);
 				return;
 			}
@@ -933,7 +933,7 @@ package classes.Scenes.Areas.Forest
 					outputText("\n\nIn your sleep, your ass plumps up slightly, growing to accomodate the demon's wishes...", false);
 					player.buttRating++;
 				}
-				player.createStatusAffect("Post Akbal Submission", 0, 0, 0, 0);
+				player.createStatusAffect(StatusAffects.PostAkbalSubmission, 0, 0, 0, 0);
 				doNext(16);
 				return;
 			}
@@ -1012,7 +1012,7 @@ package classes.Scenes.Areas.Forest
 				outputText("\n\nIn your sleep, your ass plumps up slightly, growing to accomodate the demon's wishes...", false);
 				player.buttRating++;
 			}
-			player.createStatusAffect("Post Akbal Submission", 0, 0, 0, 0);
+			player.createStatusAffect(StatusAffects.PostAkbalSubmission, 0, 0, 0, 0);
 			doNext(16);
 		}
 
@@ -1031,7 +1031,7 @@ package classes.Scenes.Areas.Forest
 			//(fighting Akbal disables this scene, but you retain the ability if you rape him after)
 			else if (flags[kFLAGS.PLAYER_RESISTED_AKBAL] == 0 && flags[kFLAGS.AKBAL_SUBMISSION_COUNTER] >= 8 && player.cor > 80)
 			{
-				if (player.cor < 80 || player.hasPerk("Fire Lord") >= 0)
+				if (player.cor < 80 || player.findPerk(PerkLib.FireLord) >= 0)
 				{
 					outputText("You awake in your camp feeling dangerous, powerful and fiercely satisfied.", false);
 				}
@@ -1044,17 +1044,17 @@ package classes.Scenes.Areas.Forest
 					outputText("(You are now capable of breathing Akbal's fire.)", false);
 					//['LOTF' or 'Terrestrial Fire Lord' appears as perk]
 					//[Gain 'Terrestrial Fire' in Specials]
-					player.createPerk("Fire Lord", 0, 0, 0, 0, "Thanks to Akbal's blessings, you're able to breathe gouts of green flame at your foes.");
+					player.createPerk(PerkLib.FireLord, 0, 0, 0, 0);
 				}
 			}
 			//[After 4th submission if corruption is greater than 40%]
-			else if (player.hasPerk("Whispered") < 0 && player.cor >= 40)
+			else if (player.findPerk(PerkLib.Whispered) < 0 && player.cor >= 40)
 			{
 				outputText("You awake in your camp with Akbal standing over you, the chorus of voices in your head reaching the apex of an agonizingly beautiful song, and then falling silent.  When you rise, Akbal licks your face before turning away and sprinting into the forest.\n\n", false);
-				if (player.hasPerk("Whispered") < 0)
+				if (player.findPerk(PerkLib.Whispered) < 0)
 				{
 					outputText("(You are now Whispered.)", false);
-					player.createPerk("Whispered", 0, 0, 0, 0, "Akbal has allowed you to whisper to the minds of your foes, as he does.");
+					player.createPerk(PerkLib.Whispered, 0, 0, 0, 0);
 						//['Whispered' appears as perk]
 						//[Gain 'Whisper' in Specials]
 				}
@@ -1211,7 +1211,7 @@ package classes.Scenes.Areas.Forest
 			}
 			dynStats("lus=", 0, "cor", 5);
 			player.slimeFeed();
-			player.createStatusAffect("Post Akbal Submission", 0, 0, 0, 0);
+			player.createStatusAffect(StatusAffects.PostAkbalSubmission, 0, 0, 0, 0);
 			doNext(16);
 		}
 

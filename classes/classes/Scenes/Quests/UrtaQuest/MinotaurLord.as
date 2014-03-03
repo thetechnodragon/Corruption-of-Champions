@@ -1,32 +1,22 @@
 package classes.Scenes.Quests.UrtaQuest
 {
-	import classes.CoC;
-	import classes.Appearance;
-	import classes.Cock;
+	import classes.*;
 	import classes.GlobalFlags.kGAMECLASS;
-	import classes.Monster;
-	import classes.CockTypesEnum;
+	import classes.internals.*;
 
 	use namespace kGAMECLASS;
-	
-	/**
-	 * ...
-	 * @author aimozg
-	 */
-	public class MinotaurLord extends Monster 
+
+
+
+	public class MinotaurLord extends Monster
 	{
 
 		override protected function performCombatAction():void
 		{
-			fidoAI();
-		}
-
-		private function fidoAI():void
-		{
-			if (HP < 300 && statusAffectv1("Mino Milk") < 4) minotaurDrankMalk();
+			if (HP < 300 && statusAffectv1(StatusAffects.MinoMilk) < 4) minotaurDrankMalk();
 			else if (rand(4) == 0 && player.weaponName != "fists") minotaurDisarm();
-			else if (hasStatusAffect("Timer") < 0) minotaurLordEntangle();
-			else if (hasStatusAffect("Minotaur Entangled") >= 0) minotaurCumPress();
+			else if (findStatusAffect(StatusAffects.Timer) < 0) minotaurLordEntangle();
+			else if (findStatusAffect(StatusAffects.MinotaurEntangled) >= 0) minotaurCumPress();
 			else {
 				if (rand(2) == 0) minotaurPrecumTease();
 				else eAttack();
@@ -37,20 +27,20 @@ package classes.Scenes.Quests.UrtaQuest
 		{
 			outputText("The minotaur lord snorts audibly and turns to look at his mistress.  \"<i>What is it, Fido, boy?  You thirsty?</i>\"  The hulking minotaur nods.");
 //Success:*
-			if (statusAffectv1("Mino Milk") < 3) {
+			if (statusAffectv1(StatusAffects.MinoMilk) < 3) {
 				outputText("\"<i>Catch!</i>\"  The succubus throws a bottle containing a milky-white substance to the minotaur.  He grabs it and uncorks the bottle, quickly chugging its contents with obvious enjoyment.  After he is done he looks even more energetic and ready to fight, and his cock looks even harder!");
 				addHP(300);
 				lust += 10;
-				if (hasStatusAffect("Mino Milk") < 0)
-					createStatusAffect("Mino Milk", 1, 0, 0, 0);
+				if (findStatusAffect(StatusAffects.MinoMilk) < 0)
+					createStatusAffect(StatusAffects.MinoMilk, 1, 0, 0, 0);
 				else
-					addStatusValue("Mino Milk", 1, 1);
+					addStatusValue(StatusAffects.MinoMilk, 1, 1);
 			}
 			//Failure:*
 			else {
 				outputText("\"<i>Well too bad!  We're all out of milk... but don't worry, my dear pet, I'll let you drink as much as you want after you're done with this bitch.</i>\"  The succubus replies, idly checking her elongated nails.");
 				outputText("\n\nThe minotaur glares at you and snorts, obviously pissed at not getting his serving...");
-				addStatusValue("Mino Milk", 1, 1);
+				addStatusValue(StatusAffects.MinoMilk, 1, 1);
 			}
 			kGAMECLASS.combatRoundOver();
 		}
@@ -59,14 +49,14 @@ package classes.Scenes.Quests.UrtaQuest
 		{
 			outputText("The giant of a minotaur raises his chain threateningly into the air, clearly intent on striking you down.  With your trained reflexes, you quickly move to block his blow with your halberd.  You recoil as the chain impacts your halberd with a loud clang, wrapping around it.  You smile triumphantly at the minotaur, only to glance at his smirk.  With a strong pull, he rips the halberd off your hands and into a corner of the room. Shit!");
 			outputText("\n\nThe succubus laughs maniacally.  \"<i>Good boy, Fido!  Take that fox slut's toys away so she'll be easier to play with!</i>\"  The minotaur puffs his chest, proud of himself for pleasing his mistress.");
-			player.weaponName = "fists";
+			player.weapon.unequip(player,false,true);
 			kGAMECLASS.combatRoundOver();
 		}
 
 		private function minotaurLordEntangle():void
 		{
 			outputText("The minotaur lord lashes out with his chain, swinging in a wide arc!\n");
-			createStatusAffect("Timer", 2 + rand(4), 0, 0, 0);
+			createStatusAffect(StatusAffects.Timer, 2 + rand(4), 0, 0, 0);
 //{dodge/whatever}
 			if (combatMiss() || combatEvade() || combatFlexibility() || combatMisdirect()) {
 				outputText("You leap over the clumsy swing, allowing the chain to fly harmlessly underneath you!");
@@ -75,7 +65,7 @@ package classes.Scenes.Quests.UrtaQuest
 				outputText("You try to avoid it, but you're too slow, and the chain slaps into your hip, painfully bruising you with the strength of the blow, even through your armor.  The inertia carries the back half of the whip around you, and in a second, the chain has you all wrapped up with your arms pinned to your sides and your movement restricted.");
 				outputText("\n\n\"<i>Hahaha!  Good boy, Fido!  Leash that bitch up!</i>\"  The succubus laughs with glee.");
 				outputText("\n\n<b>You're tangled up in the minotaur lord's chain, and at his mercy, unless you can break free!</b>");
-				createStatusAffect("Minotaur Entangled", 0, 0, 0, 0);
+				createStatusAffect(StatusAffects.MinotaurEntangled, 0, 0, 0, 0);
 			}
 			combatRoundOver();
 		}
@@ -91,7 +81,7 @@ package classes.Scenes.Quests.UrtaQuest
 				if (player.lust >= 80) outputText(" and drippy");
 				outputText(" your cock has become.  You want another taste...");
 			}
-			removeStatusAffect("Minotaur Entangled");
+			removeStatusAffect(StatusAffects.MinotaurEntangled);
 			combatRoundOver();
 		}
 
@@ -133,25 +123,48 @@ package classes.Scenes.Quests.UrtaQuest
 
 		public function MinotaurLord()
 		{
-			init01Names("the ", "minotaur lord", "minotaurlord", "Across from you is the biggest minotaur you've ever seen.  Fully eleven feet tall, this shaggy monstrosity has muscles so thick that they stand even through his thick, obscuring fur.  A leather collar with a tag indicates his status as 'pet' though it seems completely out of place on the herculean minotaur.  His legs and arms are like thick tree trunks, imposing and implacable, flexing fiercely with every movement.  This can only be a minotaur lord, a minotaur of strength and virility far beyond his lesser brothers. In his hands, a massive chain swings, connected to his collar, but used as an impromptu weapon for now.  A simple loincloth girds his groin, though it does little to hide the massive, erect length that tents it.  It winds up looking more like a simple, cloth condom than any sort of clothing, and it drips long strings of musky pre-slime in ribbons onto the ground.  Below, heavy testes, each easily the size of a basketball, swing in a taut, sloshing sack.  You can almost smell the liquid bounty he has for you, and the musk he's giving off makes it seem like a good idea...");
-			var ballSize:Number = 2 + rand(13);
-			init02Male(new Cock(rand(13) + 24,2 + rand(3),CockTypesEnum.HORSE),2, ballSize,1.5,ballSize * 10);
-			init03BreastRows(0);
-			init04Ass(ANAL_LOOSENESS_STRETCHED,ANAL_WETNESS_NORMAL,50);
-			init05Body(rand(37) + 84,HIP_RATING_AVERAGE, BUTT_RATING_AVERAGE+1,LOWER_BODY_TYPE_HOOFED);
-			init06Skin("red",SKIN_TYPE_FUR,"shaggy fur");
-			init07Hair(Appearance.randomChoice("black","brown"),3);
-			init08Face(FACE_COW_MINOTAUR);
-			init09PrimaryStats(125,90,30,30,70,25,85);
-			init10Weapon("chain","chain-whip",50);
-			init11Armor("thick fur");
-			init12Combat(700,50,0.33,Monster.TEMPERMENT_LUSTY_GRAPPLES);
-			init13Level(15,rand(5) + 5);
-			initX_Tail(TAIL_TYPE_COW);
-			initX_Specials(game.mountain.minotaurScene.minoPheromones);
-
+			this.a = "the ";
+			this.short = "minotaur lord";
+			this.imageName = "minotaurlord";
+			this.long = "Across from you is the biggest minotaur you've ever seen.  Fully eleven feet tall, this shaggy monstrosity has muscles so thick that they stand even through his thick, obscuring fur.  A leather collar with a tag indicates his status as 'pet' though it seems completely out of place on the herculean minotaur.  His legs and arms are like thick tree trunks, imposing and implacable, flexing fiercely with every movement.  This can only be a minotaur lord, a minotaur of strength and virility far beyond his lesser brothers. In his hands, a massive chain swings, connected to his collar, but used as an impromptu weapon for now.  A simple loincloth girds his groin, though it does little to hide the massive, erect length that tents it.  It winds up looking more like a simple, cloth condom than any sort of clothing, and it drips long strings of musky pre-slime in ribbons onto the ground.  Below, heavy testes, each easily the size of a basketball, swing in a taut, sloshing sack.  You can almost smell the liquid bounty he has for you, and the musk he's giving off makes it seem like a good idea...";
+			// this.plural = false;
+			this.createCock(rand(13 + 24),2 + rand(3),CockTypesEnum.HORSE);
+			this.balls = 2;
+			this.ballSize = 2 + rand(13);
+			this.cumMultiplier = 1.5;
+			this.hoursSinceCum = this.ballSize * 10;
+			createBreastRow(0);
+			this.ass.analLooseness = ANAL_LOOSENESS_STRETCHED;
+			this.ass.analWetness = ANAL_WETNESS_NORMAL;
+			this.createStatusAffect(StatusAffects.BonusACapacity,50,0,0,0);
+			this.tallness = rand(37) + 84;
+			this.hipRating = HIP_RATING_AVERAGE;
+			this.buttRating = BUTT_RATING_AVERAGE+1;
+			this.lowerBody = LOWER_BODY_TYPE_HOOFED;
+			this.skinTone = "red";
+			this.skinType = SKIN_TYPE_FUR;
+			this.skinDesc = "shaggy fur";
+			this.hairColor = randomChoice("black","brown");
+			this.hairLength = 3;
+			this.faceType = FACE_COW_MINOTAUR;
+			initStrTouSpeInte(125, 90, 30, 30);
+			initLibSensCor(70, 25, 85);
+			this.weaponName = "chain";
+			this.weaponVerb="chain-whip";
+			this.weaponAttack = 50;
+			this.armorName = "thick fur";
+			this.bonusHP = 700;
+			this.lust = 50;
+			this.lustVuln = 0.33;
+			this.temperment = TEMPERMENT_LUSTY_GRAPPLES;
+			this.level = 15;
+			this.gems = rand(5) + 5;
+			this.drop = NO_DROP;
+			this.tailType = TAIL_TYPE_COW;
+			this.special1 = game.mountain.minotaurScene.minoPheromones;
+			checkMonster();
 		}
-		
+
 	}
 
 }

@@ -1,7 +1,9 @@
 ﻿package classes.Scenes.Places.TelAdre{
-import classes.GlobalFlags.kFLAGS;
-import classes.GlobalFlags.kGAMECLASS;
-public class BakeryScene extends TelAdreAbstractContent {
+	import classes.*;
+	import classes.GlobalFlags.kFLAGS;
+	import classes.GlobalFlags.kGAMECLASS;
+
+	public class BakeryScene extends TelAdreAbstractContent {
 
 	public function BakeryScene()
 	{
@@ -61,7 +63,7 @@ private function checkBakeryMenu():void {
 	var minoCum:Function = null;
 	var gcupcake:Function = null;
 	//Turn on cum eclairs if PC is an addict!
-	if(player.hasPerk("Minotaur Cum Addict") >= 0 && flags[kFLAGS.MINOTAUR_CUM_ECLAIR_UNLOCKED] == 0) {
+	if(player.findPerk(PerkLib.MinotaurCumAddict) >= 0 && flags[kFLAGS.MINOTAUR_CUM_ECLAIR_UNLOCKED] == 0) {
 		flags[kFLAGS.MINOTAUR_CUM_ECLAIR_UNLOCKED]++;
 		outputText("While you're in line, a shaking centauress glances at you and whispers, \"<i>You need some too, don't ya hun?</i>\"  You look on in confusion, not really sure what she's insinuating.  Her eyes widen and she asks, \"<i>Aren't you addicted?</i>\" You nod, dumbly, and she smiles knowingly.  \"<i>There's a minotaur that works here with a bit of a fetish... just order a special eclair and he'll fix you right up.  Just keep it on the hush hush and hope there's some left after I get my dozen.</i>\"  The centaur licks her lips and prances around impatiently.\n\n", false);
 	}
@@ -89,7 +91,7 @@ private function checkBakeryMenu():void {
 	menu();
 	//choices("Brownies",createCallBackFunction2(nomnomnom, "brownies", 3),"Cookies",createCallBackFunction2(nomnomnom, "cookies", 4),"Cupcakes",2833,"Doughnuts",createCallBackFunction2(nomnomnom, "doughnuts", 5),"Pound Cake",createCallBackFunction2(nomnomnom, "pound cake", 4),"Fox Berry",buyFoxBerry,"SpecialEclair",minoCum,"GiantCupcake",gcupcake,"",0,"Leave",bakeryuuuuuu);
 	
-	addButton(0,"Brownies",createCallBackFunction2(nomnomnom, "doughnuts", 5));
+	addButton(0,"Brownies",createCallBackFunction2(nomnomnom, "brownies", 5));
 	addButton(1,"Cookies",createCallBackFunction2(nomnomnom, "cookies", 4));
 	addButton(2,"Cupcakes",createCallBackFunction2(nomnomnom, "cupcakes", 3));
 	addButton(3,"Doughnuts",createCallBackFunction2(nomnomnom, "doughnuts", 5));
@@ -106,10 +108,12 @@ public function ingredientsMenu():void {
 	outputText("Fox Berry - 5 gems.\n");
 	outputText("Ringtail Fig - 5 gems.\n");
 	outputText("Mouse Cocoa - 10 gems.\n");
+	outputText("Ferret Fruit - 20 gems.\n");
 	menu();
 	addButton(0,"Fox Berry",buyFoxBerry);
 	addButton(1,"Ringtail Fig",buyFig);
 	addButton(2,"Mouse Cocoa",buyCocoa);
+	addButton(3,"Ferret Fruit",buyFerretFruit);
 	addButton(9,"Back",checkBakeryMenu);
 }
 
@@ -239,10 +243,25 @@ private function buyCocoa():void {
 	}
 	outputText("You pay ten gems for some cocoa.  ");
 	menuLoc = 29;
-	shortName = "MouseCo";
 	player.gems -= 10;
 	statScreenRefresh();
-	takeItem();
+	inventory.takeItem(consumables.MOUSECO);
+}
+
+private function buyFerretFruit():void {
+	clearOutput();
+	if(player.gems < 20)
+	{
+		outputText("You can't afford one of those!");
+		menu();
+		addButton(0,"Next",ingredientsMenu);
+		return;
+	}
+	outputText("You pay twenty gems for a single ferret fruit.  ");
+	menuLoc = 29;
+	player.gems -= 20;
+	statScreenRefresh();
+	inventory.takeItem(consumables.FRRTFRT);
 }
 
 private function buyFig():void {
@@ -255,10 +274,9 @@ private function buyFig():void {
 	}
 	outputText("You pay five gems for a fig.  ");
 	menuLoc = 29;
-	shortName = "RingFig";
 	player.gems -= 5;
 	statScreenRefresh();
-	takeItem();
+	inventory.takeItem(consumables.RINGFIG);
 }
 
 
@@ -397,8 +415,7 @@ public function buySlutCake():void {
 	player.gems -= 500;
 	statScreenRefresh();
 	menuLoc = 19;
-	shortName = "CCupcak";
-	takeItem();
+	inventory.takeItem(consumables.CCUPCAK);
 }
 
 private function buyFoxBerry():void {
@@ -411,10 +428,9 @@ private function buyFoxBerry():void {
 	}
 	outputText("You pay five gems for a fox berry.  ");
 	menuLoc = 29;
-	shortName = "FoxBery";
 	player.gems -= 5;
 	statScreenRefresh();
-	takeItem();
+	inventory.takeItem(consumables.FOXBERY);
 }
 
 

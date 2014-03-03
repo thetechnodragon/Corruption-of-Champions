@@ -3,9 +3,7 @@
  */
 package classes.Scenes.Monsters
 {
-	import classes.Appearance;
-	import classes.BaseContent;
-	import classes.CockTypesEnum;
+	import classes.*;
 	import classes.GlobalFlags.kGAMECLASS;
 
 	public class GoblinScene extends BaseContent
@@ -47,7 +45,7 @@ package classes.Scenes.Monsters
 		{
 			spriteSelect(24);
 			outputText("", true);
-			if (player.hasPerk("Bimbo Brains") >= 0) {
+			if (player.findPerk(PerkLib.BimboBrains) >= 0) {
 				//[Female Bimbo Loss Against Goblin]
 				if (player.hasVagina()) {
 					outputText(images.showImage("goblin-loss-female-bimbodildo"));
@@ -145,7 +143,6 @@ package classes.Scenes.Monsters
 					outputText("She giggles again and leans over to kiss you on the lips, smearing her thick bubbly lips across your own and leaving you tasting the bubble-gum of her lipstick.  You find yourself smiling dreamily and slipping into unconsciousness...there must have been something in that lipstick!", false);
 					cleanupAfterCombat();
 					dynStats("lus=", 0);
-					return;
 				}
 				//[DICK FITS]
 				else {
@@ -209,7 +206,7 @@ package classes.Scenes.Monsters
 				dynStats("lus", 20);
 			}
 			//If cant rape or breastfeed
-			if (player.lust < 30 && player.hasStatusAffect("Feeder") < 0) {
+			if (player.lust < 30 && player.findStatusAffect(StatusAffects.Feeder) < 0) {
 				cleanupAfterCombat();
 				return;
 			}
@@ -247,7 +244,7 @@ package classes.Scenes.Monsters
 					spiderCondom = goblinCondomed;
 			}
 			//Breastfeed adds an option
-			if (player.hasStatusAffect("Feeder") >= 0) {
+			if (player.findStatusAffect(StatusAffects.Feeder) >= 0) {
 				feeder = giveGoblinAMilkMustache;
 			}
 			if (player.lust >= 33 && player.gender > 0 && (fitsFuck != null || cuntFuck != null || tooBig != null ||
@@ -274,8 +271,8 @@ package classes.Scenes.Monsters
 			//set lust to 0, increase sensitivity slightly
 			dynStats("lib", .2, "lus", -50);
 			//You've now been milked, reset the timer for that
-			player.addStatusValue("Feeder",1,1);
-			player.changeStatusValue("Feeder",2,0);
+			player.addStatusValue(StatusAffects.Feeder,1,1);
+			player.changeStatusValue(StatusAffects.Feeder,2,0);
 			cleanupAfterCombat();
 		}
 		private function gobboButtSecks():void

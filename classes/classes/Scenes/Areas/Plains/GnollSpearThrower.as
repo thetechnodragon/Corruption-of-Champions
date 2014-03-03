@@ -1,7 +1,8 @@
 package classes.Scenes.Areas.Plains
 {
-	import classes.Monster;
-	
+	import classes.*;
+	import classes.internals.*;
+
 	/**
 	 * ...
 	 * @author ...
@@ -13,13 +14,13 @@ package classes.Scenes.Areas.Plains
 			//return to combat menu when finished
 			doNext(1);
 			//Blind dodge change
-			if(hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+			if(findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 				outputText(capitalA + short + " completely misses you with a blind attack!\n", false);
 				//See below, removes the attack count once it hits rock bottom.
-				if(statusAffectv1("attacks") == 0) removeStatusAffect("attacks");
+				if(statusAffectv1(StatusAffects.Attacks) == 0) removeStatusAffect(StatusAffects.Attacks);
 				//Count down 1 attack then recursively call the function, chipping away at it.
-				if(statusAffectv1("attacks") - 1 >= 0) {
-					addStatusValue("attacks",1,-1);
+				if(statusAffectv1(StatusAffects.Attacks) - 1 >= 0) {
+					addStatusValue(StatusAffects.Attacks,1,-1);
 					eAttack();
 				}
 				return;
@@ -30,39 +31,39 @@ package classes.Scenes.Areas.Plains
 				return;
 			}
 			//Determine if evaded
-			if(player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			if(player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.\n", false);
 				//See below, removes the attack count once it hits rock bottom.
-				if(statusAffectv1("attacks") == 0) removeStatusAffect("attacks");
+				if(statusAffectv1(StatusAffects.Attacks) == 0) removeStatusAffect(StatusAffects.Attacks);
 				//Count down 1 attack then recursively call the function, chipping away at it.
-				if(statusAffectv1("attacks") - 1 >= 0) {
-					addStatusValue("attacks",1,-1);
+				if(statusAffectv1(StatusAffects.Attacks) - 1 >= 0) {
+					addStatusValue(StatusAffects.Attacks,1,-1);
 					eAttack();
 				}
 				return;
 			}
 			//("Misdirection"
-			if(player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+			if(player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 				outputText("Using Raphael's teachings, you anticipate and sidestep " + a + short + "' attacks.\n", false);
 				//See below, removes the attack count once it hits rock bottom.
-				if(statusAffectv1("attacks") == 0) removeStatusAffect("attacks");
+				if(statusAffectv1(StatusAffects.Attacks) == 0) removeStatusAffect(StatusAffects.Attacks);
 				//Count down 1 attack then recursively call the function, chipping away at it.
-				if(statusAffectv1("attacks") - 1 >= 0) {
-					addStatusValue("attacks",1,-1);
+				if(statusAffectv1(StatusAffects.Attacks) - 1 >= 0) {
+					addStatusValue(StatusAffects.Attacks,1,-1);
 					eAttack();
 				}
 				return;
 			}
 			//Determine if cat'ed
-			if(player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
+			if(player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
 				outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "", false);
 				if(plural) outputText("' attacks.\n", false);
 				else outputText("'s attack.\n", false);
 				//See below, removes the attack count once it hits rock bottom.
-				if(statusAffectv1("attacks") == 0) removeStatusAffect("attacks");
+				if(statusAffectv1(StatusAffects.Attacks) == 0) removeStatusAffect(StatusAffects.Attacks);
 				//Count down 1 attack then recursively call the function, chipping away at it.
-				if(statusAffectv1("attacks") - 1 >= 0) {
-					addStatusValue("attacks",1,-1);
+				if(statusAffectv1(StatusAffects.Attacks) - 1 >= 0) {
+					addStatusValue(StatusAffects.Attacks,1,-1);
 					eAttack();
 				}
 				return;
@@ -104,7 +105,7 @@ package classes.Scenes.Areas.Plains
 			var slow:Number = 0;
 			//<Hyena Attack 2 – Javelin – Unsuccessful – Dodged>
 			//Blind dodge change
-			if(hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+			if(findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 				outputText("The gnoll pulls a javelin from behind her and throws it at you, but blind as she is, it goes wide.", false);
 			}
 			//Determine if dodged!
@@ -112,33 +113,33 @@ package classes.Scenes.Areas.Plains
 				outputText("The gnoll pulls a long, dark wooden javelin from over her shoulder.  Her spotted arm strikes forward, launching the missile through the air.  The spear flashes through the distance towards your vulnerable form.  Even as you see doom sailing towards you, a primal instinct to duck pulls you down, and you feel the wind from the massive missile as it passes close to your ear.", false);
 			}
 			//Determine if evaded
-			else if(player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			else if(player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s thrown spear.\n", false);
 			}
 			//("Misdirection"
-			else if(player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+			else if(player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 				outputText("Using Raphael's teachings, you anticipate and sidestep " + a + short + "' thrown spear.\n", false);
 			}
 			//Determine if cat'ed
-			else if(player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
+			else if(player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
 				outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "'s thrown spear.", false);
 			}
 			//<Hyena Attack 2 – Javelin – Unsuccessful – Absorbed>
 			else if(player.armorDef > 10 && rand(2) == 0) {
 				outputText("The gnoll pulls a long, dark wooden javelin from over her shoulder.  Her spotted arm strikes forward, launching the missile through the air.  The spear flashes through the air but hits at an angle, sliding off your " + player.armorName + " without doing any damage.  It disappears into the grass.", false);
 			}
-			else if(player.hasPerk("Resolute") >= 0 && player.tou >= 75) {
+			else if(player.findPerk(PerkLib.Resolute) >= 0 && player.tou >= 75) {
 				outputText("You resolutely ignore the spear, brushing the blunted tip away when it hits you.\n");
 			}
 			//<Hyena Attack 2 – Javelin – Successful – Player Entangled>
 			else if(rand(3) >= 1) {
 				damage = player.takeDamage(25+rand(20));
 				outputText("The gnoll pulls a long, black javelin from over her shoulder.  Her spotted arm strikes forward, launching the missile through the air.  You attempt to dive to the side, but too late.  The powerful shaft slams, hard, into your back.  Pain radiates from the powerful impact.  Instead of piercing you, however, the tip seems to explode into a sticky goo that instantly bonds with your " + player.armorName + ".  The four foot, heavy shaft pulls down on you awkwardly, catching at things and throwing your balance off.  You try to tug the javelin off of you but find that it has glued itself to you.  It will take time and effort to remove; making it impossible to do while a dominant hyena stalks you. (" + damage + ")", false);
-				if(player.hasStatusAffect("Gnoll Spear") < 0) player.createStatusAffect("Gnoll Spear",0,0,0,0);
+				if(player.findStatusAffect(StatusAffects.GnollSpear) < 0) player.createStatusAffect(StatusAffects.GnollSpear,0,0,0,0);
 				slow = 15;
 				while(slow > 0 && player.spe > 2) {
 					slow--;
-					player.addStatusValue("Gnoll Spear",1,1);
+					player.addStatusValue(StatusAffects.GnollSpear,1,1);
 					player.spe--;
 					showStatDown( 'spe' );
 					// speDown.visible = true;
@@ -157,7 +158,7 @@ package classes.Scenes.Areas.Plains
 		private function hyenaSnapKicku():void {
 			var damage:Number = 0;
 			//Blind dodge change
-			if(hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+			if(findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 				outputText("The gnoll tries to catch you with a brutal snap-kick, but blind as she is, she completely misses.", false);
 			}
 			//Determine if dodged!
@@ -165,15 +166,15 @@ package classes.Scenes.Areas.Plains
 				outputText("The gnoll grins at you before striding forward and pivoting.  A spotted leg snaps up and out, flashing through the air towards your " + chestDesc() + ".  You step back just in time, robbing the blow of force.  The paw lightly strikes your torso before the female hyena springs back, glaring at you.", false);
 			}
 			//Determine if evaded
-			else if(player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			else if(player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s snap-kick.\n", false);
 			}
 			//("Misdirection"
-			else if(player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+			else if(player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 				outputText("Using Raphael's teachings, you anticipate and sidestep " + a + short + "' snap-kick.\n", false);
 			}
 			//Determine if cat'ed
-			else if(player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
+			else if(player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
 				outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "'s snap-kick.", false);
 			}
 			//Determine damage - str modified by enemy toughness!
@@ -223,13 +224,13 @@ package classes.Scenes.Areas.Plains
 //return to combat menu when finished
 			doNext(1);
 //Blind dodge change
-			if (hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+			if (findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 				outputText(capitalA + short + " completely misses you with a blind attack!\n", false);
 				//See below, removes the attack count once it hits rock bottom.
-				if (statusAffectv1("attacks") == 0) removeStatusAffect("attacks");
+				if (statusAffectv1(StatusAffects.Attacks) == 0) removeStatusAffect(StatusAffects.Attacks);
 				//Count down 1 attack then recursively call the function, chipping away at it.
-				if (statusAffectv1("attacks") - 1 >= 0) {
-					addStatusValue("attacks", 1, -1);
+				if (statusAffectv1(StatusAffects.Attacks) - 1 >= 0) {
+					addStatusValue(StatusAffects.Attacks, 1, -1);
 					eAttack();
 				}
 			}
@@ -238,37 +239,37 @@ package classes.Scenes.Areas.Plains
 				outputText("You see the gnoll's black lips pull back ever so slightly and the powerful muscles in her shapely thighs tense moments before she charges.  With a leap you throw yourself to the side, feeling the wind and fury pass through where you had just been standing.  You gracefully turn to face the hyena as she does the same, knowing that could have been very bad.", false);
 			}
 //Determine if evaded
-			if (player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			if (player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.\n", false);
 				//See below, removes the attack count once it hits rock bottom.
-				if (statusAffectv1("attacks") == 0) removeStatusAffect("attacks");
+				if (statusAffectv1(StatusAffects.Attacks) == 0) removeStatusAffect(StatusAffects.Attacks);
 				//Count down 1 attack then recursively call the function, chipping away at it.
-				if (statusAffectv1("attacks") - 1 >= 0) {
-					addStatusValue("attacks", 1, -1);
+				if (statusAffectv1(StatusAffects.Attacks) - 1 >= 0) {
+					addStatusValue(StatusAffects.Attacks, 1, -1);
 					eAttack();
 				}
 			}
 //("Misdirection"
-			if (player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+			if (player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 				outputText("Using Raphael's teachings, you anticipate and sidestep " + a + short + "' attacks.\n", false);
 				//See below, removes the attack count once it hits rock bottom.
-				if (statusAffectv1("attacks") == 0) removeStatusAffect("attacks");
+				if (statusAffectv1(StatusAffects.Attacks) == 0) removeStatusAffect(StatusAffects.Attacks);
 				//Count down 1 attack then recursively call the function, chipping away at it.
-				if (statusAffectv1("attacks") - 1 >= 0) {
-					addStatusValue("attacks", 1, -1);
+				if (statusAffectv1(StatusAffects.Attacks) - 1 >= 0) {
+					addStatusValue(StatusAffects.Attacks, 1, -1);
 					eAttack();
 				}
 			}
 //Determine if cat'ed
-			if (player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
+			if (player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
 				outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "", false);
 				if (plural) outputText("' attacks.\n", false);
 				else outputText("'s attack.\n", false);
 				//See below, removes the attack count once it hits rock bottom.
-				if (statusAffectv1("attacks") == 0) removeStatusAffect("attacks");
+				if (statusAffectv1(StatusAffects.Attacks) == 0) removeStatusAffect(StatusAffects.Attacks);
 				//Count down 1 attack then recursively call the function, chipping away at it.
-				if (statusAffectv1("attacks") - 1 >= 0) {
-					addStatusValue("attacks", 1, -1);
+				if (statusAffectv1(StatusAffects.Attacks) - 1 >= 0) {
+					addStatusValue(StatusAffects.Attacks, 1, -1);
 					eAttack();
 				}
 			}
@@ -331,20 +332,44 @@ package classes.Scenes.Areas.Plains
 
 		public function GnollSpearThrower()
 		{
-			init01Names("the ", "gnoll spear-thrower", "gnollspearthrower", "You are fighting a gnoll.  An amalgam of voluptuous, sensual lady and snarly, pissed off hyena, she clearly intends to punish you for trespassing.  Her dark-tan, spotted hide blends into a soft cream-colored fur covering her belly and two D-cup breasts, leaving two black nipples poking through the fur.  A crude loincloth is tied around her waist, obscuring her groin from view.  A leather strap cuts between her heavy breasts, holding a basket of javelins on her back.  Large, dish-shaped ears focus on you, leaving no doubt that she can hear every move you make.  Sharp, dark eyes are locked on your body, filled with aggression and a hint of lust.");
-			init02Female(VAGINA_WETNESS_DROOLING, VAGINA_LOOSENESS_LOOSE);
-			init03BreastRows("D");
-			init04Ass(ANAL_LOOSENESS_STRETCHED,ANAL_WETNESS_DRY,25);
-			init05Body(72,HIP_RATING_AMPLE,BUTT_RATING_TIGHT);
-			init06Skin("tawny",SKIN_TYPE_FUR);
-			init07Hair("black",22);
-			init08Face();
-			init09PrimaryStats(85,60,100,50,65,45,60);
-			init10Weapon("teeth","bite",0,"",25);
-			init11Armor("skin",2);
-			init12Combat(250,30,.35,Monster.TEMPERMENT_RANDOM_GRAPPLES);
-			init13Level(10,10 + rand(5));
-			initX_Specials(hyenaJavelinAttack,hyenaSnapKicku,hyenaArousalAttack);
+			this.a = "the ";
+			this.short = "gnoll spear-thrower";
+			this.imageName = "gnollspearthrower";
+			this.long = "You are fighting a gnoll.  An amalgam of voluptuous, sensual lady and snarly, pissed off hyena, she clearly intends to punish you for trespassing.  Her dark-tan, spotted hide blends into a soft cream-colored fur covering her belly and two D-cup breasts, leaving two black nipples poking through the fur.  A crude loincloth is tied around her waist, obscuring her groin from view.  A leather strap cuts between her heavy breasts, holding a basket of javelins on her back.  Large, dish-shaped ears focus on you, leaving no doubt that she can hear every move you make.  Sharp, dark eyes are locked on your body, filled with aggression and a hint of lust.";
+			// this.plural = false;
+			this.createVagina(false, VAGINA_WETNESS_DROOLING, VAGINA_LOOSENESS_LOOSE);
+			createBreastRow(Appearance.breastCupInverse("D"));
+			this.ass.analLooseness = ANAL_LOOSENESS_STRETCHED;
+			this.ass.analWetness = ANAL_WETNESS_DRY;
+			this.createStatusAffect(StatusAffects.BonusACapacity,25,0,0,0);
+			this.tallness = 72;
+			this.hipRating = HIP_RATING_AMPLE;
+			this.buttRating = BUTT_RATING_TIGHT;
+			this.skinTone = "tawny";
+			this.skinType = SKIN_TYPE_FUR;
+			//this.skinDesc = Appearance.Appearance.DEFAULT_SKIN_DESCS[SKIN_TYPE_FUR];
+			this.hairColor = "black";
+			this.hairLength = 22;
+			initStrTouSpeInte(85, 60, 100, 50);
+			initLibSensCor(65, 45, 60);
+			this.weaponName = "teeth";
+			this.weaponVerb="bite";
+			this.weaponAttack = 0;
+			this.weaponPerk = "";
+			this.weaponValue = 25;
+			this.armorName = "skin";
+			this.armorDef = 2;
+			this.bonusHP = 250;
+			this.lust = 30;
+			this.lustVuln = .35;
+			this.temperment = TEMPERMENT_RANDOM_GRAPPLES;
+			this.level = 10;
+			this.gems = 10 + rand(5);
+			this.drop = new ChainedDrop().add(consumables.GROPLUS,1/5).add(consumables.INCUBID,1/2).elseDrop(consumables.BROWN_D);
+			this.special1 = hyenaJavelinAttack;
+			this.special2 = hyenaSnapKicku;
+			this.special3 = hyenaArousalAttack;
+			checkMonster();
 		}
 	}
 }

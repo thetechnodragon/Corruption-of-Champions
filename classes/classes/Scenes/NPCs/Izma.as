@@ -1,9 +1,7 @@
 package classes.Scenes.NPCs
 {
-	import classes.CoC;
-	import classes.Cock;
-	import classes.Monster;
-	
+	import classes.*;
+
 	/**
 	 * ...
 	 * @author ...
@@ -14,7 +12,7 @@ package classes.Scenes.NPCs
 		//[Special Attacks]
 		private function IzmaSpecials1():void {
 			//Blind dodge change
-			if(hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+			if(findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 				outputText("Izma attempts to close the distance with you, but misses completely because of her blindness.\n", false);
 				return;
 			}
@@ -24,17 +22,17 @@ package classes.Scenes.NPCs
 				return;
 			}
 			//Determine if evaded
-			if(player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			if(player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("Izma attempts to get close, but you manage to side-step her before she can lay her gauntleted hands on you.\n", false);
 				return;
 			}
 			//("Misdirection"
-			if(player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+			if(player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 				outputText("Izma attempts to get close, but you put Raphael's teachings to use and side-step the sharkgirl, confusing her with your movements.\n", false);
 				return;
 			}
 			//Determine if cat'ed
-			if(player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
+			if(player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
 				outputText("Izma attempts to get close, but you manage to side-step her before she can lay her gauntleted hands on you.\n", false);
 				return;
 			}
@@ -45,7 +43,7 @@ package classes.Scenes.NPCs
 
 		private function IzmaSpecials2():void {
 			//Blind dodge change
-			if(hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+			if(findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 				outputText("Izma blindly tries to clinch with you, but misses completely.\n", false);
 				return;
 			}
@@ -55,17 +53,17 @@ package classes.Scenes.NPCs
 				return;
 			}
 			//Determine if evaded
-			if(player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			if(player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("Izma tries to clinch with you, but she didn't count on your skills in evasion.  You manage to sidestep her at the last second.\n", false);
 				return;
 			}
 			//("Misdirection"
-			if(player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+			if(player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 				outputText("Izma ducks and weaves forward to clinch with you, but thanks to Raphael's teachings, you're easily able to misguide her and avoid the clumsy grab.\n", false);
 				return;
 			}
 			//Determine if cat'ed
-			if(player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
+			if(player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
 				outputText("Izma tries to lock you in a clinch, but your cat-like flexible makes it easy to twist away from her grab.\n", false);
 				return;
 			}
@@ -77,7 +75,7 @@ package classes.Scenes.NPCs
 				//(armor-dependent Health damage, fullplate, chain, scale, and bee chitin armor are unaffected, has a chance to inflict 'Bleed' damage which removes 2-5% of health for the next three turns if successful)
 				damage = player.takeDamage(damage);
 				outputText("writhe as she painfully drags the blades of her glove down your back", false);
-				player.createStatusAffect("Izma Bleed",3,0,0,0);
+				player.createStatusAffect(StatusAffects.IzmaBleed,3,0,0,0);
 			}
 			else outputText("laugh as her blades scape uselessly at your armor-clad back", false);
 			outputText(" before breaking her embrace and leaping away. (" + damage + ")", false);
@@ -142,23 +140,41 @@ package classes.Scenes.NPCs
 
 		public function Izma()
 		{
-			init01Names("", "Izma", "izma", "Izma the tigershark stands a bit over 6' tall, with orange skin bearing horizontal stripes covering most of her body.  Her silver-white hair cascades past her shoulders, draping over an impressive pair of DD-cup breasts barely restrained by a skimpy black bikini top.  Under the knee-length grass skirt below them rustles her beastly fifteen-inch penis and four-balled sack; you catch occasional glimpses of them as she moves.  She's tucked her usual reading glasses into her locker at the moment.");
-			init02Male(new Cock(15,2.2),4,3);
-			init02Female(VAGINA_WETNESS_SLICK,VAGINA_LOOSENESS_LOOSE,45);
-			init03BreastRows("DD");
-			init04Ass(ANAL_LOOSENESS_NORMAL,ANAL_WETNESS_DRY,30);
-			init05Body("5'5",HIP_RATING_CURVY,BUTT_RATING_NOTICEABLE);
-			init06Skin("striped orange");
-			init07Hair("silver",20);
-			init08Face();
-			init09PrimaryStats(80,90,85,65,75,25,40);
-			init10Weapon("clawed gauntlets","clawed punches",45);
-			init11Armor("bikini and grass skirt",8);
-			init12Combat(330,20,.20,Monster.TEMPERMENT_RANDOM_GRAPPLES);
-			init13Level(15,rand(5) + 1);
-			initX_Specials();
-
-
+			this.a = "";
+			this.short = "Izma";
+			this.imageName = "izma";
+			this.long = "Izma the tigershark stands a bit over 6' tall, with orange skin bearing horizontal stripes covering most of her body.  Her silver-white hair cascades past her shoulders, draping over an impressive pair of DD-cup breasts barely restrained by a skimpy black bikini top.  Under the knee-length grass skirt below them rustles her beastly fifteen-inch penis and four-balled sack; you catch occasional glimpses of them as she moves.  She's tucked her usual reading glasses into her locker at the moment.";
+			// this.plural = false;
+			this.createCock(15,2.2);
+			this.balls = 4;
+			this.ballSize = 3;
+			this.createVagina(false, VAGINA_WETNESS_SLICK, VAGINA_LOOSENESS_LOOSE);
+			this.createStatusAffect(StatusAffects.BonusVCapacity, 45, 0, 0, 0);
+			createBreastRow(Appearance.breastCupInverse("DD"));
+			this.ass.analLooseness = ANAL_LOOSENESS_NORMAL;
+			this.ass.analWetness = ANAL_WETNESS_DRY;
+			this.createStatusAffect(StatusAffects.BonusACapacity,30,0,0,0);
+			this.tallness = 5*12+5;
+			this.hipRating = HIP_RATING_CURVY;
+			this.buttRating = BUTT_RATING_NOTICEABLE;
+			this.skinTone = "striped orange";
+			this.hairColor = "silver";
+			this.hairLength = 20;
+			initStrTouSpeInte(80, 90, 85, 65);
+			initLibSensCor(75, 25, 40);
+			this.weaponName = "clawed gauntlets";
+			this.weaponVerb="clawed punches";
+			this.weaponAttack = 45;
+			this.armorName = "bikini and grass skirt";
+			this.armorDef = 8;
+			this.bonusHP = 330;
+			this.lust = 20;
+			this.lustVuln = .20;
+			this.temperment = TEMPERMENT_RANDOM_GRAPPLES;
+			this.level = 15;
+			this.gems = rand(5) + 1;
+			this.drop = NO_DROP;
+			checkMonster();
 		}
 		
 	}

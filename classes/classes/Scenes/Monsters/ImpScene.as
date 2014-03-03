@@ -3,10 +3,9 @@
  */
 package classes.Scenes.Monsters
 {
-	import classes.Appearance;
-	import classes.BaseContent;
-	import classes.CockTypesEnum;
+	import classes.*;
 	import classes.GlobalFlags.kGAMECLASS;
+	import classes.Items.Armors.LustyMaidensArmor;
 	import classes.Scenes.Camp.ImpGang;
 
 	use namespace kGAMECLASS;
@@ -17,7 +16,7 @@ package classes.Scenes.Monsters
 		{
 		}
 		public function impVictory():void {
-			if(player.hasStatusAffect("Feeder") >= 0) {
+			if(player.findStatusAffect(StatusAffects.Feeder) >= 0) {
 				if(player.lust >= 33) outputText("You smile in satisfaction as " + monster.a + monster.short + " collapses and begins masturbating feverishly.  Sadly you realize your own needs have not been met.  Of course you could always rape the poor thing, but it might be more fun to force it to guzzle your breast-milk.\n\nWhat do you do?", true);
 				else outputText("You smile in satisfaction as " + monster.a + monster.short + " collapses and begins masturbating feverishly.  You're not really turned on enough to rape it, but it might be fun to force it to guzzle your breast-milk.\n\nDo you breastfeed it?", true);
 			}
@@ -33,9 +32,9 @@ package classes.Scenes.Monsters
 			var feeder:Function =null;
 			var nipFuck:Function =null;
 			var bikiniTits:Function =null;
-			if(player.hasVagina() && player.biggestTitSize() >= 4 && player.armorName == "lusty maiden's armor") bikiniTits = kGAMECLASS.lustyMaidenPaizuri;
+			if(player.hasVagina() && player.biggestTitSize() >= 4 && player.armor is LustyMaidensArmor) bikiniTits = (player.armor as LustyMaidensArmor).lustyMaidenPaizuri;
 			if(player.hasFuckableNipples() && player.lust >= 33) nipFuck = noogaisNippleRape;
-			if(player.hasStatusAffect("Feeder") >= 0) feeder = areImpsLactoseIntolerant;
+			if(player.findStatusAffect(StatusAffects.Feeder) >= 0) feeder = areImpsLactoseIntolerant;
 			//Taurs have different scenes
 			if(player.isTaur()) {
 				if(player.hasCock() && player.lust >= 33) {
@@ -369,7 +368,7 @@ package classes.Scenes.Monsters
 						else outputText("groin.\n\n", false);
 						//<<GoTo I3 then return>> 
 						centaurOnImpResults(3);
-						outputText("A guttural moan escapes your mouth as you realize the creature has completely passed out underneath you.  ", false)
+						outputText("A guttural moan escapes your mouth as you realize the creature has completely passed out underneath you.  ", false);
 						if(player.hasFuckableNipples()) outputText("Shoving your fingers deep into your " + nippleDescript(0) + "s", false);
 						else outputText("With a fierce tug on your " + nippleDescript(0) + "s", false);
 						outputText("you begin to cum deep and directly into the imp's stomach and " + eAssholeDescript() + ".  ", false);
@@ -581,8 +580,8 @@ package classes.Scenes.Monsters
 			//set lust to 0, increase sensitivity slightly
 			dynStats("lib", .2, "lus", -50);
 			//You've now been milked, reset the timer for that
-			player.addStatusValue("Feeder",1,1);
-			player.changeStatusValue("Feeder",2,0);
+			player.addStatusValue(StatusAffects.Feeder,1,1);
+			player.changeStatusValue(StatusAffects.Feeder,2,0);
 			cleanupAfterCombat();
 		}
 		
@@ -598,9 +597,9 @@ package classes.Scenes.Monsters
 			if(player.lowerBody == LOWER_BODY_TYPE_CENTAUR) {
 				if(rand(2) == 0 && (player.cockTotal() == 0 || player.gender == 3)) {
 					//(First encounter)
-					if(player.hasStatusAffect("Imp GangBang") < 0) {
+					if(player.findStatusAffect(StatusAffects.ImpGangBang) < 0) {
 						outputText("The imps stand anywhere from two to four feet tall, with scrawny builds and tiny demonic wings. Their red and orange skin is dirty, and their dark hair looks greasy. Some are naked, most are dressed in ragged loincloths that do little to hide their groins. They all have a " + eCockDescript(0) + " as long and thick as a man's arm, far oversized for their bodies. Watching an imp trip over its " + eCockDescript(0) + " would be funny, if you weren't surrounded by a horde of leering imps closing in on from all sides...\n\n", false);
-						player.createStatusAffect("Imp GangBang",0,0,0,0);
+						player.createStatusAffect(StatusAffects.ImpGangBang,0,0,0,0);
 						outputText("The imps leap forward just as you start to ready your " + player.weaponName + ", one sweaty imp clinging to your arm", false);
 						//(If the player has a weapon)
 						if(player.weaponName != "fists") outputText(" while another kicks your weapon out of reach", false);
@@ -763,7 +762,7 @@ package classes.Scenes.Monsters
 				//Scene number 2 - male possible.
 				else {
 					//Scene 2 (Centaur, vaginal)
-					if(player.hasStatusAffect("Imp GangBang") >= 0) {
+					if(player.findStatusAffect(StatusAffects.ImpGangBang) >= 0) {
 						//(Subsequent encounters - Low Corruption)
 						if(player.cor < 50) outputText("You can't tell if this is the same " + monster.short + " as last time or not. You're not racist, but all imps look alike to you. " + monster.capitalA  + " surges forward, grabbing at your legs and arms and running their hands over your body. You struggle, but there are just too many to fight. The result is the same as last time...\n\n", false);
 						//(Subsequent encounters - High Corruption)
@@ -945,9 +944,9 @@ package classes.Scenes.Monsters
 			else {
 				if(rand(2) == 0 && (player.cockTotal() == 0 || player.gender == 3)) {
 					//(First encounter)
-					if(player.hasStatusAffect("Imp GangBang") < 0) {
+					if(player.findStatusAffect(StatusAffects.ImpGangBang) < 0) {
 						outputText("The imps stand anywhere from two to four feet tall, with scrawny builds and tiny demonic wings. Their red and orange skin is dirty, and their dark hair looks greasy. Some are naked, most are dressed in ragged loincloths that do little to hide their groins. They all have a " + eCockDescript(0) + " as long and thick as a man's arm, far oversized for their bodies. Watching an imp trip over its " + eCockDescript(0) + " would be funny, if you weren't surrounded by a horde of leering imps closing in on from all sides...\n\n", false);
-						player.createStatusAffect("Imp GangBang",0,0,0,0);
+						player.createStatusAffect(StatusAffects.ImpGangBang,0,0,0,0);
 					}
 					outputText("The imps leap forward just as you start to ready your " + player.weaponName + ", one sweaty imp clinging to your arm", false);
 					if(player.weaponName != "fists") outputText(" while another kicks your weapon out of reach", false);
@@ -1071,7 +1070,7 @@ package classes.Scenes.Monsters
 					//Tag-team
 					//Include milking alt text in separate blocks. 
 					//Work cock and multicock alt text directly into main text blocks.
-					if(player.hasStatusAffect("Imp GangBang") >= 0) {
+					if(player.findStatusAffect(StatusAffects.ImpGangBang) >= 0) {
 						//(Subsequent encounters - Low Corruption)
 						if(player.cor < 50) outputText("You can't tell if this is the same " + monster.short + " as last time or not - all imps look alike to you.  The " + monster.capitalA  + " surges forward, grabbing at your " + player.legs() + " and arms and running their hands over your body. You struggle, but there are just too many to fight. The result is the same as last time...\n\n", false);
 						//(Subsequent encounters - High Corruption)
@@ -1252,7 +1251,7 @@ package classes.Scenes.Monsters
 		}
 		public function impRapesYou():void {
 			outputText("", true);
-			if (player.hasPerk("Bimbo Brains") >= 0 && !player.isTaur() && player.hasVagina()) {
+			if (player.findPerk(PerkLib.BimboBrains) >= 0 && !player.isTaur() && player.hasVagina()) {
 				outputText(images.showImage("imp-loss-female-fuck"), false);
 				outputText("You sink to the ground, assuming a position that feels all-too-natural to you now, leaning forward to let your " + player.allBreastsDescript() + " hang down slightly. The imp looks you up and down, wickedly eyeing your ready, slightly open lips. He drops his loin-cloth to reveal a hardening cock. Your eyes bulge as it grows larger... and larger... and larger! The imp's cock finally bulges to a full twelve inches... and it's moving closer. You struggle to think... but you just can't! You want that in your mouth, like, so bad!\n\n", false);
 				outputText("Your " + vaginaDescript(0) + " drips in anticipation, and you find yourself involuntarily moving your knees farther apart to prepare yourself to be filled. He smiles and presses his cock against your " + vaginaDescript(0) + ", pushing you back to get a better angle. You try to make words, but your brain can only think of so much at once! Right now, it's thinking of cock, which, naturally, makes you open your mouth and let out a slutty moan.\n\n", false);
@@ -1308,7 +1307,7 @@ package classes.Scenes.Monsters
 						outputText("You wonder what this will do to whatever is growing in your womb...  ", false);
 					}
 					else {
-						if(player.hasStatusAffect("heat") >= 0) outputText("You find yourself hoping you're pregnant as you swiftly lose consciousness.", false);
+						if(player.findStatusAffect(StatusAffects.Heat) >= 0) outputText("You find yourself hoping you're pregnant as you swiftly lose consciousness.", false);
 						else if(player.pregnancyIncubation <= 0) {
 							if(player.cor > 75) outputText("With an appreciative moan, you bury your fingers in its slimy warmth, hoping you are pregnant with some fiendish offspring, and lose consciousness.", false);
 							else outputText("You hope you don't become pregnant, but promptly lose consciousness before you can contemplate the prospect any further.", false);
@@ -1511,7 +1510,7 @@ package classes.Scenes.Monsters
 				if(player.hasCock() && player.cockThatFits(monster.analCapacity()) >= 0) addButton(0,"FuckHisAss",impLordBumPlug);
 				if(player.hasCock()) addButton(1,"Get Blown",getBlownByAnImpLord);
 				if(player.hasVagina()) addButton(2,"Ride Cock",femaleVagRape);
-				if(player.hasPerk("Feeder") >= 0) addButton(3,"Breastfeed",feederBreastfeedRape);
+				if(player.findPerk(PerkLib.Feeder) >= 0) addButton(3,"Breastfeed",feederBreastfeedRape);
 			}
 		}
 		
@@ -1729,8 +1728,8 @@ package classes.Scenes.Monsters
 				dynStats("cor", 1);
 			}
 			//You've now been milked, reset the timer for that
-			player.addStatusValue("Feeder",1,1);
-			player.changeStatusValue("Feeder",2,0);
+			player.addStatusValue(StatusAffects.Feeder,1,1);
+			player.changeStatusValue(StatusAffects.Feeder,2,0);
 			player.boostLactation(0.1);
 			cleanupAfterCombat();
 		}

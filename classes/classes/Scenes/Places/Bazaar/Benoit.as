@@ -1,4 +1,5 @@
 ﻿package classes.Scenes.Places.Bazaar {
+	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
 
 //  TIMES_IN_BENOITS:int = 562;
@@ -43,10 +44,10 @@ public function benoitAffection(changes:Number = 0):Number {
 
 private function benoitKnocksUpPCCheck():void {
 	//Convert old basi's to real basi's!
-	if(player.pregnancyType == 14 && player.hasPerk("Basilisk Womb") >= 0) player.pregnancyType = 18;
+	if(player.pregnancyType == 14 && player.findPerk(PerkLib.BasiliskWomb) >= 0) player.pregnancyType = 18;
 	//Knock up chances:
-	if((player.pregnancyType == 5 || player.hasPerk("Harpy Womb") >= 0 || player.hasPerk("Oviposition") >= 0 || player.hasPerk("Basilisk Womb") >= 0) && (player.pregnancyIncubation == 0 || player.pregnancyType == 5)) {
-		if(player.hasPerk("Basilisk Womb") >= 0 && flags[kFLAGS.BENOIT_TESTED_BASILISK_WOMB] == 1) {
+	if((player.pregnancyType == 5 || player.findPerk(PerkLib.HarpyWomb) >= 0 || player.findPerk(PerkLib.Oviposition) >= 0 || player.findPerk(PerkLib.BasiliskWomb) >= 0) && (player.pregnancyIncubation == 0 || player.pregnancyType == 5)) {
+		if(player.findPerk(PerkLib.BasiliskWomb) >= 0 && flags[kFLAGS.BENOIT_TESTED_BASILISK_WOMB] == 1) {
 			if(player.pregnancyType != 5 || player.pregnancyIncubation == 0) {
 				//player.pregnancyIncubation = 250;
 				player.knockUp(18,250);
@@ -71,7 +72,7 @@ public function benoitIntro():void {
 		
 		outputText("\n\nYou wonder how a blind anything can make it in such a rough and ready place as the Bazaar, but then Benoit curls his claws protectively into what appears to be a pile of robes sitting next to him, which opens dark brown eyes and sets its muzzle on the counter, looking at you plaintively.  The Alsatian buried within the cloth looks to you like a big softy, but you're willing to concede the point as made.");
 	}
-	else if(flags[kFLAGS.BENOIT_SUGGEST_UNLOCKED] == 0 && player.hasVagina() && (player.hasStatusAffect("heat") >= 0 || player.pregnancyType == 5 || player.hasPerk("Harpy Womb") >= 0 || player.hasPerk("Oviposition") >= 0) && (player.pregnancyType == 5 || player.pregnancyIncubation == 0)) {
+	else if(flags[kFLAGS.BENOIT_SUGGEST_UNLOCKED] == 0 && player.hasVagina() && (player.findStatusAffect(StatusAffects.Heat) >= 0 || player.pregnancyType == 5 || player.findPerk(PerkLib.HarpyWomb) >= 0 || player.findPerk(PerkLib.Oviposition) >= 0) && (player.pregnancyType == 5 || player.pregnancyIncubation == 0)) {
 		if(flags[kFLAGS.BENOIT_SUGGEST_UNLOCKED] == 0) benoitAndFemPCTalkAboutEggings();
 		suggest = eggySuggest;
 	}
@@ -87,7 +88,7 @@ public function benoitIntro():void {
 	}
 	if(flags[kFLAGS.BENOIT_SUGGEST_UNLOCKED] > 0 && player.hasVagina()) suggest = eggySuggest;
 	flags[kFLAGS.TIMES_IN_BENOITS]++;
-	if(flags[kFLAGS.BENOIT_WOMB_TALK_UNLOCKED] == 1 && player.hasPerk("Basilisk Womb") < 0 && flags[kFLAGS.BENOIT_TESTED_BASILISK_WOMB] == 0) womb = tryToConvertToBassyWomb;
+	if(flags[kFLAGS.BENOIT_WOMB_TALK_UNLOCKED] == 1 && player.findPerk(PerkLib.BasiliskWomb) < 0 && flags[kFLAGS.BENOIT_TESTED_BASILISK_WOMB] == 0) womb = tryToConvertToBassyWomb;
 	choices("Buy",benoitsBuyMenu,"Sell",benoitSellMenu,"Talk",talkToBenoit,"Suggest",suggest,"Basil. Womb",womb,"",0,"",0,"",0,"",0,"Leave",2855);
 }
 
@@ -105,9 +106,9 @@ public function benoitsBuyMenu():void {
 		outputText("\"<i>Some may call zis junk,</i>\" says Benoit, indicating his latest wares.  \"<i>Me... I call it garbage.</i>\"");
 	}
 	outputText("\n\n<b><u>" + benoitMF("Benoit","Benoite") + "'s Prices</u></b>", false);
-	outputText("\n" + itemLongName(flags[kFLAGS.BENOIT_1]) + ": " + 2*itemValue(flags[kFLAGS.BENOIT_1]));
-	outputText("\n" + itemLongName(flags[kFLAGS.BENOIT_2]) + ": " + 2*itemValue(flags[kFLAGS.BENOIT_2]));
-	outputText("\n" + itemLongName(flags[kFLAGS.BENOIT_3]) + ": " + 2*itemValue(flags[kFLAGS.BENOIT_3]));
+	outputText("\n" + ItemType.lookupItem(flags[kFLAGS.BENOIT_1]).longName + ": " + 2*ItemType.lookupItem(flags[kFLAGS.BENOIT_1]).value);
+	outputText("\n" + ItemType.lookupItem(flags[kFLAGS.BENOIT_2]).longName + ": " + 2*ItemType.lookupItem(flags[kFLAGS.BENOIT_2]).value);
+	outputText("\n" + ItemType.lookupItem(flags[kFLAGS.BENOIT_3]).longName + ": " + 2*ItemType.lookupItem(flags[kFLAGS.BENOIT_3]).value);
 	simpleChoices(flags[kFLAGS.BENOIT_1],createCallBackFunction(benoitTransactBuy,1),
 			flags[kFLAGS.BENOIT_2],createCallBackFunction(benoitTransactBuy,2),
 			flags[kFLAGS.BENOIT_3],createCallBackFunction(benoitTransactBuy,3),
@@ -128,36 +129,37 @@ private function benoitSellMenu():void {
 	var sellMod:int = 3;
 	if(flags[kFLAGS.BENOIT_EGGS] > 0) sellMod = 2;
 	outputText("\n\n<b><u>" + benoitMF("Benoit","Benoite") + "'s Estimates</u></b>", false);
-	if(itemSlot1.quantity > 0 && int(itemValue(itemSlot1.shortName)/sellMod) > 0) {
-		outputText("\n" + int(itemValue(itemSlot1.shortName)/sellMod) + " gems for " + itemLongName(itemSlot1.shortName) + ".", false);
+	if(player.itemSlot1.quantity > 0 && int(player.itemSlot1.itype.value/sellMod) > 0) {
+		outputText("\n" + int(player.itemSlot1.itype.value/sellMod) + " gems for " + player.itemSlot1.itype.longName + ".", false);
 		temp1 = createCallBackFunction(benoitSellTransact,1);
 	}
-	if(itemSlot2.quantity > 0 && int(itemValue(itemSlot2.shortName)/sellMod) > 0) {
-		outputText("\n" + int(itemValue(itemSlot2.shortName)/sellMod) + " gems for " + itemLongName(itemSlot2.shortName) + ".", false);
+	if(player.itemSlot2.quantity > 0 && int(player.itemSlot2.itype.value/sellMod) > 0) {
+		outputText("\n" + int(player.itemSlot2.itype.value/sellMod) + " gems for " + player.itemSlot2.itype.longName + ".", false);
 		temp2 = createCallBackFunction(benoitSellTransact,2);
 	}
-	if(itemSlot3.quantity > 0 && int(itemValue(itemSlot3.shortName)/sellMod) > 0) {
-		outputText("\n" + int(itemValue(itemSlot3.shortName)/sellMod) + " gems for " + itemLongName(itemSlot3.shortName) + ".", false);
+	if(player.itemSlot3.quantity > 0 && int(player.itemSlot3.itype.value/sellMod) > 0) {
+		outputText("\n" + int(player.itemSlot3.itype.value/sellMod) + " gems for " + player.itemSlot3.itype.longName + ".", false);
 		temp3 = createCallBackFunction(benoitSellTransact,3);
 	}
-	if(itemSlot4.quantity > 0 && int(itemValue(itemSlot3.shortName)/sellMod) > 0) {
+	if(player.itemSlot4.quantity > 0 && int(player.itemSlot4.itype.value/sellMod) > 0) {
 		temp4 = createCallBackFunction(benoitSellTransact,4);
-		outputText("\n" + int(itemValue(itemSlot4.shortName)/sellMod) + " gems for " + itemLongName(itemSlot4.shortName) + ".", false);
+		outputText("\n" + int(player.itemSlot4.itype.value/sellMod) + " gems for " + player.itemSlot4.itype.longName + ".", false);
 	}
-	if(itemSlot5.quantity > 0 && int(itemValue(itemSlot3.shortName)/sellMod) > 0) {
+	if(player.itemSlot5.quantity > 0 && int(player.itemSlot5.itype.value/sellMod) > 0) {
 		temp5 = createCallBackFunction(benoitSellTransact,5);
-		outputText("\n" + int(itemValue(itemSlot5.shortName)/sellMod) + " gems for " + itemLongName(itemSlot5.shortName) + ".", false);
+		outputText("\n" + int(player.itemSlot5.itype.value/sellMod) + " gems for " + player.itemSlot5.itype.longName + ".", false);
 	}
-	choices((itemSlot1.shortName + " x" + itemSlot1.quantity), temp1, (itemSlot2.shortName + " x" + itemSlot2.quantity), temp2, (itemSlot3.shortName + " x" + itemSlot3.quantity), temp3, (itemSlot4.shortName + " x" + itemSlot4.quantity), temp4, (itemSlot5.shortName + " x" + itemSlot5.quantity), temp5, "", 0, "", 0, "", 0, "", 0, "Back", benoitIntro);
+	choices((player.itemSlot1.itype.shortName + " x" + player.itemSlot1.quantity), temp1, (player.itemSlot2.itype.shortName + " x" + player.itemSlot2.quantity), temp2, (player.itemSlot3.itype.shortName + " x" + player.itemSlot3.quantity), temp3, (player.itemSlot4.itype.shortName + " x" + player.itemSlot4.quantity), temp4, (player.itemSlot5.itype.shortName + " x" + player.itemSlot5.quantity), temp5, "", 0, "", 0, "", 0, "", 0, "Back", benoitIntro);
 	
 }
 
 private function benoitTransactBuy(slot:int = 1):void {
 	clearOutput();
-	if(slot == 1) shortName = flags[kFLAGS.BENOIT_1];
-	else if(slot == 2) shortName = flags[kFLAGS.BENOIT_2];
-	else shortName = flags[kFLAGS.BENOIT_3];
-	if(player.gems < 2 * itemValue(shortName)) {
+	var itype:ItemType;
+	if(slot == 1) itype = ItemType.lookupItem(flags[kFLAGS.BENOIT_1]);
+	else if(slot == 2) itype = ItemType.lookupItem(flags[kFLAGS.BENOIT_2]);
+	else itype = ItemType.lookupItem(flags[kFLAGS.BENOIT_3]);
+	if(player.gems < 2 * itype.value) {
 		outputText("You consider making a purchase, but you lack the gems to go through with it.");
 		doNext(benoitsBuyMenu);
 		return;
@@ -167,10 +169,10 @@ private function benoitTransactBuy(slot:int = 1):void {
 	//(+3 Affection)
 	benoitAffection(3);
 	
-	player.gems -= 2 * itemValue(shortName);
+	player.gems -= 2 * itype.value;
 	statScreenRefresh();
 	menuLoc = 26;
-	takeItem();
+	inventory.takeItem(itype);
 }
 
 private function benoitSellTransact(slot:int = 1):void {
@@ -181,24 +183,24 @@ private function benoitSellTransact(slot:int = 1):void {
 	else outputText("Following a painstaking examination of what you've given him with his hands and nose, Benoit grudgingly accepts it and carefully counts out your reward.");
 	var gems:int = 0;
 	if(slot == 1) {
-		gems = int(itemValue(itemSlot1.shortName)/sellMod);
-		itemSlot1.removeOneItem();
+		gems = int(player.itemSlot1.itype.value/sellMod);
+		player.itemSlot1.removeOneItem();
 	}
 	if(slot == 2) {
-		gems = int(itemValue(itemSlot2.shortName)/sellMod);
-		itemSlot2.removeOneItem();
+		gems = int(player.itemSlot2.itype.value/sellMod);
+		player.itemSlot2.removeOneItem();
 	}
 	if(slot == 3) {
-		gems = int(itemValue(itemSlot3.shortName)/sellMod);
-		itemSlot3.removeOneItem();
+		gems = int(player.itemSlot3.itype.value/sellMod);
+		player.itemSlot3.removeOneItem();
 	}
 	if(slot == 4) {
-		gems = int(itemValue(itemSlot4.shortName)/sellMod);
-		itemSlot4.removeOneItem();
+		gems = int(player.itemSlot4.itype.value/sellMod);
+		player.itemSlot4.removeOneItem();
 	}
 	if(slot == 5) {
-		gems = int(itemValue(itemSlot5.shortName)/sellMod);
-		itemSlot5.removeOneItem();
+		gems = int(player.itemSlot5.itype.value/sellMod);
+		player.itemSlot5.removeOneItem();
 	}
 	//add gem price here.
 	player.gems += gems;
@@ -212,54 +214,54 @@ private function benoitSellTransact(slot:int = 1):void {
 public function updateBenoitInventory():void {
 	temp = rand(8);
 	//Slot 1 Any one of the following: Incubus Draft, Minotaur Blood, Minotaur Cum, Equinuum, Black Pepper, Vitalitea, Scholar's Tea, Double Pepper
-	if(temp == 0) flags[kFLAGS.BENOIT_1] = "IncubiD";
-	else if(temp == 1) flags[kFLAGS.BENOIT_1] = "MinoBlo";
-	else if(temp == 2) flags[kFLAGS.BENOIT_1] = "MinoCum";
-	else if(temp == 3) flags[kFLAGS.BENOIT_1] = "Equinum";
-	else if(temp == 4) flags[kFLAGS.BENOIT_1] = "BlackPp";
-	else if(temp == 5) flags[kFLAGS.BENOIT_1] = "Smart T";
-	else if(temp == 6) flags[kFLAGS.BENOIT_1] = "Vital T";
-	else flags[kFLAGS.BENOIT_1] = "DblPepp";
+	if(temp == 0) flags[kFLAGS.BENOIT_1] = consumables.INCUBID.id;
+	else if(temp == 1) flags[kFLAGS.BENOIT_1] = consumables.MINOBLO.id;
+	else if(temp == 2) flags[kFLAGS.BENOIT_1] = consumables.MINOCUM.id;
+	else if(temp == 3) flags[kFLAGS.BENOIT_1] = consumables.EQUINUM.id;
+	else if(temp == 4) flags[kFLAGS.BENOIT_1] = consumables.BLACKPP.id;
+	else if(temp == 5) flags[kFLAGS.BENOIT_1] = consumables.SMART_T.id;
+	else if(temp == 6) flags[kFLAGS.BENOIT_1] = consumables.VITAL_T.id;
+	else flags[kFLAGS.BENOIT_1] = consumables.DBLPEPP.id;
 	
 	//If the player discarded a unique item, the first time they arrive at the Salvage Shop after a week has passed it will appear in Slot 1.
 	if(rand(10) == 0) {
-		flags[kFLAGS.BENOIT_1] = "GodMead";
+		flags[kFLAGS.BENOIT_1] = consumables.GODMEAD.id;
 	}
 	
 	//Slot 2 Any one of the following: Succubus Milk, Whisker Fruit, Wet Cloth, Golden Seed, LaBova, Snake Oil, Pink Gossamer, Black Gossamer
 	temp = rand(7);
-	if(temp == 0) flags[kFLAGS.BENOIT_2] = "SucMilk";
-	else if(temp == 1) flags[kFLAGS.BENOIT_2] = "W.Fruit";
-	else if(temp == 2) flags[kFLAGS.BENOIT_2] = "WetClth";
-	else if(temp == 3) flags[kFLAGS.BENOIT_2] = "GldSeed";
-	else if(temp == 4) flags[kFLAGS.BENOIT_2] = "LaBova ";
-	else if(temp == 5) flags[kFLAGS.BENOIT_2] = "SnakOil";
-	else if(temp == 6) flags[kFLAGS.BENOIT_2] = "S.Gossr";
-	else flags[kFLAGS.BENOIT_2] = "B.Gossr";
+	if(temp == 0) flags[kFLAGS.BENOIT_2] = consumables.SUCMILK.id;
+	else if(temp == 1) flags[kFLAGS.BENOIT_2] = consumables.W_FRUIT.id;
+	else if(temp == 2) flags[kFLAGS.BENOIT_2] = consumables.WETCLTH.id;
+	else if(temp == 3) flags[kFLAGS.BENOIT_2] = consumables.GLDSEED.id;
+	else if(temp == 4) flags[kFLAGS.BENOIT_2] = consumables.LABOVA_.id;
+	else if(temp == 5) flags[kFLAGS.BENOIT_2] = consumables.SNAKOIL.id;
+	else if(temp == 6) flags[kFLAGS.BENOIT_2] = consumables.S_GOSSR.id;
+	else flags[kFLAGS.BENOIT_2] = consumables.B_GOSSR.id;
 	
 	//There is a 4% chance the following items will appear in Slot 2: Bimbo Liqueur, Large Pink Egg, Large Blue Egg, Bro Brew, T. Shark Tooth.
 	if(rand(100) < 4) {
 		temp = rand(5);
-		if(temp == 0) flags[kFLAGS.BENOIT_2] = "BimboLq";
-		else if(temp == 1) flags[kFLAGS.BENOIT_2] = "L.PnkEg";
-		else if(temp == 2) flags[kFLAGS.BENOIT_2] = "L.BluEg";
-		else if(temp == 3) flags[kFLAGS.BENOIT_2] = "BroBrew";
-		else flags[kFLAGS.BENOIT_2] = "TSTooth";
+		if(temp == 0) flags[kFLAGS.BENOIT_2] = consumables.BIMBOLQ.id;
+		else if(temp == 1) flags[kFLAGS.BENOIT_2] = consumables.L_PNKEG.id;
+		else if(temp == 2) flags[kFLAGS.BENOIT_2] = consumables.L_BLUEG.id;
+		else if(temp == 3) flags[kFLAGS.BENOIT_2] = consumables.BROBREW.id;
+		else flags[kFLAGS.BENOIT_2] = consumables.TSTOOTH.id;
 	}
 	
 	//Slot 3 Any one of the following: Maid's Clothes, Wizard Robes, Tough Silk, Slutty Swimwear, Goo Chunk, Chitin Plate
 	temp = rand(5);
-	if(temp == 0) flags[kFLAGS.BENOIT_3] = "W.Robes";
-	else if(temp == 1) flags[kFLAGS.BENOIT_3] = "T.SSilk";
-	else if(temp == 2) flags[kFLAGS.BENOIT_3] = "S.Swmwr";
-	else if(temp == 3) flags[kFLAGS.BENOIT_3] = "GreenGl";
-	else flags[kFLAGS.BENOIT_3] = "B.Chitn";
+	if(temp == 0) flags[kFLAGS.BENOIT_3] = armors.W_ROBES.id;
+	else if(temp == 1) flags[kFLAGS.BENOIT_3] = useables.T_SSILK.id;
+	else if(temp == 2) flags[kFLAGS.BENOIT_3] = armors.S_SWMWR.id;
+	else if(temp == 3) flags[kFLAGS.BENOIT_3] = useables.GREENGL.id;
+	else flags[kFLAGS.BENOIT_3] = useables.B_CHITN.id;
 	
 	if(rand(10) == 0) {
 		//There is a 10% chance the following items will appear in Slot 3: Bondage Straps, Nurse Outfit, Red Party Dress
 		temp = rand(2);
-		if(temp == 0) flags[kFLAGS.BENOIT_3] = "BonStrp";
-		else flags[kFLAGS.BENOIT_3] = "NurseCl";
+		if(temp == 0) flags[kFLAGS.BENOIT_3] = armors.BONSTRP.id;
+		else flags[kFLAGS.BENOIT_3] = armors.NURSECL.id;
 	}
 	//Slot 4 Herbal Contraceptive - 30 gems.  Only becomes available through PC fem path.  Reduces fertility by 90% for a week if taken.
 }
@@ -357,10 +359,10 @@ private function talkToBenoit():void {
 			//[Deep cave cleared: 
 			if(flags[kFLAGS.DEFEATED_ZETAZ] > 0) outputText("\n\n\"<i>Somesing strange did 'appen ze uzzer day, now you mention it,</i>\" " + benoitMF("he","she") + " says, tapping a curved tooth.  \"<i>I got a big group of imps in ere.  I normally don't serve zem because zey are always stealing sings whilst one of zem is paying, but zese guys seemed too worked up to even sink about lifting ze shop - zey smelt of fear.  Zey were buying lots of food and survival gear - one of zem kept going on and on about ze fact zey left \"<i>ze fairy</i>\" behind, until one of ze uzzers slapped 'im and said if 'ee didn't shut up, 'ee would be ze fairy.</i>\"  " + benoitMF("Benoit","Benoite") + " shrugs.  \"<i>Nasty little sings.  Tasty, though.</i>\"");
 			//[Factory not cleared: 
-			else if(player.hasStatusAffect("DungeonShutDown") < 0) outputText("\n\n\"<i>Not anysing very interesting,</i>\" " + benoitMF("he","she") + " shrugs.  \"<i>I get a few customers from ze desert city, Tel'Adre, coming in 'ere in secret to pick up a few sings zey cannot find back 'ome.  So zey are still a sing.  You 'ave to wonder ow much longer zey can keep hiding, though.</i>\"");
+			else if(player.findStatusAffect(StatusAffects.DungeonShutDown) < 0) outputText("\n\n\"<i>Not anysing very interesting,</i>\" " + benoitMF("he","she") + " shrugs.  \"<i>I get a few customers from ze desert city, Tel'Adre, coming in 'ere in secret to pick up a few sings zey cannot find back 'ome.  So zey are still a sing.  You 'ave to wonder ow much longer zey can keep hiding, though.</i>\"");
 			else {
 				//[Factory destroyed: 
-				if(player.hasStatusAffect("FactoryOverload") >=  0){
+				if(player.findStatusAffect(StatusAffects.FactoryOverload) >=  0){
 					outputText("\n\n\"<i>I don't know what is 'appening exactly,</i>\" " + benoitMF("he","she") + " says, leaning over the counter. \"<i>But ze demons 'oo I trade with, zey seem very worked up about sumsing.  Sumsing went wrong at one of zeir facilities, I sink.  I also get a number of shark ladies coming in ere, asking if I sell fresh water.  Zey also seem very unhappy.</i>\"");
 				}
 				else outputText("\n\n\"<i>I don't know what is 'appening exactly,</i>\" " + benoitMF("he","she") + " says, leaning over the counter.  \"<i>But ze demons 'oo I trade with, zey seem very worked up about somesing.  Sumsing went wrong at one of zeir facilities, I sink.  I also hear a number of passers-by talking about ze lake.  Apparently it is much cleaner now; many are going back to use it for water.  Now if only someone could make zose crazy cultists go away, eh?</i>\"");
@@ -474,7 +476,7 @@ private function eggySuggest():void {
 		}
 		outputText("\n\nHis hands trail upwards, moving over your bestial behind, exploring your soft flesh until he touches your lips.  You close your eyes and sigh as he slowly parts them with his smooth fingers and slides into your [vagina].  Although his breath is becoming increasingly heavy he also seems genuinely curious about you; with surprising gentleness his fingers travel over and around your moistening sex, exploring your every fold, working deeper and deeper as he does.  You let him know what pleases you by sighing when he touches a sweet spot, moving deliberately with his finger's motions so he may give them better attention.  He soon finds your [clit], beginning to bulge with need; slowly he circles it and then flicks at it, gently frigging you.");
 		//[In heat:]
-		if(player.hasStatusAffect("heat") >= 0) outputText("  By now your vagina is practically gushing, your bodies' own deep seated pheromone need stoked to blazing heights by the basilisk's gentle, painstaking exploration of your body.  You cannot stop thrusting yourself against his soaked hand, announcing how badly you want this with heavy moans.");
+		if(player.findStatusAffect(StatusAffects.Heat) >= 0) outputText("  By now your vagina is practically gushing, your bodies' own deep seated pheromone need stoked to blazing heights by the basilisk's gentle, painstaking exploration of your body.  You cannot stop thrusting yourself against his soaked hand, announcing how badly you want this with heavy moans.");
 			
 		outputText("\n\nThe scent of your arousal is in the air and as Benoit breathes it in his own breath comes heavier.  His erection bulges in his long johns and you decide it's time for you to take charge; you back up, butting him insistently with your powerful body until you have him pinned against a space upon the opposite wall.  You watch him over your shoulder as he unbuckles himself and lets his trousers fall.  Stoked by the pheromones simmering off your body, his long, thin purple erection is straining and he arches his back and opens his mouth as you flare your [butt] and press yourself against it.  You know just from looking at his intense arousal you're going to have to go slow to stop him from shooting his bolt straight away; with a wicked smile your partner can't see, you suppose such is your effect on him it may not even matter if he does.  Still, as he lays his hands upon your flanks, and you lean back with a sigh and slowly slide his length into your moistened [vagina] as gently as you can.");
 		player.cuntChange(12,true,true,false);
@@ -525,7 +527,7 @@ private function eggySuggest():void {
 			else outputText("  This is evidently an uncanny experience for him, the alien nature of it deepening as his hands moves along your male sex. \"<i>'Oly Gods, [name]; you are a monster,</i>\" he says thickly.  You smile and decide it's time to do some feeling yourself; you grasp and pinch at his tight, supple behind through his trousers, making him gasp as you move into him.");
 		}
 		outputText("\n\nHis hands trail further down, moving into your inner thighs, exploring your soft flesh until he touches your lips.  You close your eyes and sigh as he slowly parts them with his smooth fingers and slides into your [vagina].  Although his breath is becoming increasingly heavy he also seems genuinely curious about you; with surprising gentleness his fingers travel over and around your moistening sex, exploring your every fold, working deeper and deeper as he does.  You let him know what pleases you by sighing when he touches a sweet spot, moving deliberately with his finger's motions so he may give them better attention.  He soon finds your [clit], beginning to bulge with need; slowly he circles it and then flicks at it, gently frigging you.");
-		if(player.hasStatusAffect("heat") >= 0) outputText(" By now your vagina is practically gushing, your body's own deep-seated pheromone need stoked to blazing heights by the basilisk's gentle, painstaking exploration.  You cannot stop yourself thrusting against his soaked hand, announcing how badly you want this with heavy moans.");
+		if(player.findStatusAffect(StatusAffects.Heat) >= 0) outputText(" By now your vagina is practically gushing, your body's own deep-seated pheromone need stoked to blazing heights by the basilisk's gentle, painstaking exploration.  You cannot stop yourself thrusting against his soaked hand, announcing how badly you want this with heavy moans.");
 		
 		outputText("\n\nThe scent of your arousal is in the air and as Benoit inhales it, his own breath comes heavier.  His erection bulges in his long johns and you decide it's time for you to take charge; you push him against the wall, unbuckle him and let his trousers fall.  Stoked by the pheromones simmering off your body, his long, thin, purple erection is straining and he arches his back and opens his mouth as you lay a hand on it.  You know just from looking at his straining prick you're going to have to go slow for him not to shoot his bolt straight away; with a wicked smile your partner can't see, you suppose that such is your body's effect on him it may not even matter if he does.  As lost as the horny lizan is to the haze of his pleasure, you remind him of reality the best way you know how, guiding his hands to your [hips] and with a sigh, slowly sliding his length into your moistened [vagina] with as much grace as your eagerness can stand.");
 
@@ -556,7 +558,7 @@ private function eggySuggest():void {
 	outputText("\n\nEventually, the two of you part, dripping your mixed fluids as you step back.  \"<i>Phew!</i>\" Benoit says after he's managed to catch his breath.  \"<i>That was... somesing.  Mademoiselle, you are... amazing.</i>\"  You find yourself laughing at his slightly shell-shocked expression, and the light, happy sound seems to bring him around a bit.  He brushes your shoulder as he walks past you, feeling around the stock room until he finds a chest of drawers.  He opens a compartment and withdraws a small woollen bag, stuffed with pungent green leaves.");
 	outputText("\n\n\"<i>Ze shark ladies are always coming up from ze lake to sell me zis,</i>\" he says. \"<i>It is a very effective, 'ow you say, 'counter septic'?");
 	dynStats("lus=", 0);
-	if((player.pregnancyType == 5 || player.hasPerk("Harpy Womb") >= 0 || player.hasPerk("Oviposition") >= 0) && (player.pregnancyIncubation == 0 || player.pregnancyType == 5)) {
+	if((player.pregnancyType == 5 || player.findPerk(PerkLib.HarpyWomb) >= 0 || player.findPerk(PerkLib.Oviposition) >= 0) && (player.pregnancyIncubation == 0 || player.pregnancyType == 5)) {
 		outputText("  I would not inflict my children upon you.  Ere, take as much as you like.</i>\"");
 		simpleChoices("Take It",takeBenoitsContraceptives,"",0,"",0,"",0,"Leave",dontTakeEggtraceptives);
 	}
@@ -670,7 +672,7 @@ private function repeatBenoitFuckTakeCharge():void {
 		if(player.isTaur()) outputText("\n\nHis hands travel downwards until, with a small grin, he finds what he knows is there.  He wraps his dry, smooth grasp around your semi-erect cock and moves it up and down, rubbing and coiling you until you are straining.  You close your eyes and sigh, enjoying the masterful treatment that both of you can only feel, not see.");
 		
 		outputText("\n\nHis hands trail upwards, moving over your bestial behind, exploring your soft flesh until he touches your lips.  You close your eyes and sigh as he slowly parts them with his smooth fingers and slides into your [vagina].  Although his breath is becoming increasingly heavy he also seems genuinely curious about you; with surprising gentleness his fingers travel over and around your moistening sex, exploring your every fold, working deeper and deeper as he does.  You let him know what pleases you by sighing when he touches a sweet spot, moving deliberately with his finger's motions so he may give them better attention.  He soon finds your [clit], beginning to bulge with need; slowly he circles it and then flicks at it, gently frigging you.");
-		if(player.hasStatusAffect("heat") >= 0) outputText("  By now your vagina is practically gushing, your bodies' own deep seated pheromone need stoked to blazing heights by the basilisk's gentle, painstaking exploration of your body.  You cannot stop thrusting yourself against his soaked hand, announcing how badly you want this with heavy moans.");
+		if(player.findStatusAffect(StatusAffects.Heat) >= 0) outputText("  By now your vagina is practically gushing, your bodies' own deep seated pheromone need stoked to blazing heights by the basilisk's gentle, painstaking exploration of your body.  You cannot stop thrusting yourself against his soaked hand, announcing how badly you want this with heavy moans.");
 		
 		outputText("\n\nThe scent of your arousal is in the air and as Benoit breathes it in his own breath comes heavier.  His erection bulges in his long johns and you decide it's time for you to take charge; you back up, butting him insistently with your powerful body until you have him pinned against a space upon the opposite wall.  You watch him over your shoulder as he unbuckles himself and lets his trousers fall.  Stoked by the pheromones simmering off your body, his long, thin purple erection is straining and he arches his back and opens his mouth as you flare your [butt] and press yourself against it.  You know just from looking at his intense arousal you're going to have to go slow to stop him from shooting his bolt straight away; with a wicked smile your partner can't see, you suppose such is your effect on him it may not even matter if he does.  Still, as he lays his hands upon your flanks, and with a sigh you lead back and slowly slide his length into your moistened [vagina], it is as gently as you can.");
 		
@@ -702,7 +704,7 @@ private function repeatBenoitFuckTakeCharge():void {
 		
 		//begin copypasta
 		outputText("His hands trail further down, moving into your inner thighs, exploring your soft flesh until he touches your lips.  You close your eyes and sigh as he slowly parts them with his smooth fingers and slides into your [vagina].  Although his breath is becoming increasingly heavy he also seems genuinely curious about you; with surprising gentleness his fingers travel over and around your moistening sex, exploring your every fold, working deeper and deeper as he does.  You let him know what pleases you by sighing when he touches a sweet spot, moving deliberately with his finger's motions so he may give them better attention.  He soon finds your [clit], beginning to bulge with need; slowly he circles it and then flicks at it, gently frigging you.");
-		if(player.hasStatusAffect("heat") >= 0) outputText("  By now your vagina is practically gushing, your body's own deep-seated pheromone need stoked to blazing heights by the basilisk's gentle, painstaking exploration.  You cannot stop yourself thrusting against his soaked hand, announcing how badly you want this with heavy moans.");
+		if(player.findStatusAffect(StatusAffects.Heat) >= 0) outputText("  By now your vagina is practically gushing, your body's own deep-seated pheromone need stoked to blazing heights by the basilisk's gentle, painstaking exploration.  You cannot stop yourself thrusting against his soaked hand, announcing how badly you want this with heavy moans.");
 		
 		outputText("\n\nThe scent of your arousal is in the air and as Benoit inhales it, his own breath comes heavier.  His erection bulges in his long johns and you decide it's time for you to take charge; you push him against the wall, unbuckle him and let his trousers fall.  Stoked by the pheromones simmering off your body, his long, thin, purple erection is straining and he arches his back and opens his mouth as you lay a hand on it.  You know just from looking at his straining prick you're going to have to go slow for him not to shoot his bolt straight away; with a wicked smile your partner can't see, you suppose that such is your body's effect on him it may not even matter if he does.  Still, as you once again lay his hands upon you, brace him against the wall and, with a sigh, slowly slide his length into your moistened [vagina], it is as gently as your eagerness can stand.");
 		player.cuntChange(10,true,true,false);
@@ -749,7 +751,7 @@ private function tryToConvertToBassyWomb():void {
 	clearOutput();
 	//[Ingredients not in inventory: ]
 	//A double dose of ovi-elixer, a bottle of reptilum, goblin ale and some basilisk blood would probably do...
-	if(!(hasItem("OviElix",2) && hasItem("Reptlum",1) && hasItem("Gob.Ale",1))) {
+	if(!(player.hasItem(consumables.OVIELIX,2) && player.hasItem(consumables.REPTLUM) && player.hasItem(consumables.GOB_ALE))) {
 		outputText("You don't have the necessary ingredients to attempt this yet.  You recall " + benoitMF("Benoit","Benoite") + " mentioning that you would need Reptilum, two Ovi Elixirs, and Goblin Ale.");
 		doNext(benoitIntro);
 	}
@@ -761,9 +763,9 @@ private function tryToConvertToBassyWomb():void {
 	}*/
 	//Ingredients in inventory: 
 	else {
-		consumeItem("OviElix",2);
-		consumeItem("Reptlum",1);
-		consumeItem("Gob.Ale",1);
+		player.consumeItem(consumables.OVIELIX,2);
+		player.consumeItem(consumables.REPTLUM);
+		player.consumeItem(consumables.GOB_ALE);
 		outputText("You ferret out the ingredients you have collected and begin to bang them onto the counter in front of Benoit, telling him that you've got what he needs.  Pierre barks excitedly at the noise.");
 		
 		outputText("\n\n\"<i>And what is zat?</i>\" the basilisk says, bewildered. You explain you can whip something up which will give you a basilisk womb - and hence, female basilisk kids.  Benoit opens his mouth then closes it again; it takes him a while to properly compute these words.  \"<i>But... but zat is completely impossible, [name]!</i>\" he says eventually, wringing his hands.  \"<i>'Ow do you know you won't just poison yourself?  Or, or turn yourself into a newt or somesing?  Please... don't 'urt... I should never 'ave said...</i>\"  He lapses into silence as you grab a pewter bowl from a nearby shelf and a wooden spoon from a container full of old utensils, and begin to mix the various ingredients together.  You pour the ovi-elixers into the goblin ale, beating them together until a fairly unpleasant sulphuric smell fills the close market stall.  Carefully you dribble the reptilum in whilst continuing to stir, until the smell changes to that of cooking sherry.  You frown at the mixture.  It feels like it's missing something...  Casually, you ask Benoit to open his hand to you, whilst plucking a kitchen knife from the utensil container.  He barks in pain as you run the blade across his palm and then hold his hand firmly over the bowl.  Drops of dark red blossom into the mixture, and as you carefully stir the potion turns a green-grey colour: the colour of Benoit's scales.");
@@ -772,7 +774,7 @@ private function tryToConvertToBassyWomb():void {
 		
 		outputText("\n\nThe mixture has a lingering bite of mint overlaying the all-consuming burn of alcohol; you are reminded vaguely of the sticky liqueurs that populated the recesses of cupboards back home.  You smack your lips and plonk the bowl back down with deliberate loudness after you have finished; Benoit clutches the counter tensely as you wait.  You haven't died straight away, so that's a positive... an immense gurgle comes from your belly and you double over as your insides shift and the contents of your gut churn.  The sensation is not painful exactly but you feel like you've lost all control of your insides; you clutch your sides and try to breathe levelly as your stomach turns upside down and makes a sound like trapped gas.  Eventually you feel something like a bubble form just below your gut; slowly your insides settle as the bubble grows larger and larger, until the sensation slowly fades.  Cautiously you walk back and forth a few times, before poking your tummy.");
 		//[No oviposition:
-		if(player.hasPerk("Oviposition") < 0) outputText("  You feel slightly bloated, but otherwise fine; you sense that you can lay eggs of your own volition now.");
+		if(player.findPerk(PerkLib.Oviposition) < 0) outputText("  You feel slightly bloated, but otherwise fine; you sense that you can lay eggs of your own volition now.");
 		else outputText("You feel slightly bloated, but otherwise fine; you sense that were you to get impregnated by basilisk seed, the eggs you produce would be pure basilisk.");
 		
 		outputText("\n\n\"<i>[name]?</i>\" says Benoit nervously.  \"<i>Are you all right?  Shall I call ze sawbones? I will call ze sawbones.  'E is mostly good at taking people apart and putting zem back togezzer again, but I am sure 'e can give you a good purgative if we rush...</i>\"  You toy with the idea of staging a dramatic allergic reaction, but deciding not to fray his nerves any further you tell him you feel absolutely fine.  Indeed, stroking your belly, you are almost certain that it worked.");
@@ -847,10 +849,10 @@ private function suggestSexAfterBasiWombed(later:Boolean = true):void {
 	flags[kFLAGS.BENOIT_TESTED_BASILISK_WOMB] = 1;
 	benoitKnocksUpPCCheck();
 	//(Oviposition perk added)
-	player.createPerk("Basilisk Womb",0,0,0,0);
+	player.createPerk(PerkLib.BasiliskWomb,0,0,0,0);
 	outputText("\n\n(<b>Perk Unlocked: Basilisk Womb - You can now give birth to female basilisks.</b>)");
-	if(player.hasPerk("Oviposition") < 0) {
-		player.createPerk("Oviposition",0,0,0,0);
+	if(player.findPerk(PerkLib.Oviposition) < 0) {
+		player.createPerk(PerkLib.Oviposition,0,0,0,0);
 		outputText("\n(<b>Perk Unlocked: Oviposition - You will now regularly lay unfertilized eggs.</b>)");
 	}
 	if(player.pregnancyType == 14) player.pregnancyType = 18;

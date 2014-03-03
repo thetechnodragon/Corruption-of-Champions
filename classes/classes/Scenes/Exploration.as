@@ -1,17 +1,18 @@
-/**
+﻿/**
  * Created by aimozg on 05.01.14.
  */
 package classes.Scenes
 {
-	import classes.Appearance;
-	import classes.BaseContent;
+	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
 	import classes.GlobalFlags.kGAMECLASS;
-	import classes.Scenes.Monsters.Goblin;
-	import classes.Scenes.Monsters.Imp;
+	import classes.Scenes.Explore.ExploreDebug;
+	import classes.Scenes.Monsters.*;
 
 	public class Exploration extends BaseContent
 	{
+		public var exploreDebug:ExploreDebug = new ExploreDebug();
+
 		public function Exploration()
 		{
 		}
@@ -45,7 +46,7 @@ package classes.Scenes
 			addButton(4, "Next", explorePageII);
 			if (flags[kFLAGS.TIMES_EXPLORED_PLAINS] > 0) addButton(5, "Plains", kGAMECLASS.plains.explorePlains);
 			if (flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00272] > 0) addButton(6, "Swamp", kGAMECLASS.swamp.exploreSwamp);
-			if (player.hasStatusAffect("exploredDeepwoods") >= 0) addButton(7, "Deepwoods", kGAMECLASS.forest.exploreDeepwoods);
+			if (player.findStatusAffect(StatusAffects.ExploredDeepwoods) >= 0) addButton(7, "Deepwoods", kGAMECLASS.forest.exploreDeepwoods);
 			if (player.exploredMountain > 0) addButton(8, "Mountain", kGAMECLASS.mountain.exploreMountain);
 			addButton(9, "Back", eventParser, 1);
 		}
@@ -57,6 +58,7 @@ package classes.Scenes
 			if (flags[kFLAGS.DISCOVERED_HIGH_MOUNTAIN] > 0) addButton(0, "High Mountain", kGAMECLASS.highMountains.exploreHighMountain);
 			if (flags[kFLAGS.BOG_EXPLORED] > 0) addButton(1, "Bog", kGAMECLASS.bog.exploreBog);
 			addButton(4, "Previous", goBackToPageI);
+			if (debug) addButton(8, "Debug", exploreDebug.doExploreDebug);
 			addButton(9, "Back", eventParser, 1);
 		}
 
@@ -70,6 +72,10 @@ package classes.Scenes
 		//Try to find a new location - called from doExplore once the first location is found
 		public function tryDiscover():void
 		{
+
+			// kGAMECLASS.goblinAssassinScene.goblinAssassinEncounter();
+			// return;
+
 			if (flags[kFLAGS.PC_PROMISED_HEL_MONOGAMY_FUCKS] == 1 && flags[kFLAGS.HEL_RAPED_TODAY] == 0 && rand(10) == 0 && player.gender > 0 && !kGAMECLASS.helFollower.followerHel()) {
 				kGAMECLASS.helScene.helSexualAmbush();
 				return;
@@ -158,6 +164,11 @@ package classes.Scenes
 					}
 					//Encounter Gobbalin!
 					else {
+						//50% of the time, goblin assassin!
+						if (player.level >= 10 && rand(2) == 0) {
+							kGAMECLASS.goblinAssassinScene.goblinAssassinEncounter();
+							return;
+						}
 						if (player.gender > 0) {
 							outputText("A goblin saunters out of the bushes with a dangerous glint in her eyes.\n\nShe says, \"<i>Time to get fucked, " + player.mf("stud", "slut"), true);
 							outputText(".</i>\"", false);
@@ -184,8 +195,7 @@ package classes.Scenes
 
 		public function debugOptions():void
 		{
-			shortName = "W.Fruit";
-			takeItem();
+			inventory.takeItem(consumables.W_FRUIT);
 		}
 
 		//Massive bodyparts scene
@@ -252,8 +262,6 @@ package classes.Scenes
 			fatigue(5);
 			doNext(13);
 		}
-
-
 
 
 	}

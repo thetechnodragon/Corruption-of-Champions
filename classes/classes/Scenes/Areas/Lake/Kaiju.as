@@ -1,11 +1,9 @@
 ﻿package classes.Scenes.Areas.Lake{
+	import classes.*;
+	import classes.GlobalFlags.kFLAGS;
 	import classes.GlobalFlags.kGAMECLASS;
-	import classes.GlobalFlags.kGAMECLASS;
-import classes.GlobalFlags.kFLAGS;
-import classes.BaseContent;
-import classes.Appearance;
-import classes.CockTypesEnum;
-public class Kaiju extends AbstractLakeContent {
+
+	public class Kaiju extends AbstractLakeContent {
 
 	public function Kaiju()
 	{
@@ -29,8 +27,8 @@ public function kaijuMeeting():void {
 		addButton(1,"No",noMeetingKaijus);
 	}
 	else {
-		if(player.hasStatusAffect("FactoryOverload") >= 0 && !kaijuCock()) kaijuGrowsWangus();
-		else if(flags[kFLAGS.KAIJU_BAD_END_COUNTER] >= 5) kaijuBadEndToyBOOSH()
+		if(player.findStatusAffect(StatusAffects.FactoryOverload) >= 0 && !kaijuCock()) kaijuGrowsWangus();
+		else if(flags[kFLAGS.KAIJU_BAD_END_COUNTER] >= 5) kaijuBadEndToyBOOSH();
 		else repeatKaijuEncounter();
 	}
 }
@@ -52,7 +50,7 @@ private function meetDatKaijuYo():void {
 	clearOutput();
 	spriteSelect(103);
 	flags[kFLAGS.KAIJU_MEETINGS] = 1;
-	if(player.hasStatusAffect("FactoryOverload") >= 0) flags[kFLAGS.KAIJU_COCK] = 1;
+	if(player.findStatusAffect(StatusAffects.FactoryOverload) >= 0) flags[kFLAGS.KAIJU_COCK] = 1;
 	outputText("You step up onto the hill and slowly make your way to the top.  The rock seems to be unnaturally symmetrical, more like a large upside down oval.  Walking around, there seems to be little of interest to explore here.  You decide to head back for the boat when suddenly the island shifts and you are nearly knocked off your feet.  You look around, wondering if it was an earthquake or an attack when suddenly the island begins shaking violently.  You run for the boat, practically falling in as you almost lose your footing.  The island seems to be rising out of the water rapidly, until towering above you is a massive terrapin girl!  What you had mistaken for an island was really a large turtle shell!");
 	
 	outputText("\n\nShe takes in a tremendous gulp of air before stretching, arching her back as far her shell will let her while her green hands flutter near her monumental rack.  You take in the sight of the green giantess, from her wet yet curly red locks of hair, to her dark green, her almost black lips, her massive mammaries which she’s currently fondling quite lewdly, to the hard turtle shell, the front of which covers her belly yet supports her exposed breasts like some kind of perverse hard corset.  She pinches a pert nipple, cooing in pleasure before finally opening her eyes and taking notice of you.");
@@ -78,7 +76,7 @@ private function insultTheKaijuFirstMeeting():void {
 		outputText("\n\n\"<i>You are too rude,</i>\" she says in a huff.  \"<i>But I know how to fix you!</i>\" she begins to rise, standing to her full towering height.  Though much of her legs are still beneath the waves, her genitalia are in full display.  The lips of her feminine sex are moist, dripping with lake water and substantial moisture of their own.  They are surprisingly pink against the almost olive green of the rest of her.  But most shocking of all is that where a clit should be is instead a massive, gigantic green dong!");
 		outputText("\n\n\"<i>How about you put that mean mouth of yours to some good,</i>\" she tells you as she roughly picks you up between two large fingers and brings you to her stiffening cock.");
 		//[If player has learned the Whitefire spell]
-		if(player.hasStatusAffect("Knows Whitefire") >= 0 && (player.hasPerk("Blood Mage") < 0 && player.fatigue + kGAMECLASS.spellCost(30) > 100)) {
+		if(player.findStatusAffect(StatusAffects.KnowsWhitefire) >= 0 && (player.findPerk(PerkLib.BloodMage) < 0 && player.fatigue + kGAMECLASS.spellCost(30) > 100)) {
 			outputText("\n\nSensing her desires, you try to quickly think of how to avoid pleasing the giant's large cock.  It occurs to you that you could use the spell whitefire to attack her.  Do you cast it?");
 			//[Yes][No]
 			menu();
@@ -180,7 +178,7 @@ private function letKaijuHaveWayWithYou():void {
 	//[if player has vagina]
 	else if(player.hasVagina()) {
 		outputText("\n\nShe spreads your legs open and slowly brings your pink netherlips into place, your [vagina] hovering right in front of her massive, cock-sized nipple!  With a squeal of delight, she pushes the tip of her nip into your pussy, her eyes almost rolling back in her head as she slowly, steadily shoves her nipple inch by inch into your stretched [vagina].");
-		cuntChange(14,true,true,false);
+		player.cuntChange(14,true,true,false);
 		outputText("  Something wet begins to leak out from the stiff, female member in your stuffed hole, and with a shock you realize she must be lactating!  The giantess's milk lubricates your passage, allowing her to ease more of her throbbing stiffness into you until finally her nipple bottoms out, your pussy lips kissing pink areola.  Your [vagina] clamps down on her, pinching her nipple and driving her deeper into what quickly turns into an ecstatic orgasm.  Her lactating tit suddenly erupts, pouring what must be gallons of corrupt milk into your womb, quickly distending your belly until you look pudgy, and then pregnant - with triplets!");
 		
 		outputText("\n\nHer nipple pops out, spurting milk all over you, soaking your skin in slick whiteness.  You hope it's good for your skin.");
@@ -280,7 +278,7 @@ private function repeatKaijuEncounter():void {
 	menu();
 	var drafts:int = 0;
 	//[If PC has 15 incubus drafts (regular or pure) and Venus is not already a herm]
-	if(kGAMECLASS.itemCount("IncubiD") + kGAMECLASS.itemCount("P.Draft") >= 10 && !kaijuCock()) {
+	if(player.itemCount(consumables.INCUBID) + player.itemCount(consumables.P_DRAFT) >= 10 && !kaijuCock()) {
 		outputText("\n\nIt occurs to you that you have enough Incubi Drafts on you to even affect someone of the turtle girl’s great size.  Maybe you could give her a cock?");
 		addButton(5,"Give Cock",yesTurnKaijuFuta);
 	}
@@ -323,7 +321,7 @@ private function kaijuRepeatBoobHug():void {
 	//[if player has vagina]
 	if(player.hasVagina()) {
 		outputText("\n\nShe spreads your legs open and slowly brings your pink netherlips into place, your [vagina] hovering right in front of her massive, cock-sized nipple!  With a squeal of delight she pushes the tip of her nip into your pussy, her eyes almost rolling back in her head as she slowly, steadily shoves her nipple inch by inch into your stretched hole.");
-		cuntChange(14,true,true,false);
+		player.cuntChange(14,true,true,false);
 		outputText("  Something wet begins to leak out from the stiff female member in your stuffed hole, and with a shock you realize she must be lactating!  The giantess milk lubricates your passage, allowing her to ease more of her throbbing stiffness into you until finally her nipple bottoms out, your pussy lips kissing pink areola.  Your [vagina] clamps down on her, pinching her nipple and driving her deeper into what quickly turns into an ecstatic orgasm.  Her lactating tit suddenly erupts, pouring what must be gallons of corrupt milk into your womb, quickly distending your belly until you look pudgy, and then pregnant - with triplets!");
 		outputText("\n\nHer nipple pops out, spurting milk all over you, soaking your skin in slick whiteness. You hope it's good for your skin.");
 		dynStats("lus=", 0);
@@ -480,7 +478,7 @@ private function talkToKaiju():void {
 		
 		outputText("\n\nHer body seems to quiver in delight as she continues on.  \"<i>I'm not sure why they want to taint the waters or what it is they use, but I found the spot where the corruption enters the lake and is the strongest.  I go there daily to absorb the warmth and delicious taint of those chemicals.  It increased my lust, and over time my size.");
 		//[If factory has been shut down and Marae was left uncorrupted]
-		if(player.hasStatusAffect("DungeonShutDown") >= 0 && player.hasStatusAffect("FactoryOverload") < 0) outputText("  But the flow of yummy fluids seems to have been stopped.");
+		if(player.findStatusAffect(StatusAffects.DungeonShutDown) >= 0 && player.findStatusAffect(StatusAffects.FactoryOverload) < 0) outputText("  But the flow of yummy fluids seems to have been stopped.");
 		//[If the Factory was shut down and Marae corrupted]
 		else if(kaijuCock()) outputText("  But the pouring of liquids has been stopped for some reason, but not before there was one final, huge burst of tainted fluids. It was so strong and changed me even further, making me grow this,</i>\" she says as she rises further out of the lake's waters, revealing a large green cock.");
 		
@@ -657,8 +655,8 @@ private function yesTurnKaijuFuta():void {
 	var counter:int = 10;
 	while(counter > 0) {
 		counter--;
-		if(hasItem("P.Draft",1)) consumeItem("P.Draft",1);
-		else if(hasItem("IncubiD",1)) consumeItem("IncubiD",1);
+		if(player.hasItem(consumables.P_DRAFT)) player.consumeItem(consumables.P_DRAFT);
+		else if(player.hasItem(consumables.INCUBID)) player.consumeItem(consumables.INCUBID);
 	}
 	outputText("You wouldn’t have offered if you didn’t want to see a giant green futa-cock dangling between her legs.  Your declaration seems to have deepened her blush to almost beet red, but the lustful look in her eyes betrays her desire.");
 	outputText("\n\nSince her hands are too large to fiddle with the small containers she has you stand on her bottom lip while she lies down, you pouring draft after draft into her open mouth.  By the time the tenth draft has been emptied the green girl can barely keep still, writhing in sexual pleasure and excitement.  She picks you up into one hand as she sits up spread legged, her other hand clasped to her pink nether regions, her palm rubbing furiously at her clit.  \"<i>Oh my goddess it feels too good!  I’m going to cum, I got to cum,</i>\" she cries out as her hand is pushed out away from her crotch by her expanding clitoris, the pink nub taking on a green color and a much more phallic shape.  As her clit-cock expands and changes she grabs it with her hand, getting in two good strokes before the change is complete and she ejaculates for the first time with her new green turtle herm cock!");
@@ -748,7 +746,7 @@ private function badEndPartTwo():void {
 		outputText("\n\n\"<i>Alright cupcake, drinky drinky,</i>\" she says, pushing your head deep into the bubbly goo.  She leaves you there to drink or drown, so drink you do, until your belly is fit to burst and your lungs are aching.  Then she gives you a chance to catch your breath before rubbing you on her cock tip, bathing you in the pink cum until your skin is shiny with it all over.  You suddenly feel a tingling all over your skin and in your belly, then slowly the tingling spreads as if your body is absorbing it into every part of yourself.");
 		outputText("\n\n\"<i>Do you feel it working yet?  Can you guess what it did?  I’ll give you a hint,</i>\" the giantess says, a mad look of lust in her eyes as she gazes at your nude, helpless form.  It appears the turtle girl you know is gone, completely taken over by her libido.  She turns you around and you suddenly feel the giant head of her dick resting on your [butt].  Why is she rubbing your ass with her dick, she knows it won’t fit right?  It’s bigger and wider than your whole body!");
 		outputText("\n\nAnd that’s when you feel the impossible.  Your asshole expands, gently giving ground to the leviathan at your backdoor as you feel your hips part and stretch away from each other.  Her magic pink cum has turned you into the most elastic fuck toy in the land!  Oh, this is just too wrong.");
-		buttChange(500,true,true,false);
+		player.buttChange(500,true,true,false);
 		outputText("\n\nSuddenly her entire cockhead enters your ass, stretching you out obscenely.  You orgasm instantly.  You might handle anal better than this under normal conditions, but then there’s nothing normal about taking something this huge.");
 		if(player.hasCock()) outputText("  You prostate is pressed down like a button, and there’s just no letting up!");
 		if(player.hasVagina()) outputText("  Even if your cunt is empty, there is no free space left there, your cunt walls forced together like glue.");
@@ -763,7 +761,7 @@ private function badEndPartTwo():void {
 	outputText("\n\nYou’re drenched in the turtle girl’s love juices as she near instantly cums from pleasure, but you know it’s far from over as she keeps thrusting you up and down, in and out of her colossal cunt.  \"<i>Oh gods! So good!</i>\" she moans, her voice soft and muffled from your vantage point inside of her.  \"<i>I need more!  I need more in me!</i>\"  Well, considering you’re all the way in that’s going to be kind of hard, there’s nothing more to shove i... wait, what is that below you? Green foliage spreads out underneath you as she shoves a tree up her titanic twat!  Even for her impressive size you can tell this is almost too much for the giantess, as it stretches her cunt out.  But there’s something more, something almost hard to see in the dark, pink depths of her sex, but you manage to make out long, slithering tendrils sliding up from the tree towards you.  She’s fucking herself with a tentacle tree from a corrupted glade!  You’re not exactly in a position to walk away from the corrupted foliage as the tree’s long vine-cocks begin to climb up your legs with lustful intent.  Whether you want it or not, you’re about to get fucked inside this cunt.");
 	
 	outputText("\n\nThe first planty-cock hits your ass like a switch, spanking your [butt] till your cheeks are blushing red before the tip snuggles up to your puckered sphincter.  It wriggles wildly, working itself up in ecstatic anticipation, or at least the plant-like version of anticipation, drippy vine-pre-seed lubing up your hole before pushing forth with all its might, meeting only a little resistance before the pressure and fluid mixture eases it into your [butt].");
-	buttChange(30,true,true,false);
+	player.buttChange(30,true,true,false);
 	outputText("  Inches slide in at a time as it spasms inside of you, attempting to hit every sensitive spot your ass may have as it slowly tries to stretch you out.\n\n");
 	
 	//[If PC has a cock] 

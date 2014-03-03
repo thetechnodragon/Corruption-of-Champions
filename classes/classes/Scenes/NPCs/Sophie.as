@@ -1,7 +1,8 @@
 ﻿package classes.Scenes.NPCs
 {
-	import classes.Monster;
+	import classes.*;
 	import classes.Scenes.Areas.HighMountains.Harpy;
+	import classes.internals.*;
 
 	/**
 	 * ...
@@ -21,7 +22,7 @@
 			game.sophieBimbo.sophieSprite();
 			outputText("Sophie bobs and weaves as she closes the distance between you in an instant.  ", false);
 			//Blind dodge change
-			if(hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+			if(findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 				outputText(capitalA + short + " looks like she's trying to kiss you, but it's easy to avoid the blind harpy!\n", false);
 				return;
 			}
@@ -31,16 +32,16 @@
 				return;
 			}
 			//Determine if evaded
-			if(player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			if(player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.\n", false);
 				return;
 			}
-			if(player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+			if(player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 				outputText("Using Raphael's teachings and the movement afforded by your bodysuit, you anticipate and sidestep " + a + short + "'s attack.\n", false);
 				return;
 			}
 			//Determine if cat'ed
-			if(player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
+			if(player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
 				outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "", false);
 				outputText("'s attack.\n", false);
 				return;
@@ -49,7 +50,7 @@
 			outputText("Before you can react, she gives you a chaste peck on the lips.  The harpy pulls back with a sultry smile, watching you expectantly.", false);
 			
 			//Already affected by it
-			if(player.hasStatusAffect("Luststick") >= 0) {
+			if(player.findStatusAffect(StatusAffects.Luststick) >= 0) {
 				outputText("  Blood rushes to " + game.sMultiCockDesc() + " as you grow so hard so fast that it hurts.  ", false);
 				game.sophieScene.luststickApplication(2);
 				game.dynStats("lus", (12+player.lib/10));
@@ -57,7 +58,7 @@
 				else if(player.lust < 80) outputText("Her curvy thighs look so inviting.  You barely stop yourself before you climb in between them!\n", false);
 				else if(player.lust < 90) outputText("A trickle of pre-cum leaks from " + game.sMultiCockDesc() + ".  Sophie coos, \"<i>Why don't you give in and let mommy Sophie drain out all that juicy cum?</i>\"\n", false);
 				else if(player.lust < 100) outputText(player.SMultiCockDesc() + " twitches and bounces in time with your heartbeat, practically pulling you towards Sophie's gaping, pink-linked snatch.\n", false);
-				else outputText("So horny.  You need to copulate - no, fuck - right NOW.  Your hand touches your " + cockDescript(0) + " and you swoon, pumping your hips lewdly as you submit.\n", false);		
+				else outputText("So horny.  You need to copulate - no, fuck - right NOW.  Your hand touches your " + player.cockDescript(0) + " and you swoon, pumping your hips lewdly as you submit.\n", false);
 			}
 			else {
 				outputText("  Your whole body blushes as your lips tingle with some unnatural sensation.  Her lips were drugged!  Your whole body flushes as arousal begins to course through your veins.  ", false);
@@ -67,7 +68,7 @@
 				else if(player.lust < 80) outputText("Her curvy thighs look so inviting.  You barely stop yourself before you climb in between them!\n", false);
 				else if(player.lust < 90) outputText("A trickle of pre-cum leaks from " + game.sMultiCockDesc() + ".  Sophie coos, \"<i>Why don't you give in and let mommy Sophie drain out all that juicy cum?</i>\"\n", false);
 				else if(player.lust < 100) outputText(player.SMultiCockDesc() + " twitches and bounces in time with your heartbeat, practically pulling you towards Sophie's gaping, pink-linked snatch.\n", false);
-				else outputText("So horny.  You need to copulate - no, fuck - right NOW.  Your hand touches your " + cockDescript(0) + " and you swoon, pumping your hips lewdly as you submit.\n", false);		
+				else outputText("So horny.  You need to copulate - no, fuck - right NOW.  Your hand touches your " + player.cockDescript(0) + " and you swoon, pumping your hips lewdly as you submit.\n", false);
 			}
 		}
 		
@@ -80,7 +81,7 @@
 			game.sophieBimbo.sophieSprite();
 			outputText(capitalA + short + " flaps her wings and launches herself forwards with her talons up.  ", false);
 			//Blind dodge change
-			if(hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+			if(findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 				outputText(capitalA + short + "'s talons are easy to avoid thanks to her blindness!\n", false);
 				return;
 			}
@@ -90,16 +91,16 @@
 				return;
 			}
 			//Determine if evaded
-			if(player.hasPerk("Evade") >= 0 && rand(100) < 60) {
+			if(player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 60) {
 				outputText("Using your skills at evading attacks, you determine " + a + short + " is aiming for your upper body and slide under the attack.\n", false);
 				return;
 			}
-			if(player.hasPerk("Misdirection") >= 0 && rand(100) < 40 && player.armorName == "red, high-society bodysuit") {
+			if(player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 40 && player.armorName == "red, high-society bodysuit") {
 				outputText("Using Raphael's teachings and the movement afforded by your bodysuit, you anticipate and sidestep " + a + short + "'s attack.\n", false);
 				return;
 			}
 			//Determine if cat'ed
-			if(player.hasPerk("Flexibility") >= 0 && rand(100) < 40) {
+			if(player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 40) {
 				outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "", false);
 				outputText("'s attack.\n", false);
 				return;
@@ -137,7 +138,7 @@
 			outputText("Sophie pulls her leg up, cocking her thigh dangerously.  Look out!  ", false);
 			var damage:Number = 0;
 			//Blind dodge change
-			if(hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+			if(findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 				outputText(capitalA + short + "'s talons are easy to avoid thanks to her blindness!\n", false);
 				return;
 			}
@@ -147,16 +148,16 @@
 				return;
 			}
 			//Determine if evaded
-			if(player.hasPerk("Evade") >= 0 && rand(100) < 60) {
+			if(player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 60) {
 				outputText("Using your skills at evading attacks, you watch " + a + short + " and deftly sidestep her brutal talons.\n", false);
 				return;
 			}
-			if(player.hasPerk("Misdirection") >= 0 && rand(100) < 30 && player.armorName == "red, high-society bodysuit") {
+			if(player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 30 && player.armorName == "red, high-society bodysuit") {
 				outputText("Using Raphael's teachings and the movement afforded by your bodysuit, you anticipate and sidestep " + a + short + "'s attack.\n", false);
 				return;
 			}
 			//Determine if cat'ed
-			if(player.hasPerk("Flexibility") >= 0 && rand(100) < 40) {
+			if(player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 40) {
 				outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "", false);
 				outputText("'s attack.\n", false);
 				return;
@@ -206,7 +207,7 @@
 			var select:Number = 1;
 			var rando:Number = 1;
 //Update attacks for girls/neuters
-			if (!player.hasCock() || hasStatusAffect("bimboBrawl") >= 0) {
+			if (!player.hasCock() || findStatusAffect(StatusAffects.BimboBrawl) >= 0) {
 				//Talons
 				special1 = talonsSophie;
 				//Batter
@@ -223,7 +224,7 @@
 				//compulsion
 				special3 = sophieCompulsionAttack;
 			}
-			if (player.hasCock() && hasStatusAffect("bimboBrawl") < 0) rando = 1 + rand(3);
+			if (player.hasCock() && findStatusAffect(StatusAffects.BimboBrawl) < 0) rando = 1 + rand(3);
 			else rando = 1 + rand(2);
 			if (rando == 1) game.eventParser(special1);
 			if (rando == 2) game.eventParser(special2);
@@ -233,7 +234,7 @@
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			if(hasStatusAffect("bimboBrawl") >= 0)
+			if(findStatusAffect(StatusAffects.BimboBrawl) >= 0)
 				game.sophieFollowerScene.beatUpDebimboSophie();
 			else
 				game.sophieScene.sophieLostCombat();
@@ -241,7 +242,7 @@
 
 		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
 		{
-			if(hasStatusAffect("bimboBrawl") >= 0)
+			if(findStatusAffect(StatusAffects.BimboBrawl) >= 0)
 				game.sophieFollowerScene.debimboSophieBeatsYouUp();
 			else if (pcCameWorms) {
 				outputText("\n\nYour foe seems disgusted by the display and leaves you to recover alone...");
@@ -256,22 +257,45 @@
 			super(true);
 			trace("Sophie Constructor!");
 		
-			init01Names("", "Sophie", "sophie", "Sophie is approximately the size of a normal human woman, not counting the large feathery wings that sprout from her back.  Her face is gorgeous, with large rounded eyes and glimmering amber lip-gloss painted on her lush, kissable lips.  In spite of her beauty, it's clear from the barely discernible laugh lines around her mouth that she's been around long to enough to have quite a few children.  Her feathers are light pink, though the downy plumage that comprises her 'hair' is brighter than the rest.  She moves with practiced grace despite the large, jiggling breasts that hang from her chest.  Judging from her confident movements, she's an experienced fighter.");
-			init02Female(VAGINA_WETNESS_DROOLING,VAGINA_LOOSENESS_GAPING_WIDE,40);
-			init03BreastRows("DD");
-			init04Ass(ANAL_LOOSENESS_TIGHT,ANAL_WETNESS_DRY,10);
-			init05Body("5'5",HIP_RATING_INHUMANLY_WIDE,BUTT_RATING_EXPANSIVE);
-			init06Skin("pink",SKIN_TYPE_PLAIN,"feathers");
-			init07Hair("pink",16);
-			init08Face();
-			init09PrimaryStats(55,40,110,60,60,50,60);
-			init10Weapon("talons","slashing talons",20);
-			init11Armor("feathers",5);
-			init12Combat(250,10,.3,Monster.TEMPERMENT_RANDOM_GRAPPLES);
-			init13Level(11,20 + rand(25));
-			initX_Wings(WING_TYPE_HARPY,"large feathery");
-			initX_Specials(harpyUberCharge,harpyTease);
-
+			this.a = "";
+			this.short = "Sophie";
+			this.imageName = "sophie";
+			this.long = "Sophie is approximately the size of a normal human woman, not counting the large feathery wings that sprout from her back.  Her face is gorgeous, with large rounded eyes and glimmering amber lip-gloss painted on her lush, kissable lips.  In spite of her beauty, it's clear from the barely discernible laugh lines around her mouth that she's been around long to enough to have quite a few children.  Her feathers are light pink, though the downy plumage that comprises her 'hair' is brighter than the rest.  She moves with practiced grace despite the large, jiggling breasts that hang from her chest.  Judging from her confident movements, she's an experienced fighter.";
+			// this.plural = false;
+			this.createVagina(false, VAGINA_WETNESS_DROOLING, VAGINA_LOOSENESS_GAPING_WIDE);
+			this.createStatusAffect(StatusAffects.BonusVCapacity, 40, 0, 0, 0);
+			createBreastRow(Appearance.breastCupInverse("DD"));
+			this.ass.analLooseness = ANAL_LOOSENESS_TIGHT;
+			this.ass.analWetness = ANAL_WETNESS_DRY;
+			this.createStatusAffect(StatusAffects.BonusACapacity,10,0,0,0);
+			this.tallness = 5*12+5;
+			this.hipRating = HIP_RATING_INHUMANLY_WIDE;
+			this.buttRating = BUTT_RATING_EXPANSIVE;
+			this.skinTone = "pink";
+			this.skinType = SKIN_TYPE_PLAIN;
+			this.skinDesc = "feathers";
+			this.hairColor = "pink";
+			this.hairLength = 16;
+			initStrTouSpeInte(55, 40, 110, 60);
+			initLibSensCor(60, 50, 60);
+			this.weaponName = "talons";
+			this.weaponVerb="slashing talons";
+			this.weaponAttack = 20;
+			this.armorName = "feathers";
+			this.armorDef = 5;
+			this.bonusHP = 250;
+			this.lust = 10;
+			this.lustVuln = .3;
+			this.temperment = TEMPERMENT_RANDOM_GRAPPLES;
+			this.level = 11;
+			this.gems = 20 + rand(25);
+			this.drop = new ChainedDrop().add(armors.W_ROBES,1/10)
+					.elseDrop(consumables.GLDSEED);
+			this.wingType = WING_TYPE_HARPY;
+			this.wingDesc = "large feathery";
+			this.special1 = harpyUberCharge;
+			this.special2 = harpyTease;
+			checkMonster();
 		}
 
 	}

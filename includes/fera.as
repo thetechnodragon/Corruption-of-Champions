@@ -117,7 +117,7 @@ public function pumpkinFuckPartIII():void {
 	outputText("\n\nFera disappears along with all the evidence of your encounter, her ruby lips hanging in the air for a split-second before fading as well.  You're left naked, alone with your discarded armor, lusts, and recently adjusted attitude.");
 	//(+30 corrution, Fera's Boon - Alpha gained)
 	outputText("\n\n(<b>Perk Gained: Fera's Boon - Alpha</b>)");
-	player.createPerk("Fera's Boon - Alpha",0,0,0,0,"FUCKING SAVE EDITORS MANG");
+	player.createPerk(PerkLib.FerasBoonAlpha,0,0,0,0);
 	dynStats("cor", 30);
 	doNext(13);
 }
@@ -210,7 +210,7 @@ public function mountPumpkinsIII():void {
 	outputText("\n\n<i>\"I went ahead and gave you your reward.  It seemed fitting to enhance the power of your womb, since that was how you saved me.  My hero,\"</i> Fera explains before giving you a chaste kiss on the lips.  <i>\"You'll find yourself breeding easier and giving birth faster.  Now go, fill this world with strong offspring.  Do not disappoint me.\"</i>");
 	outputText("\n\nFera disappears along with all the evidence of your encounter, her ruby lips hanging in the air for a split-second before fading as well.  You're left naked, alone with your discarded armor, urge of release, and recently adjusted attitude.");
 	outputText("\n\n(<b>Perk Gained: Fera's Boon - Breeding Bitch</b>)");
-	player.createPerk("Fera's Boon - Breeding Bitch",0,0,0,0,"HAXOR!");
+	player.createPerk(PerkLib.FerasBoonBreedingBitch,0,0,0,0);
 	dynStats("cor", 30);
 	doNext(13);
 }
@@ -399,7 +399,7 @@ public function dickBoostingFuntimes():void {
 		}
 	}
 	dynStats("lib", 10, "lus=", 0, "cor", 5);
-	player.createPerk("Fera's Boon - Seeder",0,0,0,0,"Seriously, stop looking at my code, Onii-chan!");
+	player.createPerk(PerkLib.FerasBoonSeeder,0,0,0,0);
 	menu();
 	addButton(0,"Next",postSeederUpgrade);
 }
@@ -464,7 +464,7 @@ public function gapeMePleaseFera():void {
 	else outputText(", meeting more than a little resistant at your unstretched entry and finding a way in anyhow. First one tentacle slithers in, then a second, then a fourth, and so on. One after another, they spread you wider and wider, opening you until the entire wiggling column is buried deep, pulling your lips ridiculously wide.");
 	outputText("\n\nYou do not feel an ounce of pain from the extreme insertion. You don't even feel a whiff of discomfort. All you can feel is a sense of delicious, twat-stuffing fullness, filling and expanding you all while flooding you with more of that heavenly, brain-deadening slime. Your crotch quickly overflows. There simply isn't room for all the nectar they're leaking inside. The excess is painting you with a glossy coat of nectar and girl-honey, spraying over your [legs] around the impaling members.");
 	//STEAL VIRGINITY!
-	cuntChange(90000,true,true,false);
+	player.cuntChange(90000,true,true,false);
 	
 	outputText("\n\nFera's voice whispers with a voice that has as much heat as the crackling coals of a long-burning bonfire, \"<i>Feel the pleasure of being filled, my servant.  Feel the bliss of stuffing yourself so full, so very full.  Only the biggest, strongest, most well-hung of mates will ever come close to filling you like this, and you will seek them out.  Your twat will hunger for huge cocks.  It will </i>thirst<i> for the cum that's lurking in those big, meaty balls.  Your womb will ache for impregnation, and you will seek it, won't you?  Answer me, my pet champion.</i>\"");
 	outputText("\n\nYour lips mouth, exhaling your answer in a barely audible, \"<i>yessss....</i>\"");
@@ -475,15 +475,15 @@ public function gapeMePleaseFera():void {
 	outputText(" as you climax, arching your back and making guttural, beast-like sounds of pleasure.  Your eyelids hang low, lazily obscuring some of those wonderful colors from your view as the pleasure and plant-sap work on you.  Shuddering, you gush girlcum harder than ever, spraying a thick wave of lady-spunk across the tentacles, shining them with your juices");
 	if(player.wetness() < 4) outputText(" even though you're not a squirter");
 	outputText(".  They pump on with intense, unrelenting energy, squishing wetly with every thrust, splattering juice everywhere as they ruin your poor, convulsing cunny.");
-	cuntChange(90000,true,true,false);
+	player.cuntChange(90000,true,true,false);
 	
 	outputText("\n\nAs you come down, Fera resumes talking. Your body doesn't seem to care, because you start to cum again three thrusts later, riding out wave after wave of ecstasy to the sound of her simmering-hot voice filling you with idea after idea.  Her words just slip right into your delicate, open consciousness, settling in as if they're your own with every cunt-shattering orgasm that wracks your bliss-riddled form.  \"<i>This is your top priority, [name].  Pleasure.  Ecstasy.  You are going to fuck who you want, when you want.  You are going to take the sperm you want from the male you choose to father your young and you are not going to take anything for an answer except his big, fat dick in your needy cooch.</i>\"");
-	cuntChange(90000,true,true,false);
+	player.cuntChange(90000,true,true,false);
 	outputText("\n\nYou pant, \"<i>Yessssssssss,</i>\" though you don't know if it's due to the nerve-incinerating excitement or in agreement with Fera's declarations.  Your world dissolves into pure rapture.  The colors fade away when your eyes roll back, and the instructions seem far away, almost as if spoken to someone else.  The tentacles never stop thrusting, and you never stop cumming, focusing solely on the hot, lurid flower-fuck until your mind is laden with cruel suggestions and your body has orgasmed into unconsciousness.");
-	cuntChange(90000,true,true,false);
+	player.cuntChange(90000,true,true,false);
 	//(cum!)
 	//Minimum size to 4
-	player.createPerk("Fera's Boon - Wide Open",0,0,0,0,"Seriously, stop looking at my code, Onii-chan!");
+	player.createPerk(PerkLib.FerasBoonWideOpen,0,0,0,0);
 	//Boost fertility by a bunch
 	player.fertility += 20;
 	if(player.fertility > 50) player.fertility = 50;
@@ -533,14 +533,14 @@ public function tightLikeAToigar():void {
 	else if(player.vaginas[0].vaginalLooseness >= VAGINA_LOOSENESS_LOOSE) outputText(", slowly working its way into your decently unstretched entrance");
 	else outputText(", slowly burrowing past your tight, restrictive entrance");
 	outputText(" and leaving a trail of slick, black corruption in its wake.  The tendril pushes the whole way up to your cervix, gently butting up against your womb's portal before dragging back out, sputtering more inky cum all the way.  When it pops out, the head catches the tip of your [clit], causing your [vagina] to spasm and contract, squeezing down on the foreign fluid with such strength that a geyser of sable spunk erupts from your quivering quim.");
-	cuntChange(1,true,true,false);
+	player.cuntChange(1,true,true,false);
 	outputText("\n\nFera coos, \"<i>Atta girl, are you feeling it?  Can you feel the way your pussy is tightening up?  You can, I know, and your womb is getting thirstier and thirstier, just aching to squeeze the cum out of a helpless male or herm that you've taken the time to beat into their place, right, my pretty?</i>\"  Her fingers reach down to your black-stained cleft and rub around the hardening gunk that paints your crotch, making it look like someone painted liquid latex all across your " + player.skin() + ".  At the same time, the tendril lunges back in to your spunk-spouting cunt, plugging it just before it starts to unload once more, its stalk undulating between your legs with each thrust, rising up and straightening with each hip-shaking thrust it delivers to your increasingly supple, stained box.");
 	outputText("\n\nYou cum, and you cum... and you cum some more.  Each orgasm comes closer on the heels of the one before, wetter, hotter, and more powerful than the last.  Despite the commands to relax, your body shakes and quivers like a leaf caught up in a tornado, helplessly tossed about on disastrously strong winds of ecstasy.  Your [legs] clench around the penetrating stalk, increasingly painted with the onyx hue of your floral lover's distilled love, and you give yourself over to the passion, screaming and crying and moaning until your voice goes hoarse and Fera's gentle whispers shush you into silence.");
 	outputText("\n\nYou have no choice but to obey as you lose consciousness to the pleasure, your mind left as open to Fera's instructions as your pussy is to that ever-thrusting, continually-cumming vine-cock.");
 	//(cum!)
 	dynStats("lib", 5, "sen", 20, "lus=", 0, "cor", 3);
 	//Maximum size to 2
-	player.createPerk("Fera's Boon - Milking Twat",0,0,0,0,"Seriously, stop looking at my code, Onii-chan!");
+	player.createPerk(PerkLib.FerasBoonMilkingTwat,0,0,0,0);
 	if(player.vaginas[0].vaginalLooseness > VAGINA_LOOSENESS_LOOSE) player.vaginas[0].vaginalLooseness = VAGINA_LOOSENESS_LOOSE;
 	//Boost fertility a little
 	player.fertility += 10;
@@ -581,7 +581,7 @@ public function growADickForFera():void {
 	player.cocks[0].cockLength = 10;
 	player.cocks[0].cockThickness = 2.5;
 	//Add five corruption.
-	player.createPerk("Fera's Boon - Seeder",0,0,0,0,"Seriously, stop looking at my code, Onii-chan!");
+	player.createPerk(PerkLib.FerasBoonSeeder,0,0,0,0);
 	menu();
 	genderCheck();
 	addButton(0,"Next",afterFeraGivesYouACawk);

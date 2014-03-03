@@ -1,15 +1,8 @@
 ﻿package classes.Scenes.NPCs
 {
-	import classes.Cock;
+	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
-	import classes.Monster;
-	import classes.CockTypesEnum;
-	
-	/**
-	 * ...
-	 * @author Fake-Name
-	 */
-
+	import classes.internals.*;
 
 	public class Ceraph extends Monster
 	{
@@ -19,7 +12,7 @@
 		private function ceraphSpecial1():void
 		{
 			game.spriteSelect(7);
-			if (hasStatusAffect("Uber") < 0) {
+			if (findStatusAffect(StatusAffects.Uber) < 0) {
 				if (rand(2) == 0) {
 					outputText("Ceraph winks and says, \"<i><i>Have you ever cum without being touched? You will.</i></i>\"\n\n", false);
 				}
@@ -27,12 +20,12 @@
 					outputText("Ceraph titters, \"<i><i>Let me show you the true power of an Omnibus.</i></i>\"\n\n", false);
 				}
 				outputText("Despite her sultry tease, you can tell she's starting to build up to something big...", false);
-				createStatusAffect("Uber", 0, 0, 0, 0);
+				createStatusAffect(StatusAffects.Uber, 0, 0, 0, 0);
 			}
 			else {
 				//(Next Round)
-				if (statusAffectv1("Uber") == 0) {
-					addStatusValue("Uber", 1, 1);
+				if (statusAffectv1(StatusAffects.Uber) == 0) {
+					addStatusValue(StatusAffects.Uber, 1, 1);
 					if (rand(2) == 0) outputText("The demonic hermaphrodite begins forging demonic symbols in the air before her, each glowing brilliant pink before they blur away in a haze.", false);
 					else outputText("The demonette makes obscene motions with her hands, as if masturbating an imaginary cock or vagina while her hands are wreathed in pink flames.", false);
 					outputText("  <b>She's about to unleash something huge!</b>", false);
@@ -40,7 +33,7 @@
 				}
 				//FIRE!
 				else {
-					removeStatusAffect("Uber");
+					removeStatusAffect(StatusAffects.Uber);
 					//(Avoid!)
 					if (flags[kFLAGS.IN_COMBAT_USE_PLAYER_WAITED_FLAG] == 1) {
 						outputText("She throws her hands out, palms facing you, and a rush of pink flame washes towards you.  Thanks to your decision to wait, it's easy to avoid the onrushing flames and her attack.\n\n", false);
@@ -58,14 +51,14 @@
 //[SPECIAL] – Whip Binding
 		private function ceraphSpecial2():void
 		{
-			if (player.hasStatusAffect("Bound") < 0) {
+			if (player.findStatusAffect(StatusAffects.Bound) < 0) {
 				outputText("Ceraph snaps her whip at you, lightning fast.  Unable to avoid the blinding speed of her attack, you find yourself wrapped from head to toe in the strong leather of her whip.  Remarkably, the fire dies out everywhere the whip touches you, leaving you bound but unharmed.", false);
 				//If player has l2 piercing
 				if (flags[kFLAGS.PC_FETISH] >= 2) {
 					outputText("  Gods this turns you on!", false);
 					game.dynStats("lus", 5);
 				}
-				player.createStatusAffect("Bound", 2 + rand(5), 0, 0, 0);
+				player.createStatusAffect(StatusAffects.Bound, 2 + rand(5), 0, 0, 0);
 			}
 			//[SPECIAL WHILE PC RESTRAINED]
 			else {
@@ -91,13 +84,13 @@
 		{
 			outputText("", true);
 			outputText("You wriggle in the tight binding, trying your best to escape.  ", false);
-			if (player.statusAffectv1("Bound") - 1 <= 0) {
+			if (player.statusAffectv1(StatusAffects.Bound) - 1 <= 0) {
 				outputText("With a mighty twist and stretch, the whip gives and uncurls from you all at once.  You've regained your freedom", false);
 				if (flags[kFLAGS.PC_FETISH] >= 2) {
 					outputText(", though you miss the tight leathery embrace", false);
 				}
 				outputText("!", false);
-				player.removeStatusAffect("Bound");
+				player.removeStatusAffect(StatusAffects.Bound);
 				combatRoundOver();
 				return;
 			}
@@ -106,11 +99,11 @@
 				if (flags[kFLAGS.PC_FETISH] >= 2) {
 					outputText("  You get nice and hot from being so effectively restrained, maybe you should just accept it?", false);
 				}
-				player.addStatusValue("Bound", 1, -1);
+				player.addStatusValue(StatusAffects.Bound, 1, -1);
 				//Strong characters break free faster
 				if (player.str > 65 && rand(player.str) > 45) {
 					outputText("  Though you didn't break free, it seems like your mighty struggles loosened the whip slightly...", false);
-					player.addStatusValue("Bound", 1, -1);
+					player.addStatusValue(StatusAffects.Bound, 1, -1);
 				}
 			}
 			outputText("\n\n", false);
@@ -156,7 +149,7 @@
 			//First hit!
 			doNext(1);
 			//Blind dodge change
-			if (hasStatusAffect("Blind") >= 0 && rand(10) != 9) {
+			if (findStatusAffect(StatusAffects.Blind) >= 0 && rand(10) != 9) {
 				outputText(capitalA + short + " completely misses you with a blind attack!", false);
 			}
 			//Determine if dodged!
@@ -166,10 +159,10 @@
 				if (player.spe - spe >= 20) outputText("You deftly avoid " + a + short + "'s slow " + weaponVerb + ".", false);
 			}
 			//Determine if evaded
-			else if (player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			else if (player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.", false);
 			}
-			else if (player.hasPerk("Misdirection") >= 0 && rand(100) < 15 && player.armorName == "red, high-society bodysuit") {
+			else if (player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 15 && player.armorName == "red, high-society bodysuit") {
 				outputText("With Raphael's teachings and the easy movement afforded by your bodysuit, you easily anticipate and sidestep " + a + short + "'s attack.", false);
 			}
 			//Determine damage - str modified by enemy toughness!
@@ -201,7 +194,7 @@
 			outputText("\n", false);
 			//SECOND ATTACK HERE------
 			//Blind dodge change
-			if (hasStatusAffect("Blind") >= 0 && rand(10) != 9) {
+			if (findStatusAffect(StatusAffects.Blind) >= 0 && rand(10) != 9) {
 				outputText(capitalA + short + " completely misses you with a blind attack!", false);
 			}
 			//Determine if dodged!
@@ -211,10 +204,10 @@
 				if (player.spe - spe >= 20) outputText("You deftly avoid " + a + short + "'s slow " + weaponVerb + ".", false);
 			}
 			//Determine if evaded
-			else if (player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			else if (player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.", false);
 			}
-			else if (player.hasPerk("Misdirection") >= 0 && rand(100) < 15 && player.armorName == "red, high-society bodysuit") {
+			else if (player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 15 && player.armorName == "red, high-society bodysuit") {
 				outputText("With Raphael's teachings and the easy movement afforded by your bodysuit, you easily anticipate and sidestep " + a + short + "'s attack.", false);
 			}
 			else {
@@ -251,11 +244,11 @@
 		override protected function performCombatAction():void
 		{
 			var choice:Number = rand(4);
-			if (player.hasStatusAffect("Bound") >= 0) {
+			if (player.findStatusAffect(StatusAffects.Bound) >= 0) {
 				ceraphSpecial2();
 				return;
 			}
-			if (hasStatusAffect("Uber") >= 0) {
+			if (findStatusAffect(StatusAffects.Uber) >= 0) {
 				ceraphSpecial1();
 				return;
 			}
@@ -294,21 +287,42 @@
 		public function Ceraph()
 		{
 			trace("Ceraph Constructor!");
-			init01Names("", "Ceraph", "ceraph", "Ceraph the Omnibus is totally nude and reveling in it.  Her large yet perky breasts jiggle heavily against her chest as she moves.  The flawless purple skin of her twin mounds glistens with a thin sheen of sweat, inviting you to touch and rub your fingers along their slippery surface.  Her eyes are solid black, but convey a mix of amusement and desire, in spite of their alien appearance.  The demon's crotch is a combination of both genders – a drooling cunt topped with a thick demonic shaft, sprouting from where a clit should be.");
-			init02Male(new Cock(10,2,CockTypesEnum.DEMON));
-			init02Female(VAGINA_WETNESS_SLAVERING, VAGINA_LOOSENESS_GAPING, 20);
-			init03BreastRows("E");
-			init04Ass(ANAL_LOOSENESS_STRETCHED,ANAL_WETNESS_DRY,15);
-			init05Body("5'6",HIP_RATING_CURVY,BUTT_RATING_NOTICEABLE,LOWER_BODY_TYPE_DEMONIC_HIGH_HEELS);
-			init06Skin("purple");
-			init07Hair("black",20);
-			init08Face();
-			init09PrimaryStats(65,40,80,80,75,15,100);
-			init10Weapon("flaming whip","flame-whip",15);
-			init11Armor("demon-skin");
-			init12Combat(200,30,0.75,TEMPERMENT_RANDOM_GRAPPLES);
-			init13Level(9,rand(5) + 38);
-			initX_Specials(ceraphSpecial1,ceraphSpecial2,ceraphSpecial3);
+			this.a = "";
+			this.short = "Ceraph";
+			this.imageName = "ceraph";
+			this.long = "Ceraph the Omnibus is totally nude and reveling in it.  Her large yet perky breasts jiggle heavily against her chest as she moves.  The flawless purple skin of her twin mounds glistens with a thin sheen of sweat, inviting you to touch and rub your fingers along their slippery surface.  Her eyes are solid black, but convey a mix of amusement and desire, in spite of their alien appearance.  The demon's crotch is a combination of both genders – a drooling cunt topped with a thick demonic shaft, sprouting from where a clit should be.";
+			// this.plural = false;
+			this.createCock(10,2,CockTypesEnum.DEMON);
+			this.createVagina(false, VAGINA_WETNESS_SLAVERING, VAGINA_LOOSENESS_GAPING);
+			this.createStatusAffect(StatusAffects.BonusVCapacity, 20, 0, 0, 0);
+			createBreastRow(Appearance.breastCupInverse("E"));
+			this.ass.analLooseness = ANAL_LOOSENESS_STRETCHED;
+			this.ass.analWetness = ANAL_WETNESS_DRY;
+			this.createStatusAffect(StatusAffects.BonusACapacity,15,0,0,0);
+			this.tallness = 5*12+6;
+			this.hipRating = HIP_RATING_CURVY;
+			this.buttRating = BUTT_RATING_NOTICEABLE;
+			this.lowerBody = LOWER_BODY_TYPE_DEMONIC_HIGH_HEELS;
+			this.skinTone = "purple";
+			this.hairColor = "black";
+			this.hairLength = 20;
+			initStrTouSpeInte(65, 40, 80, 80);
+			initLibSensCor(75, 15, 100);
+			this.weaponName = "flaming whip";
+			this.weaponVerb="flame-whip";
+			this.weaponAttack = 15;
+			this.armorName = "demon-skin";
+			this.bonusHP = 200;
+			this.lust = 30;
+			this.lustVuln = 0.75;
+			this.temperment = TEMPERMENT_RANDOM_GRAPPLES;
+			this.level = 9;
+			this.gems = rand(5) + 38;
+			this.drop = NO_DROP;
+			this.special1 = ceraphSpecial1;
+			this.special2 = ceraphSpecial2;
+			this.special3 = ceraphSpecial3;
+			checkMonster();
 		}
 
 	}

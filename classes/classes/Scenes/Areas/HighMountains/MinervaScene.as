@@ -1,11 +1,9 @@
 ﻿package classes.Scenes.Areas.HighMountains {
-import classes.BaseContent;
+	import classes.*;
+	import classes.GlobalFlags.kFLAGS;
 	import classes.GlobalFlags.kGAMECLASS;
-	import classes.GlobalFlags.kGAMECLASS;
-import classes.GlobalFlags.kFLAGS;
-import classes.Appearance;
-import classes.CockTypesEnum;
-public class MinervaScene extends BaseContent {
+
+	public class MinervaScene extends BaseContent {
 //const MINERVA_LOVE:int = 813;
 //const MINERVA_BACKSTORY:int = 814;
 //const MINERVA_BACKSTORY_LEARNED:int = 815;
@@ -770,6 +768,7 @@ private function fuckMinervasAsshole():void {
 	}
 	//PC returns to main camp menu
 	flags[kFLAGS.TIMES_BUTTFUCKED_MINERVA]++;
+	player.resetDickEjaculateTimer();
 	dynStats("sen", -1, "lus=", 0);
 	if(inCombat()) cleanupAfterCombat();
 	else doNext(13);
@@ -871,6 +870,7 @@ private function minervaCowgirlSex():void {
 	//Romanced ending:
 	else outputText("\n\nThe lovestruck siren sighs and sits up, looking up at you with affection clearly written on her face.  \"<i>I hope you'll come back soon; I always feel so much happier when you're around,</i>\" she says as she brings a hand to her chest, holding it over her heart.");
 	flags[kFLAGS.TIMES_MINERVA_COWGIRLED]++;
+	player.resetDickEjaculateTimer();
 	dynStats("sen", -1, "lus=", 0);
 	if(inCombat()) cleanupAfterCombat();
 	else doNext(13);
@@ -910,7 +910,7 @@ private function minervaLapSex():void {
 	//Virgin:
 	else outputText("  The thick siren prick plunges into your soaked cunt, filling your sweltering pussy with her oddly cool cock, in the process tearing right through your hymen, claiming your first fuck for herself as you bite back a pained yelp, though it is quickly displaced by the pleasure from the stimulation and venom.");
 	outputText("  Minerva basks in the feeling of being balls deep in you, and you revel in the feeling of being so filled and stretched while little tentacles squirm inside you and gently sting you with aphrodisiac venom.  The build-up of all the arousal enhancing toxins running through your body and the pleasure of the pussy-packing cock squeezed into your twat becomes too much to bear.  Your vision explodes with stars and your cunt clenches as you reach an orgasm.  Your body shudders and quivers with spine-tingling ecstasy, your nerves alight with furious sensation while your back arches and presses your [chest] against your siren lover.");
-	cuntChange(32,true,true,false);
+	player.cuntChange(32,true,true,false);
 	
 	outputText("\n\nLetting out a gasp at the sudden tightness, Minerva grits her sharky teeth and grips your rear harder, clearly trying to hold back her own orgasm.  You could swear you could feel her sizable balls swell in preparation only to be denied.  \"<i>Nnnh!  That was close... almost blew my load right there!  You feel so good around me... so warm around my cock.  How do those tentacles feel, hm?  The stinging must feel good,</i>\" she says teasingly as she grinds against you, using her grip on you to shift you back and forth slowly and twist her cock inside you.");
 	
@@ -958,6 +958,7 @@ private function minervaLapSex():void {
 	else outputText("\n\nThe lovestruck siren sighs and sits up, looking up at you with affection clearly written on her face.  \"<i>I hope you'll come back soon, I always feel so much happier when you're around,</i>\" she says as she brings a hand to her chest, holding it over her heart.");
 	player.slimeFeed();
 	flags[kFLAGS.TIMES_MINERVA_LAPSEXED]++;
+	player.resetDickEjaculateTimer();
 	dynStats("sen", -1, "lus=", 0);
 	if(inCombat()) cleanupAfterCombat();
 	else doNext(13);
@@ -1111,7 +1112,9 @@ private function letMinervaSuckYouOff():void {
 	
 	outputText("\n\nDeciding to relax for a while after your sexual exertion, you curl up on the soft moss with Minerva, both of you just basking in the warmth that the spring gives off, and the softness of the moss, content with each other's presence.  Unfortunately, you know you have to go; the call of your duty to this land is too great, and despite the comfort of this place, you must go.  Pulling away from the siren you promise to return and visit her soon.");
 	//PC returns to camp.
+	player.resetDickEjaculateTimer();
 	dynStats("lus=", 0);
+
 	if(inCombat()) cleanupAfterCombat();
 	else doNext(13);
 }
@@ -1176,6 +1179,7 @@ private function fuckMinervaWithHerHandsBehindHerBack():void {
 	outputText("\n\nWith an amused grin, you give the sharky herm a pat on the rump before heading out, your hand sliding along that sexy tail of hers as you let the well-fucked woman rest.");
 	//PC returns to camp
 	dynStats("sen", -1, "lus=", 0);
+	player.resetDickEjaculateTimer();
 	if(inCombat()) cleanupAfterCombat();
 	else doNext(13);
 }
@@ -1253,6 +1257,7 @@ private function pcGetsEatenOutByMinerva():void {
 	flags[kFLAGS.MINERVA_LEZZES_OUT]++;
 	// PC returns to camp
 	dynStats("sen", -2, "lus=", 0);
+	player.resetDickEjaculateTimer();
 	if(inCombat()) cleanupAfterCombat();
 	else doNext(13);
 }
@@ -1267,10 +1272,9 @@ internal function loseToMinerva():void {
 		outputText("\n\nThe friendly siren smiles down at you as she cares for you.  \"<i>I thought you did well!  You put up a real fight, but looks like Minerva came out on top this time!</i>\" she chirps happily with a proud look on her face.  After healing your wounds, Minerva helps you up and holds toward you a freshly picked peach.  \"<i>Here, eat this.  It will help you recover your strength.</i>\" she says, sending you on your way.  ");
 		// return PC to options- no combat option
 		// PC gains 1 Purity peach
-		monster.createStatusAffect("Peach Loot Loss",0,0,0,0);
+		monster.createStatusAffect(StatusAffects.PeachLootLoss,0,0,0,0);
 		menuLoc = 2;
-		shortName = "PurPeac";
-		takeItem();
+		inventory.takeItem(consumables.PURPEAC);
 		cleanupAfterCombat();
 	}
 	//PC loss by Lust
@@ -1311,8 +1315,7 @@ private function eatSomethingYouCunt():void {
 	//Acquiring: 
 	outputText("You walk over to the fruit trees surrounding the spring, examining the strange treats.  You decide that one ripe fruit, one resembling a peach, is the best choice, and pluck it from the tree.  Thanking Minerva for letting you have it, you stow it away safely and head back to camp.\n\n");
 	menuLoc = 2;
-	shortName = "PurPeac";
-	takeItem();
+	inventory.takeItem(consumables.PURPEAC);
 }
 
 /*

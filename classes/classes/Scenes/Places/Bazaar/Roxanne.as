@@ -1,10 +1,8 @@
 ﻿package classes.Scenes.Places.Bazaar{
-import classes.GlobalFlags.kFLAGS;
-import classes.GlobalFlags.kGAMECLASS;
-import classes.CockTypesEnum;
-import classes.CoC_Settings;
-import classes.Appearance;
-public class Roxanne extends BazaarAbstractContent{
+	import classes.*;
+	import classes.GlobalFlags.kFLAGS;
+
+	public class Roxanne extends BazaarAbstractContent{
 
 	public function Roxanne()
 	{
@@ -360,7 +358,7 @@ private function roxanneReamsYouNormal():void {
 	outputText("You giggle underneath the lizan, your face mopping up the frothy brew that spilled during the previous bout of binge drinking.  Lapping it up, you forget about your predicament as you adjust to the warm, scaled body overtop you.  Roxanne leaves you to your distractions while she wiggles out of her pants, her tail swaying to counterbalance the now-freed bulk of her member.  The sodden shaft rises to bump your butt, dripping with pre-cum as it wiggles between your cheeks.  It prods your " + assholeDescript() + ", rousing you from your drunken stupor and earning a look back, but the pirate begins to tongue the edge of your ear, making you giggle and relax into sexy, alcohol-lubricated acquiescence.\n\n", false);
 	
 	outputText("With a slow, steady push, Captain Poisontail forces her drippy tip through your liquor-loosened ring and into your innards.  You grunt in discomfort from the sudden straightening of your colon, unable to take such a beast in silence.  It's enough to stir you from your semi-conscious silence, and you try to ask her to go slower, slobbering and slurring your protests through numbed lips.  \"<i>Relax, my helpless prey.  Don't fight.  Just lie there and take what's coming to you,</i>\" orders the still somewhat-sober lizan while she leers at you with an expression that borders on malice.  Her words ring true, you're drunk and helpless to resist the inches of thick shemale cock sliding into your stretched pucker.", false);
-	buttChange(Math.floor(30+(flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00225]/4)),true,true,false);
+	player.buttChange(Math.floor(30+(flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00225]/4)),true,true,false);
 	outputText("\n\n", false);
 	
 	outputText("Too intoxicated to control yourself, your sphincter clenches repeatedly, drawing in a few more inches of Roxanne's thickness.  It packs you totally and completely, filling you in a way that centers all of your limited thoughts on the feel of that bulbous mass inside your anus.  While the lizan is scaled from head to toe, her penis clearly isn't.  You judge by the shape stuffing you that her cock is like that of a human,  a long veiny shaft capped with a rounded crown.  Her balls slap ", false);
@@ -379,7 +377,7 @@ private function roxanneReamsYouNormal():void {
 	outputText("\"<i>Unf... you're so fucking tight, " + player.short + "!  Gods, I hate Ceraph's curse and this wretched world... but your ass... your gorgeous, cock-slurping asshole... it's divine,</i>\" praises Roxanne, smacking your ass-pillows in between her slow, rump-filling pumps.  She continues ranting with her thrusts, picking up the pace while she says, \"<i>So hot... my beautiful, drunken anal slut.  Look at you... you're soaked in your spilt beer, panting while I ream your rump.  Did you even want to win?  I bet you secretly wanted this, didn't you?  Go on, nod and tell me how much you want this.</i>\"\n\n", false);
 	
 	outputText("You shake your head no, and are rewarded for your disobedience with a violent, butt-jiggling tail-whip.  Gasping from the pain, your " + assholeDescript() + " contracts involuntarily, milking Roxanne's member for a few more drops of pre.  The aggressive lizard really gets into it, her massive, DD-cup tits pinning you to the table while she smacks your cheeks with her flexible lizan tail.   Pounding and slapping you, she abuses you for every dick-milking squeeze you'll give her, ", false);
-	if(player.hasPerk("Masochist") < 0) outputText("until you're voluntarily working your abdominal muscles to avoid the pain.", false);
+	if(player.findPerk(PerkLib.Masochist) < 0) outputText("until you're voluntarily working your abdominal muscles to avoid the pain.", false);
 	else outputText("until you're moaning with delight from every butt-reddening strike.", false);
 	outputText("  Breaking under the onslaught, you mewl drunkenly, \"<i>Fuck my assh... plug me with your cum,</i>\" and wonder if you actually meant it.\n\n", false);
 	
@@ -466,7 +464,7 @@ private function roxanneFucksYourAssOHGODITSHUGE():void {
 	outputText("-slicked ass to accept ever-greater quantities of cock.  Sharp fingernails drag over your " + hipDescript(), false);
 	if(player.skinType == SKIN_TYPE_PLAIN) outputText(", leaving red lines in your unblemished skin", false);
 	outputText(" while your hips visibly spread, somehow accepting something a normal human body never could.", false);
-	buttChange(Math.floor(30+(flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00225]/4)),true,true,false);
+	player.buttChange(Math.floor(30+(flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00225]/4)),true,true,false);
 	outputText("\n\n", false);
 	
 	outputText("Roxanne stops and pants lustily, her two-foot prehensile tongue hanging into her cavernous cleavage while she strokes the exposed half of her member.  She traces one of her fingers over the swell of your left cheek, letting her nail leave behind ", false);
@@ -503,10 +501,10 @@ private function applyHangover():void {
 	//v4 = intelligence
 
 	//Already hungover?  Reset duration.
-	if(player.hasStatusAffect("Hangover") >= 0) player.changeStatusValue("Hangover",1,8);
+	if(player.findStatusAffect(StatusAffects.Hangover) >= 0) player.changeStatusValue(StatusAffects.Hangover,1,8);
 	//No hangover yet?  Create and yoink stats
 	else {
-		player.createStatusAffect("Hangover",8,0,0,0);
+		player.createStatusAffect(StatusAffects.Hangover,8,0,0,0);
 		//Strength minus 5
 		temp = 5;
 		while(temp > 0) {
@@ -517,7 +515,7 @@ private function applyHangover():void {
 				// strDown.visible = true;
 				// strUp.visible = false;
 				player.str--;
-				player.addStatusValue("Hangover",2,1);			
+				player.addStatusValue(StatusAffects.Hangover,2,1);
 			}
 		}
 		//speed minus 10
@@ -530,7 +528,7 @@ private function applyHangover():void {
 				// speDown.visible = true;
 				// speUp.visible = false;
 				player.spe--;
-				player.addStatusValue("Hangover",3,1);
+				player.addStatusValue(StatusAffects.Hangover,3,1);
 			}
 		}
 		//int minus 15
@@ -543,7 +541,7 @@ private function applyHangover():void {
 				// inteDown.visible = true;
 				// inteUp.visible = false;
 				player.inte--;
-				player.addStatusValue("Hangover",4,1);
+				player.addStatusValue(StatusAffects.Hangover,4,1);
 			}
 		}
 	}
@@ -563,7 +561,7 @@ private function bigBootyRoxanneContestLoss():void {
 	outputText("\n\nDrops of liquid lizan love spatter across your asscheeks when Roxanne pulls herself back, and she comments, \"<i>You've got a beautiful ass, [name].  So thick, soft, and... shiny.</i>\"  Narrow, reptilian fingers slide through your ass-cleavage, smearing the pirate's natural lubricants everywhere and circling your [asshole] with slow strokes.  You clench at the first touch, an instinctive reaction to the probing, but the newhalf's insistent caresses slowly win your drunken, pleasure-hungry mind (and hole) over.  \"<i>Atta " + player.mf("boy","girl") + "!</i>\" the lizard exclaims encouragingly.");
 	outputText("\n\nAfter all that alcohol, kissing, and sensuous groping, you feel eager and ready to go, suddenly hungry for the pending, plus-sized violation that your lizan lover has been saving up for you.  You sigh into your pillow as Roxanne's bulbous cock-tip lines up with your [asshole], the muscles of your sphincter quivering in anticipation.  Slurring drunkenly, you beg, \"<i>Put it... put it in already... I'm ssho fukkin' horny!</i>\"");
 	outputText("\n\nRoxanne gleefully slaps your [butt] and counters, \"<i>I'm getting ready, ya greedy butt-slut!</i>\"  She groans, and you feel some of her syrupy pre slipping through your well-lubed ring.  Despite her words, she's ready to go and just as ready to blow.  She edges her fluid-dribbling invader past your gate and suddenly thrusts, forcing you open and battering her way into your rectum with one hard push.  As big as she is, only her tip and the first few inches get in, but you feel as if you're about to be split in half.  The pulsating, fleshy spear twitches happily from the warmth of your innards and the squeezing of your big, rounded booty.");
-	buttChange(Math.floor(30+(flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00225]/4)),true,true,false);
+	player.buttChange(Math.floor(30+(flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00225]/4)),true,true,false);
 	outputText("\n\n[if (hasCock = true) \"[EachCock] twitches, only half-hard and yet trembling from the light bumps your poor prostate receives.  You moan and give a saucy wiggle as your ass caresses the bulbous invader, pulling it deeper to rub up against your anal G-spot.  A tiny jet of pre squirts on the bed sheets, foreshadowing the fun to come.\"]");
 	if(player.hasCock() && player.hasVagina()) outputText("  ");
 	outputText("[if (hasVagina = true) \"Meanwhile, your [vagina] gets slicker and slicker, your lust permeating the air with potent female musk.  Oh, if only Roxanne would fuck you there too!\"]");

@@ -1,15 +1,15 @@
 ﻿package classes 
 {
-	import classes.Scenes.Places.TelAdre.UmasShop;
+import classes.Scenes.Places.TelAdre.UmasShop;
 
-	/**
+/**
 	 * Character class for player and NPCs. Has subclasses Player and NonPlayer.
 	 * @author Yoffy
 	 */
 	public class Character extends Creature 
 	{
 		private var _femininity:Number = 50;
-		
+
 		// This is the easiest way I could think of to apply "flat" bonuses to certain stats without having to write a whole shitload of crazyshit
 		// I think a better long-term solution may be to hang function references off the end of the statusAffect class and move all of the value
 		// calculation into methods of ContentClasses, so rather than having walls of logic, we just call the method reference with a value, and get back the modified value.
@@ -17,13 +17,13 @@
 		public function get femininity():Number
 		{
 			var fem:Number = _femininity;
-			var statIndex:int = this.hasStatusAffect(UmasShop.MASSAGE_BONUS_NAME);
-			
+			var statIndex:int = this.findStatusAffect(StatusAffects.UmasMassage);
+
 			if (statIndex >= 0)
 			{
-				if (this.statusAffects[statIndex].value1 == UmasShop.MASSAGE_MODELLING_BONUS)
+				if (this.statusAffect(statIndex).value1 == UmasShop.MASSAGE_MODELLING_BONUS)
 				{
-					fem += this.statusAffects[statIndex].value2;
+					fem += this.statusAffect(statIndex).value2;
 				}
 			}
 			
@@ -167,7 +167,7 @@
 				Changed = true;
 			}
 			//Fix if it went out of bounds!
-			if (hasPerk("Androgyny") < 0)
+			if (findPerk(PerkLib.Androgyny) < 0)
 				fixFemininity();
 			//Abort if nothing changed!
 			if (!Changed)
@@ -194,7 +194,6 @@
 		
 		public function modThickness(goal:Number, strength:Number = 1):String
 		{
-			var oldN:Number = thickness;
 			if (goal == thickness)
 				return "";
 			//Lose weight fatty!
@@ -225,7 +224,6 @@
 		
 		public function modTone(goal:Number, strength:Number = 1):String
 		{
-			var oldN:Number = tone;
 			if (goal == tone)
 				return "";
 			//Lose muscle visibility!
@@ -326,10 +324,7 @@
 		
 		public function hasBeard():Boolean
 		{
-			if (beardLength > 0)
-				return true;
-			else
-				return false;
+			return beardLength > 0;
 		}
 		
 		public function beard():String
@@ -338,7 +333,7 @@
 				return "beard";
 			else
 			{
-				//if (CoC_Settings.haltOnErrors) throw new Error("");
+				//CoC_Settings.error("");
 				return "ERROR: NO BEARD! <b>YOU ARE NOT A VIKING AND SHOULD TELL FEN IMMEDIATELY.</b>";
 			}
 		}
@@ -448,16 +443,16 @@
 		}
 
 		public function isPregnant():Boolean {
-			if (pregnancyIncubation == 0) return false;
-			return true;
+			return pregnancyIncubation != 0;
+
 		}
 		//fertility must be >= random(0-beat)
 		public function knockUp(type:int = 0, incubation:int = 0, beat:int = 100, arg:int = 0):void
 		{
 			//Contraceptives cancel!
-			if (hasStatusAffect("Contraceptives") >= 0 && arg < 1)
+			if (findStatusAffect(StatusAffects.Contraceptives) >= 0 && arg < 1)
 				return;
-			if (hasStatusAffect("gooStuffed") >= 0) 
+			if (findStatusAffect(StatusAffects.GooStuffed) >= 0)
 				return;
 			var bonus:int = 0;
 			//If arg = 1 (always pregnant), bonus = 9000
@@ -475,7 +470,7 @@
 			//Chance for eggs fertilization - ovi elixir and imps excluded!
 			if (type != 1 && type != 5 && type != 10)
 			{
-				if (hasPerk("Spider Ovipositor") >= 0 || hasPerk("Bee Ovipositor") >= 0)
+				if (findPerk(PerkLib.SpiderOvipositor) >= 0 || findPerk(PerkLib.BeeOvipositor) >= 0)
 				{
 					if (totalFertility() + bonus > Math.floor(Math.random() * beat))
 					{
@@ -489,7 +484,7 @@
 		public function buttKnockUp(type:int = 0, incubation:int = 0, beat:int = 100, arg:int = 0):void
 		{
 			//Contraceptives cancel!
-			if (hasStatusAffect("Contraceptives") >= 0 && arg < 1)
+			if (findStatusAffect(StatusAffects.Contraceptives) >= 0 && arg < 1)
 				return;
 			var bonus:int = 0;
 			//If arg = 1 (always pregnant), bonus = 9000
@@ -513,12 +508,12 @@
 			//used to denote that the array has already had its new spot pushed on.
 			var arrayed:Boolean = false;
 			//used to store where the array goes
-			var keySlot:Number = 0
-			var counter:Number = 0
+			var keySlot:Number = 0;
+			var counter:Number = 0;
 			//Start the array if its the first bit
 			if (keyItems.length == 0)
 			{
-				trace("New Key Item Started Array! " + keyName);
+				//trace("New Key Item Started Array! " + keyName);
 				keyItems.push(newKeyItem);
 				arrayed = true;
 				keySlot = 0;
@@ -526,7 +521,7 @@
 			//If it belongs at the end, push it on
 			if (keyItems[keyItems.length - 1].keyName < keyName && !arrayed)
 			{
-				trace("New Key Item Belongs at the end!! " + keyName);
+				//trace("New Key Item Belongs at the end!! " + keyName);
 				keyItems.push(newKeyItem);
 				arrayed = true;
 				keySlot = keyItems.length - 1;
@@ -534,7 +529,7 @@
 			//If it belongs in the beginning, splice it in
 			if (keyItems[0].keyName > keyName && !arrayed)
 			{
-				trace("New Key Item Belongs at the beginning! " + keyName);
+				//trace("New Key Item Belongs at the beginning! " + keyName);
 				keyItems.splice(0, 0, newKeyItem);
 				arrayed = true;
 				keySlot = 0;
@@ -542,7 +537,7 @@
 			//Find the spot it needs to go in and splice it in.
 			if (!arrayed)
 			{
-				trace("New Key Item using alphabetizer! " + keyName);
+				//trace("New Key Item using alphabetizer! " + keyName);
 				counter = keyItems.length;
 				while (counter > 0 && !arrayed)
 				{
@@ -578,9 +573,8 @@
 			//Fallback
 			if (!arrayed)
 			{
-				trace("New Key Item Belongs at the end!! " + keyName);
+				//trace("New Key Item Belongs at the end!! " + keyName);
 				keyItems.push(newKeyItem);
-				arrayed = true;
 				keySlot = keyItems.length - 1;
 			}
 			
@@ -589,7 +583,7 @@
 			keyItems[keySlot].value2 = value2;
 			keyItems[keySlot].value3 = value3;
 			keyItems[keySlot].value4 = value4;
-			trace("NEW KEYITEM FOR PLAYER in slot " + keySlot + ": " + keyItems[keySlot].keyName);
+			//trace("NEW KEYITEM FOR PLAYER in slot " + keySlot + ": " + keyItems[keySlot].keyName);
 		}
 		
 		//Remove a key item
@@ -646,7 +640,6 @@
 				}
 			}
 			//trace("ERROR: Looking for keyitem '" + statusName + "' to change value " + statusValueNum + ", and player does not have the key item.");
-			return;
 		}
 		
 		public function keyItemv1(statusName:String):Number
@@ -787,9 +780,8 @@
 		
 		public function hasSheath():Boolean
 		{
-			if (dogCocks() > 0 || horseCocks() > 0 || catCocks() > 0 || kangaCocks() > 0 || displacerCocks() > 0)
-				return true;
-			return false;
+			return dogCocks() > 0 || horseCocks() > 0 || catCocks() > 0 || kangaCocks() > 0 || displacerCocks() > 0;
+
 		}
 		
 		public function hasKnot(arg:int = 0):Boolean
@@ -804,15 +796,22 @@
 		{
 			var max:Number = 0;
 			max += int(tou * 2 + 50);
-			if (hasPerk("Tank") >= 0) max += 50;
-			if (hasPerk("Tank 2") >= 0) max += Math.round(tou);
-			if (hasPerk(UmasShop.NEEDLEWORK_DEFENSE_PERK_NAME) >= 0) max += UmasShop.NEEDLEWORK_DEFENSE_EXTRA_HP;
+			if (findPerk(PerkLib.Tank) >= 0) max += 50;
+			if (findPerk(PerkLib.Tank2) >= 0) max += Math.round(tou);
+			if (findPerk(PerkLib.ChiReflowDefense) >= 0) max += UmasShop.NEEDLEWORK_DEFENSE_EXTRA_HP;
 			if (level <= 20) max += level * 15;
 			else max += 20 * 15;
 			max = Math.round(max);
 			if (max > 999) max = 999;
 			return max;
 		}
+
+		public function buttDescript():String
+		{
+			return Appearance.buttDescription(this);
+		}
+
+
 	}
 
 }

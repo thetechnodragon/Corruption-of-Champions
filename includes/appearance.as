@@ -1,4 +1,4 @@
-public function appearance(e:MouseEvent = null):void 
+﻿public function appearance(e:MouseEvent = null):void 
 {
 	funcs = new Array();
 	args = new Array();
@@ -60,7 +60,7 @@ public function appearance(e:MouseEvent = null):void
 		outputText("  <b>You are currently wearing " + player.armorName + " and using your " + player.weaponName + " as a weapon.</b>", false);
 	else outputText("  <b>You are currently wearing your " + player.armorName + " and using your " + player.weaponName + " as a weapon.</b>", false);
 	//Face
-	if(player.faceType == FACE_HUMAN || player.faceType == FACE_SHARK_TEETH || player.faceType == FACE_BUNNY || player.faceType == FACE_SPIDER_FANGS) 
+	if(player.faceType == FACE_HUMAN || player.faceType == FACE_SHARK_TEETH || player.faceType == FACE_BUNNY || player.faceType == FACE_SPIDER_FANGS || player.faceType == FACE_FERRET_MASK) 
 	{
 		if(player.skinType == SKIN_TYPE_PLAIN || player.skinType == SKIN_TYPE_GOO) 
 			outputText("  Your face is human in shape and structure, with " + player.skin() + ".", false);
@@ -74,6 +74,13 @@ public function appearance(e:MouseEvent = null):void
 			outputText("  The constant twitches of your nose and the length of your incisors gives your visage a hint of bunny-like cuteness.", false);
 		else if(player.faceType == FACE_SPIDER_FANGS) 
 			outputText("  A set of retractable, needle-like fangs sit in place of your canines and are ready to dispense their venom.", false);
+		else if(player.faceType == FACE_FERRET_MASK)
+			outputText("  The [skinFurScales] around your eyes is significantly darker than the rest of your face, giving you a cute little ferret mask.", false);
+	}
+	else if(player.faceType == FACE_FERRET)
+	{
+		if(player.skinType == SKIN_TYPE_PLAIN) outputText("  Your face is an adorable cross between human and ferret features, complete with a wet nose and whiskers.  The only oddity is your lack of fur, leaving only [skin] visible on your ferret-like face.",false);
+		else outputText("  Your face is coated in " + player.hairColor + " fur with [skin] underneath, an adorable cross between human and ferret features.  It is complete with a wet nose and whiskers.");
 	}
 	else if(player.faceType == FACE_RACCOON_MASK) 
 	{
@@ -222,6 +229,8 @@ public function appearance(e:MouseEvent = null):void
 		else outputText("  You are totally bald, showing only shiny " + player.skinTone + " " + player.skinDesc + " where your hair should be.", false);
 		if(player.earType == EARS_HORSE) 
 			outputText("  A pair of horse-like ears rise up from the top of your head.", false);
+		else if(player.earType == EARS_FERRET) 
+			outputText("  A pair of small, rounded ferret ears sit on top of your head.", false);
 		else if(player.earType == EARS_DOG) 
 			outputText("  A pair of dog ears protrude from your skull, flopping down adorably.", false);
 		else if(player.earType == EARS_COW) 
@@ -250,6 +259,8 @@ public function appearance(e:MouseEvent = null):void
 	{
 		if(player.earType == EARS_HUMAN) 
 			outputText("  Your " + hairDescript() + " looks good on you, accentuating your features well.", false);
+		else if(player.earType == EARS_FERRET) 
+			outputText("  A pair of small, rounded ferret ears burst through the top of your " + hairDescript() + ".", false);
 		else if(player.earType == EARS_HORSE) 
 			outputText("  The " + hairDescript() + " on your head parts around a pair of very horse-like ears that grow up from your head.", false);
 		else if(player.earType == EARS_DOG) 
@@ -518,6 +529,8 @@ public function appearance(e:MouseEvent = null):void
 	//TAILS
 	if(player.tailType == TAIL_TYPE_HORSE) 
 		outputText("  A long " + player.hairColor + " horsetail hangs from your " + buttDescript() + ", smooth and shiny.", false);
+	if(player.tailType == TAIL_TYPE_FERRET)
+		outputText("  A long ferret tail sprouts from above your [butt].  It is thin, tapered, and covered in shaggy " + player.hairColor + " fur.", false);
 	if(player.tailType == TAIL_TYPE_DOG) 
 		outputText("  A fuzzy " + player.hairColor + " dogtail sprouts just above your " + buttDescript() + ", wagging to and fro whenever you are happy.", false);
 	if(player.tailType == TAIL_TYPE_DEMONIC) 
@@ -591,6 +604,7 @@ public function appearance(e:MouseEvent = null):void
 	//LOWERBODY SPECIAL
 	if(player.lowerBody == LOWER_BODY_TYPE_HUMAN) 
 		outputText("  Two normal human legs grow down from your waist, ending in normal human feet.", false);
+	else if(player.lowerBody == LOWER_BODY_FERRET) outputText("  Two furry, digitigrade legs form below your [hips].  The fur is thinner on the feet, and your toes are tipped with claws.", false);
 	else if(player.lowerBody == LOWER_BODY_TYPE_HOOFED) 
 		outputText("  Your legs are muscled and jointed oddly, covered in fur, and end in a pair of bestial hooves.", false);
 	else if(player.lowerBody == LOWER_BODY_TYPE_DOG) 
@@ -626,11 +640,11 @@ public function appearance(e:MouseEvent = null):void
 		outputText("  Two human-like legs grow down from your " + hipDescript() + ", sheathed in scales and ending in clawed feet.  There are three long toes on the front, and a small hind-claw on the back.", false);
 	else if(player.lowerBody == LOWER_BODY_TYPE_RACCOON) 
 		outputText("  Your legs, though covered in fur, are humanlike.  Long feet on the ends bear equally long toes, and the pads on the bottoms are quite sensitive to the touch.");
-	if(player.hasPerk("Incorporeality") >= 0) 
+	if(player.findPerk(PerkLib.Incorporeality) >= 0)
 		outputText("  Of course, your " + player.legs() + " are partially transparent due to their ghostly nature.", false);
 	
 	outputText("\n", false);
-	if (player.hasStatusAffect("gooStuffed") >= 0)
+	if (player.findStatusAffect(StatusAffects.GooStuffed) >= 0)
 	
 	{
 		outputText("\n<b>Your gravid-looking belly is absolutely stuffed full of goo. There's no way you can get pregnant like this, but at the same time, you look like some fat-bellied breeder.</b>\n");
@@ -642,7 +656,7 @@ public function appearance(e:MouseEvent = null):void
 		{
 			outputText("<b>", false);
 			//Compute size
-			temp = player.statusAffects[player.hasStatusAffect("eggs")].value3 + player.statusAffects[player.hasStatusAffect("eggs")].value2 * 10;
+			temp = player.statusAffectv3(StatusAffects.Eggs) + player.statusAffectv2(StatusAffects.Eggs) * 10;
 			if(player.pregnancyIncubation <= 50 && player.pregnancyIncubation > 20) 
 			{
 				outputText("Your swollen pregnant belly is as large as a ", false);
@@ -887,7 +901,7 @@ public function appearance(e:MouseEvent = null):void
 			outputText("  With its tapered tip, there are few holes you wouldn't be able to get into.  It has a strange, knot-like bulb at its base, but doesn't usually flare during arousal as a dog's knot would.");
 		}
 		//Worm flavor
-		if(player.hasStatusAffect("infested") >= 0) 
+		if(player.findStatusAffect(StatusAffects.Infested) >= 0)
 			outputText("  Every now and again a slimy worm coated in spunk slips partway out of your " + cockDescript(0) + ", tasting the air like a snake's tongue.", false);		
 		if(player.cocks[temp].sock) 
 			sockDescript(temp);
@@ -913,7 +927,7 @@ public function appearance(e:MouseEvent = null):void
 				else outputText("-Your next ", false);
 				outputText(cockDescript(temp), false);
 				outputText(" is ", false);
-				outputText(int(10*player.cocks[temp].cockLength)/10 + " inches long and ", false)
+				outputText(int(10*player.cocks[temp].cockLength)/10 + " inches long and ", false);
 				if(Math.floor(player.cocks[temp].cockThickness) >= 2) 
 					outputText(num2Text(Math.round(player.cocks[temp].cockThickness * 10)/10) + " inches wide.", false);
 				else 
@@ -1030,19 +1044,19 @@ public function appearance(e:MouseEvent = null):void
 				sockDescript(temp);
 			}
 			temp++;
-			rando++
+			rando++;
 			outputText("\n", false);
 			if(rando > 3) rando = 0;
 		}
 		//Worm flavor
-		if(player.hasStatusAffect("infested") >= 0) 
+		if(player.findStatusAffect(StatusAffects.Infested) >= 0)
 			outputText("Every now and again slimy worms coated in spunk slip partway out of your " + multiCockDescriptLight() + ", tasting the air like tongues of snakes.\n", false);
 		//DONE WITH COCKS, moving on!
 	}
 	//Of Balls and Sacks!
 	if(player.balls > 0) 
 	{
-		if(player.hasStatusAffect("Uniball") >= 0) 
+		if(player.findStatusAffect(StatusAffects.Uniball) >= 0)
 		{
 			if(player.skinType != SKIN_TYPE_GOO) 
 				outputText("Your [sack] clings tightly to your groin, holding " + ballsDescript() + " snugly against you.");
@@ -1221,6 +1235,7 @@ public function appearance(e:MouseEvent = null):void
 	mainView.setOutputText( currentText );
 	//menu();
 	//addButton(0,"Next",camp);
+	flushOutputTextToGUI();
 }
 
 public function sockDescript(index:int):void 

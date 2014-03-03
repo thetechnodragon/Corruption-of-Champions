@@ -1,16 +1,7 @@
 ﻿package classes.Scenes.Areas.Lake
 {
-	import classes.CoC;
-	import classes.Cock;
-	import classes.Creature;
-	import classes.Monster;
-	import classes.CockTypesEnum;
-
-	/**
-	 * ...
-	 * @author Fake-Name
-	 */
-
+	import classes.*;
+	import classes.internals.*;
 
 	public class GreenSlime extends Monster
 	{
@@ -20,7 +11,7 @@
 		{
 			outputText("You smile in satisfaction as the " + short + " collapses, unable to continue fighting.", true);
 			//Boobfeed.
-			if(player.hasStatusAffect("Feeder") >= 0) {
+			if(player.findStatusAffect(StatusAffects.Feeder) >= 0) {
 				//Eligable to rape
 				if(player.lust >= 33 && player.gender > 0) {
 					outputText("\n\nYou're horny enough to try and rape it, though you'd rather see how much milk you can squirt into it.  What do you do?", false);
@@ -53,23 +44,42 @@
 		public function GreenSlime()
 		{
 			trace("GreenSlime Constructor!");
-			init01Names("a ", "green slime", "greenslime", "The green slime has a normally featureless face that sits on top of wide shoulders that sprout into thick, strong arms.  Its torso fades into an indistinct column that melds into the lump of ooze on the ground that serves as a makeshift form of locomotion.");
-			init02Male(new Cock(18, 2, CockTypesEnum.HUMAN), 0, 0, 3, 20);
+			this.a = "a ";
+			this.short = "green slime";
+			this.imageName = "greenslime";
+			this.long = "The green slime has a normally featureless face that sits on top of wide shoulders that sprout into thick, strong arms.  Its torso fades into an indistinct column that melds into the lump of ooze on the ground that serves as a makeshift form of locomotion.";
+			// this.plural = false;
+			this.createCock(18, 2, CockTypesEnum.HUMAN);
+			this.cumMultiplier = 3;
+			this.hoursSinceCum = 20;
 			this.pronoun1 = "it";
 			this.pronoun2 = "it";
 			this.pronoun3 = "its";
-			init03BreastRows(0);
-			init04Ass(ANAL_LOOSENESS_STRETCHED, ANAL_WETNESS_SLIME_DROOLING);
-			init05Body(rand(8) + 80, HIP_RATING_AMPLE, BUTT_RATING_LARGE,LOWER_BODY_TYPE_GOO);
-			init06Skin("green");
-			init07Hair();
-			init08Face();
-			init09PrimaryStats(25, 20, 10, 5, 50, 60, 20);
-			init10Weapon("hands", "slap");
-			init11Armor("gelatinous skin");
-			init12Combat(30, 30, 1, Monster.TEMPERMENT_LOVE_GRAPPLES);
-			init13Level(2, rand(5) + 1);
-			initX_Specials(5040, 5039, 5039);
+			createBreastRow(0);
+			this.ass.analLooseness = ANAL_LOOSENESS_STRETCHED;
+			this.ass.analWetness = ANAL_WETNESS_SLIME_DROOLING;
+			this.tallness = rand(8) + 80;
+			this.hipRating = HIP_RATING_AMPLE;
+			this.buttRating = BUTT_RATING_LARGE;
+			this.lowerBody = LOWER_BODY_TYPE_GOO;
+			this.skinTone = "green";
+			initStrTouSpeInte(25, 20, 10, 5);
+			initLibSensCor(50, 60, 20);
+			this.weaponName = "hands";
+			this.weaponVerb="slap";
+			this.armorName = "gelatinous skin";
+			this.bonusHP = 30;
+			this.lust = 30;
+			this.temperment = TEMPERMENT_LOVE_GRAPPLES;
+			this.level = 2;
+			this.gems = rand(5) + 1;
+			this.drop = new ChainedDrop().add(weapons.PIPE, 1 / 10)
+					.add(consumables.WETCLTH, 1 / 2)
+					.elseDrop(useables.GREENGL);
+			this.special1 = 5040;
+			this.special2 = 5039;
+			this.special3 = 5039;
+			checkMonster();
 		}
 
 	}

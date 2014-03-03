@@ -1,8 +1,7 @@
 package classes.Scenes.Areas.Swamp
 {
-	import classes.Appearance;
-	import classes.Cock;
-	import classes.CockTypesEnum;
+	import classes.*;
+	import classes.internals.*;
 
 	/**
 	 * ...
@@ -16,7 +15,7 @@ package classes.Scenes.Areas.Swamp
 			var temp:int;
 			outputText("The corrupted drider closes in on your web-bound form, cooing happily at you while you struggle with the sticky fibres.\n\n", false);
 			//Blind dodge change
-			if(hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+			if(findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 				outputText("She's too blind to get anywhere near you.\n", false);
 			}
 			//Dodge
@@ -29,7 +28,7 @@ package classes.Scenes.Areas.Swamp
 				else outputText("Just look at my glossy, dripping lips.  Imagine how great it would feel to have them locked against you.  Why resist?</i>\"\n", false);
 			}
 			//Determine if evaded
-			else if(player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			else if(player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("Somehow, you manage to evade her lusty attack.  She sighs and licks her lips.  \"<i>", false);
 				temp = rand(4);
 				if(temp == 0) outputText("I just wanted to give my delicious morsel a kiss...</i>\"\n", false);
@@ -38,7 +37,7 @@ package classes.Scenes.Areas.Swamp
 				else outputText("Just look at my glossy, dripping lips.  Imagine how great it feel to have them locked against you.  Why resist?</i>\"\n", false);
 			}
 			//("Misdirection"
-			else if(player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+			else if(player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 				outputText("You manage to misdirect her lusty attack, avoiding it at the last second.  She sighs and licks her lips.  \"<i>", false);
 				temp = rand(4);
 				if(temp == 0) outputText("I just wanted to give my delicious morsel a kiss...</i>\"\n", false);
@@ -47,7 +46,7 @@ package classes.Scenes.Areas.Swamp
 				else outputText("Just look at my glossy, dripping lips.  Imagine how great it feel to have them locked against you.  Why resist?</i>\"\n", false);
 			}
 			//Determine if cat'ed
-			else if(player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
+			else if(player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
 				outputText("You manage to twist your cat-like body out of the way at the last second, avoiding it at the last second.  She sighs and licks her lips.  \"<i>", false);
 				temp = rand(4);
 				if(temp == 0) outputText("I just wanted to give my delicious morsel a kiss...</i>\"\n", false);
@@ -56,7 +55,7 @@ package classes.Scenes.Areas.Swamp
 				else outputText("Just look at my glossy, dripping lips.  Imagine how great it feel to have them locked against you.  Why resist?</i>\"\n", false);
 			}
 			
-			else if(player.hasStatusAffect("Drider Kiss") < 0) {
+			else if(player.findStatusAffect(StatusAffects.DriderKiss) < 0) {
 				//(HIT? + 10 lust)
 				game.dynStats("lus", 10);
 				outputText("Before you can move, she's right on top of you, leaning ", false);
@@ -64,12 +63,12 @@ package classes.Scenes.Areas.Swamp
 				else outputText("over", false);
 				outputText(" to plant a sloppy, wet kiss upon your lips.  Her glossy lip-venom oozes everywhere, dribbling down your collective chins and sliding into your mouth.  You shudder, trying to resist, but your tongue betrays you.  It slides between her moist, puffy entrance, lapping at her venom and making love to her tongue.", false);
 				if(player.lust <= 99) outputText("  Somehow, you work up the willpower to back away, but your body slowly begins to burn hotter and harder, afflicted with a slowly-building lust.", false);
-				player.createStatusAffect("Drider Kiss",0,0,0,0);
+				player.createStatusAffect(StatusAffects.DriderKiss,0,0,0,0);
 			}
 			//Get hit 2nd time) 
 			else {
-				player.addStatusValue("Drider Kiss",1,1);
-				if(player.statusAffectv1("Drider Kiss") == 1) {
+				player.addStatusValue(StatusAffects.DriderKiss,1,1);
+				if(player.statusAffectv1(StatusAffects.DriderKiss) == 1) {
 					//(HIT? + 15 lust)
 					game.dynStats("lus", 15);
 					outputText("Again, the drider ties your mouth up in her syrupy lip-lock, seeming to bind your mouth as effectively as her webs bind your body.  Her sweet venom bubbles and froths at the corners of the oral embrace, dripping over her many-breasted bosom and your " + player.chestDesc() + ".", false);
@@ -114,15 +113,15 @@ package classes.Scenes.Areas.Swamp
 			game.spriteSelect(77);
 			if (lust > 70 && rand(4) == 0) driderMasturbate();
 			//1/4 chance of silence if pc knows spells
-			else if (game.hasSpells() && player.hasStatusAffect("Web-Silence") < 0 && rand(4) == 0) {
+			else if (game.hasSpells() && player.findStatusAffect(StatusAffects.WebSilence) < 0 && rand(4) == 0) {
 				spiderSilence();
 			}
 			//1/4 chance of disarm
-			else if (player.hasStatusAffect("Disarmed") < 0 && player.weaponName != "fists" && rand(4) == 0) {
+			else if (player.findStatusAffect(StatusAffects.Disarmed) < 0 && player.weaponName != "fists" && rand(4) == 0) {
 				spiderDisarm();
 			}
 			//Always web unless already webbed
-			else if (player.spe >= 2 && (player.hasStatusAffect("Web") < 0 || rand(2) == 0)) {
+			else if (player.spe >= 2 && (player.findStatusAffect(StatusAffects.Web) < 0 || rand(2) == 0)) {
 				spiderMorphWebAttack();
 			}
 			//Kiss!
@@ -147,31 +146,60 @@ package classes.Scenes.Areas.Swamp
 		public function CorruptedDrider()
 		{
 
-			var hairColor:String = Appearance.randomChoice("red", "orange", "green");
-			var skinTone:String = Appearance.randomChoice("yellow", "purple", "red", "turquoise");
+			var hairColor:String = randomChoice("red", "orange", "green");
+			var skinTone:String = randomChoice("yellow", "purple", "red", "turquoise");
 
 			var pierced:Boolean = rand(2)==0;
-			init01Names("the ", "corrupted drider", "corrupteddrider",
-					"This particular spider-woman is a drider - a creature with a humanoid top half and the lower body of a giant arachnid.  From a quick glance, you can tell that this one has fallen deeply to corruption.  She is utterly nude, exposing her four well-rounded, D-cup breasts with their shiny black nipples.  "+(pierced?"Gold piercings and chains link the curvy tits together, crossing in front of her four mounds in an 'x' pattern.  ":"")+"On her face and forehead, a quartet of lust-filled, " + skinTone + " eyes gaze back at you.  Behind her, the monster-girl's " + hairColor + " hair drapes down her back like a cloak.  The drider's lips seem to shine with a light all their own, and a steady trickle of purple, reflective fluid beads and drips from them.  At her waist, there's a juicy looking snatch with a large, highly visible clit.  From time to time it pulsates and grows, turning part-way into a demon-dick.  Her spider-half has eight spindly legs with black and " + hairColor + " stripes - a menacing display if ever you've seen one.");
-			init02Male(new Cock(9,2,CockTypesEnum.DEMON));
-			init02Female(VAGINA_WETNESS_DROOLING, VAGINA_LOOSENESS_GAPING, 70);
-			init03BreastRows("DD");
-			init04Ass(ANAL_LOOSENESS_TIGHT,ANAL_WETNESS_DRY,70);
-			init05Body("10'",HIP_RATING_CURVY+2,BUTT_RATING_LARGE+1,LOWER_BODY_TYPE_DRIDER_LOWER_BODY);
-			init06Skin(skinTone,SKIN_TYPE_PLAIN);
-			init07Hair(hairColor,24);
-			init08Face();
-			init09PrimaryStats(100,50,70,100,80,50,90);
-			init10Weapon("claws","claw",30);
-			init11Armor("carapace",55,"",70);
+			this.a = "the ";
+			this.short = "corrupted drider";
+			this.imageName = "corrupteddrider";
+			this.long = "This particular spider-woman is a drider - a creature with a humanoid top half and the lower body of a giant arachnid.  From a quick glance, you can tell that this one has fallen deeply to corruption.  She is utterly nude, exposing her four well-rounded, D-cup breasts with their shiny black nipples.  "+(pierced?"Gold piercings and chains link the curvy tits together, crossing in front of her four mounds in an 'x' pattern.  ":"")+"On her face and forehead, a quartet of lust-filled, " + skinTone + " eyes gaze back at you.  Behind her, the monster-girl's " + hairColor + " hair drapes down her back like a cloak.  The drider's lips seem to shine with a light all their own, and a steady trickle of purple, reflective fluid beads and drips from them.  At her waist, there's a juicy looking snatch with a large, highly visible clit.  From time to time it pulsates and grows, turning part-way into a demon-dick.  Her spider-half has eight spindly legs with black and " + hairColor + " stripes - a menacing display if ever you've seen one.";
+			// this.plural = false;
+			this.createCock(9,2,CockTypesEnum.DEMON);
+			this.createVagina(false, VAGINA_WETNESS_DROOLING, VAGINA_LOOSENESS_GAPING);
+			this.createStatusAffect(StatusAffects.BonusVCapacity, 70, 0, 0, 0);
+			createBreastRow(Appearance.breastCupInverse("DD"));
+			this.ass.analLooseness = ANAL_LOOSENESS_TIGHT;
+			this.ass.analWetness = ANAL_WETNESS_DRY;
+			this.createStatusAffect(StatusAffects.BonusACapacity,70,0,0,0);
+			this.tallness = 10*12;
+			this.hipRating = HIP_RATING_CURVY+2;
+			this.buttRating = BUTT_RATING_LARGE+1;
+			this.lowerBody = LOWER_BODY_TYPE_DRIDER_LOWER_BODY;
+			this.skinTone = skinTone;
+			this.skinType = SKIN_TYPE_PLAIN;
+			//this.skinDesc = Appearance.Appearance.DEFAULT_SKIN_DESCS[SKIN_TYPE_PLAIN];
+			this.hairColor = hairColor;
+			this.hairLength = 24;
+			initStrTouSpeInte(100, 50, 70, 100);
+			initLibSensCor(80, 50, 90);
+			this.weaponName = "claws";
+			this.weaponVerb="claw";
+			this.weaponAttack = 30;
+			this.armorName = "carapace";
+			this.armorDef = 55;
+			this.armorPerk = "";
+			this.armorValue = 70;
 			if (pierced) {
 				this.nipplesPierced = 1;
-				init12Combat(325,35,.25,TEMPERMENT_RANDOM_GRAPPLES);
-				init13Level(15,rand(10) + 30)
+				this.bonusHP = 325;
+				this.lust = 35;
+				this.lustVuln = .25;
+				this.temperment = TEMPERMENT_RANDOM_GRAPPLES;
+				this.level = 15;
+				this.gems = rand(10) + 30;
 			} else {
-				init12Combat(250,30,.4,TEMPERMENT_RANDOM_GRAPPLES);
-				init13Level(14,rand(10) + 20);
+				this.bonusHP = 250;
+				this.lust = 30;
+				this.lustVuln = .4;
+				this.temperment = TEMPERMENT_RANDOM_GRAPPLES;
+				this.level = 14;
+				this.gems = rand(10) + 20;
 			}
+			this.drop = new WeightedDrop().add(consumables.B_GOSSR,5)
+					.add(useables.T_SSILK,1)
+					.add(null,4);
+			checkMonster();
 		}
 
 	}

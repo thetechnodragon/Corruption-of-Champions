@@ -1,7 +1,8 @@
 package classes.Scenes.Areas.Plains
 {
-	import classes.Monster;
-	
+	import classes.*;
+	import classes.internals.*;
+
 	/**
 	 * ...
 	 * @author ...
@@ -16,7 +17,7 @@ package classes.Scenes.Areas.Plains
 			//return to combat menu when finished
 			doNext(1);
 			//Blind dodge change
-			if(hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+			if(findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 				outputText(capitalA + short + " completely misses you with a blind attack!\n", false);
 			}
 			//Determine if dodged!
@@ -26,15 +27,15 @@ package classes.Scenes.Areas.Plains
 				else if(player.spe - spe >= 20) outputText("You deftly avoid " + a + short + "'s slow " + weaponVerb + ".\n", false);
 			}
 			//Determine if evaded
-			else if(player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			else if(player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.\n", false);
 			}
 			//("Misdirection"
-			else if(player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+			else if(player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 				outputText("Using Raphael's teachings, you anticipate and sidestep " + a + short + "' attacks.\n", false);
 			}
 			//Determine if cat'ed
-			else if(player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
+			else if(player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
 				outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "", false);
 				if(plural) outputText("' attacks.\n", false);
 				else outputText("'s attack.\n", false);
@@ -130,7 +131,7 @@ package classes.Scenes.Areas.Plains
 //return to combat menu when finished
 			doNext(1);
 //Blind dodge change
-			if (hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+			if (findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 				outputText(capitalA + short + " completely misses you with a blind attack!\n", false);
 			}
 			//Determine if dodged!
@@ -140,15 +141,15 @@ package classes.Scenes.Areas.Plains
 				else if (player.spe - spe >= 20) outputText("You deftly avoid " + a + short + "'s slow " + weaponVerb + ".\n", false);
 			}
 			//Determine if evaded
-			else if (player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			else if (player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.\n", false);
 			}
 			//("Misdirection"
-			else if (player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+			else if (player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 				outputText("Using Raphael's teachings, you anticipate and sidestep " + a + short + "' attacks.\n", false);
 			}
 			//Determine if cat'ed
-			else if (player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
+			else if (player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
 				outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "", false);
 				if (plural) outputText("' attacks.\n", false);
 				else outputText("'s attack.\n", false);
@@ -204,25 +205,25 @@ package classes.Scenes.Areas.Plains
 
 		override protected function performCombatAction():void
 		{
-			if (hasStatusAffect("Stunned") >= 0) {
+			if (findStatusAffect(StatusAffects.Stunned) >= 0) {
 				if (plural) outputText("Your foes are too dazed from your last hit to strike back!", false);
 				else outputText("Your foe is too dazed from your last hit to strike back!", false);
-				removeStatusAffect("Stunned");
+				removeStatusAffect(StatusAffects.Stunned);
 				combatRoundOver();
 			}
-			if (hasStatusAffect("Fear") >= 0) {
-				if (statusAffectv1("Fear") == 0) {
+			if (findStatusAffect(StatusAffects.Fear) >= 0) {
+				if (statusAffectv1(StatusAffects.Fear) == 0) {
 					if (plural) {
-						removeStatusAffect("Fear");
+						removeStatusAffect(StatusAffects.Fear);
 						outputText("Your foes shake free of their fear and ready themselves for battle.", false);
 					}
 					else {
-						removeStatusAffect("Fear");
+						removeStatusAffect(StatusAffects.Fear);
 						outputText("Your foe shakes free of its fear and readies itself for battle.", false);
 					}
 				}
 				else {
-					addStatusValue("Fear", 1, -1);
+					addStatusValue(StatusAffects.Fear, 1, -1);
 					if (plural) outputText(capitalA + short + " are too busy shivering with fear to fight.", false);
 					else outputText(capitalA + short + " is too busy shivering with fear to fight.", false);
 				}
@@ -231,18 +232,18 @@ package classes.Scenes.Areas.Plains
 			var select:Number = 1;
 			var rando:Number = 1;
 //Exgartuan gets to do stuff!
-			if (player.hasStatusAffect("Exgartuan") >= 0 && player.statusAffectv2("Exgartuan") == 0 && rand(3) == 0) {
+			if (player.findStatusAffect(StatusAffects.Exgartuan) >= 0 && player.statusAffectv2(StatusAffects.Exgartuan) == 0 && rand(3) == 0) {
 				game.exgartuan.exgartuanCombatUpdate();
 				outputText("\n\n", false);
 			}
-			if (hasStatusAffect("Constricted") >= 0) {
+			if (findStatusAffect(StatusAffects.Constricted) >= 0) {
 				//Enemy struggles -
 				outputText("Your prey pushes at your tail, twisting and writhing in an effort to escape from your tail's tight bonds.", false);
-				if (statusAffectv1("Constricted") <= 0) {
+				if (statusAffectv1(StatusAffects.Constricted) <= 0) {
 					outputText("  " + capitalA + short + " proves to be too much for your tail to handle, breaking free of your tightly bound coils.", false);
-					removeStatusAffect("Constricted");
+					removeStatusAffect(StatusAffects.Constricted);
 				}
-				addStatusValue("Constricted", 1, -1);
+				addStatusValue(StatusAffects.Constricted, 1, -1);
 				combatRoundOver();
 			}
 //If grappling...
@@ -267,7 +268,7 @@ package classes.Scenes.Areas.Plains
 //return to combat menu when finished
 				doNext(1);
 //Blind dodge change
-				if (hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+				if (findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 					outputText(capitalA + short + " completely misses you with a blind attack!\n", false);
 				}
 				//Determine if dodged!
@@ -277,15 +278,15 @@ package classes.Scenes.Areas.Plains
 					else if (player.spe - spe >= 20) outputText("You deftly avoid " + a + short + "'s slow " + weaponVerb + ".\n", false);
 				}
 				//Determine if evaded
-				else if (player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+				else if (player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 					outputText("Using your skills at evading attacks, you anticipate and sidestep " + a + short + "'s attack.\n", false);
 				}
 				//("Misdirection"
-				else if (player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+				else if (player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 					outputText("Using Raphael's teachings, you anticipate and sidestep " + a + short + "' attacks.\n", false);
 				}
 				//Determine if cat'ed
-				else if (player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
+				else if (player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
 					outputText("With your incredible flexibility, you squeeze out of the way of " + a + short + "", false);
 					if (plural) outputText("' attacks.\n", false);
 					else outputText("'s attack.\n", false);
@@ -345,8 +346,8 @@ package classes.Scenes.Areas.Plains
 
 		override public function defeated(hpVictory:Boolean):void
 		{
-			if(hasStatusAffect("PhyllaFight") >= 0) {
-				removeStatusAffect("PhyllaFight");
+			if(findStatusAffect(StatusAffects.PhyllaFight) >= 0) {
+				removeStatusAffect(StatusAffects.PhyllaFight);
 				game.desert.antsScene.phyllaPCBeatsGnoll();
 				return;
 			}
@@ -355,8 +356,8 @@ package classes.Scenes.Areas.Plains
 
 		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
 		{
-			if(hasStatusAffect("PhyllaFight") >= 0) {
-				removeStatusAffect("PhyllaFight");
+			if(findStatusAffect(StatusAffects.PhyllaFight) >= 0) {
+				removeStatusAffect(StatusAffects.PhyllaFight);
 				game.desert.antsScene.phyllaGnollBeatsPC();
 			} else if(pcCameWorms) {
 				outputText("\n\nYour foe doesn't seem put off enough to leave...");
@@ -368,19 +369,44 @@ package classes.Scenes.Areas.Plains
 
 		public function Gnoll()
 		{
-			init01Names("the ", "gnoll", "gnoll", "This lanky figure is dappled with black spots across rough, tawny fur. Wiry muscle ripples along long legs and arms, all of it seeming in perpetual frenetic motion: every moment half flinching and half lunging.  The head bears a dark muzzle curled in a perpetual leer and bright orange eyes watching with a savage animal cunning.  Between the legs hang what appears at first to be a long, thin dong; however, on closer inspection it is a fused tube of skin composed of elongated pussy lips and clitoris.  The hyena girl is sporting a pseudo-penis, and judging by the way it bobs higher as she jinks back and forth, she's happy to see you!\n\nShe wears torn rags scavenged from some other, somewhat smaller, creature, and in one hand clutches a twisted club.");
-			init02Female(VAGINA_WETNESS_DROOLING, VAGINA_LOOSENESS_LOOSE);
-			init03BreastRows("C");
-			init04Ass(ANAL_LOOSENESS_STRETCHED,ANAL_WETNESS_DRY,25);
-			init05Body("6'",HIP_RATING_AMPLE,BUTT_RATING_TIGHT);
-			init06Skin("tawny",SKIN_TYPE_FUR);
-			init07Hair("black",22);
-			init08Face();
-			init09PrimaryStats(80,70,75,60,65,25,60);
-			init10Weapon("twisted club","smash",0,"",25);
-			init11Armor("skin",2);
-			init12Combat(250,30,.35,Monster.TEMPERMENT_RANDOM_GRAPPLES);
-			init13Level(14,10 + rand(5));
+			this.a = "the ";
+			this.short = "gnoll";
+			this.imageName = "gnoll";
+			this.long = "This lanky figure is dappled with black spots across rough, tawny fur. Wiry muscle ripples along long legs and arms, all of it seeming in perpetual frenetic motion: every moment half flinching and half lunging.  The head bears a dark muzzle curled in a perpetual leer and bright orange eyes watching with a savage animal cunning.  Between the legs hang what appears at first to be a long, thin dong; however, on closer inspection it is a fused tube of skin composed of elongated pussy lips and clitoris.  The hyena girl is sporting a pseudo-penis, and judging by the way it bobs higher as she jinks back and forth, she's happy to see you!\n\nShe wears torn rags scavenged from some other, somewhat smaller, creature, and in one hand clutches a twisted club.";
+			// this.plural = false;
+			this.createVagina(false, VAGINA_WETNESS_DROOLING, VAGINA_LOOSENESS_LOOSE);
+			createBreastRow(Appearance.breastCupInverse("C"));
+			this.ass.analLooseness = ANAL_LOOSENESS_STRETCHED;
+			this.ass.analWetness = ANAL_WETNESS_DRY;
+			this.createStatusAffect(StatusAffects.BonusACapacity,25,0,0,0);
+			this.tallness = 6*12;
+			this.hipRating = HIP_RATING_AMPLE;
+			this.buttRating = BUTT_RATING_TIGHT;
+			this.skinTone = "tawny";
+			this.skinType = SKIN_TYPE_FUR;
+			//this.skinDesc = Appearance.Appearance.DEFAULT_SKIN_DESCS[SKIN_TYPE_FUR];
+			this.hairColor = "black";
+			this.hairLength = 22;
+			initStrTouSpeInte(80, 70, 75, 60);
+			initLibSensCor(65, 25, 60);
+			this.weaponName = "twisted club";
+			this.weaponVerb="smash";
+			this.weaponAttack = 0;
+			this.weaponPerk = "";
+			this.weaponValue = 25;
+			this.armorName = "skin";
+			this.armorDef = 2;
+			this.bonusHP = 250;
+			this.lust = 30;
+			this.lustVuln = .35;
+			this.temperment = TEMPERMENT_RANDOM_GRAPPLES;
+			this.level = 14;
+			this.gems = 10 + rand(5);
+			this.drop = new ChainedDrop().
+					add(consumables.REDUCTO,1/5).
+					add(consumables.SUCMILK,1/2).
+					elseDrop(consumables.BLACK_D);
+			checkMonster();
 		}
 		
 	}

@@ -8,6 +8,8 @@
 
 	import classes.AssClass;
 	import classes.BreastRowClass;
+	import classes.Items.*;
+	import classes.PerkLib;
 
 	import classes.Player;
 	import classes.Cock;
@@ -16,23 +18,22 @@
 	import classes.PerkClass;
 	import classes.StatusAffectClass;
 	import classes.VaginaClass;
-	import classes.ImageManager; // This line not necessary, but added because I'm pedantic like that.
+	import classes.ImageManager;
+	import classes.internals.Utils;
+
+
+	// This line not necessary, but added because I'm pedantic like that.
 	import classes.InputManager;
 
 	import classes.Parser.Main.Parser; 	// import getting long enough yet?
 
 	import classes.Scenes.*;
 	import classes.Scenes.Areas.*;
-	import classes.Scenes.Areas.Bog.*
 	import classes.Scenes.Areas.Desert.*
 	import classes.Scenes.Areas.Forest.*
 	import classes.Scenes.Areas.HighMountains.*
-	import classes.Scenes.Areas.Lake.*
 	import classes.Scenes.Areas.Mountain.*
-	import classes.Scenes.Areas.Plains.*
 	import classes.Scenes.Areas.Swamp.*
-	import classes.Scenes.Camp.*;
-	import classes.Scenes.Dungeons.*;
 	import classes.Scenes.Dungeons.DeepCave.*;
 	import classes.Scenes.Dungeons.DesertCave.*;
 	import classes.Scenes.Dungeons.Factory.*;
@@ -41,13 +42,8 @@
 	import classes.Scenes.Monsters.*;
 	import classes.Scenes.NPCs.*;
 	import classes.Scenes.Places.*;
-	import classes.Scenes.Places.Bazaar.*;
-	import classes.Scenes.Places.Boat.*;
-	import classes.Scenes.Places.Farm.*;
-	import classes.Scenes.Places.Owca.*;
 	import classes.Scenes.Places.TelAdre.*;
 	import classes.Scenes.Quests.*;
-	import classes.Scenes.Quests.UrtaQuest.*;
 	import coc.view.MainView;
 
 	import coc.model.GameModel;
@@ -82,7 +78,6 @@
 	{
 
 		// Include the functions. ALL THE FUNCTIONS
-		include "../../includes/charCreation.as";
 		include "../../includes/customCharCreation.as";
 		
 		include "../../includes/descriptors.as";
@@ -105,15 +100,27 @@
 		include "../../includes/transform.as";
 		
 		include "../../includes/engineCore.as";
-		include "../../includes/saves.as";
-		
+
 		// Lots of constants
 		//include "../../includes/flagDefs.as";
 		include "../../includes/appearanceDefs.as";
 
+		// /
+		private var _perkLib:PerkLib = new PerkLib();// to init the static
+		private var _statusAffects:StatusAffects = new StatusAffects();// to init the static
+		public var charCreation:CharCreation = new CharCreation();
+		public var saves:Saves = new Saves();
+		// Items/
+		public var mutations:Mutations = new Mutations();
+		public var consumables:ConsumableLib = new ConsumableLib();
+		public var useables:UseableLib = new UseableLib();
+		public var weapons:WeaponLib = new WeaponLib();
+		public var armors:ArmorLib = new ArmorLib();
+		public var miscItems:MiscItemLib = new MiscItemLib();
 		// Scenes/
 		public var camp:Camp = new Camp();
 		public var exploration:Exploration = new Exploration();
+		public var inventory:Inventory = new Inventory();
 		public var followerInteractions:FollowerInteractions = new FollowerInteractions();
 		// Scenes/Areas/
 		public var bog:Bog = new Bog();
@@ -132,6 +139,7 @@
 		// Scenes/Monsters/
 		public var goblinScene:GoblinScene = new GoblinScene();
 		public var impScene:ImpScene = new ImpScene();
+		public var goblinAssassinScene:GoblinAssassinScene = new GoblinAssassinScene();
 		// Scenes/NPC/
 		public var amilyScene:AmilyScene = new AmilyScene();
 		public var anemoneScene:AnemoneScene = new AnemoneScene();
@@ -176,8 +184,6 @@
 		public var urtaQuest:UrtaQuest = new UrtaQuest();
 
 		// Other scenes
-		[Scene]
-		public var testContent:TestContent = new TestContent();
 
 		include "../../includes/april_fools.as";
 
@@ -188,9 +194,7 @@
 		include "../../includes/dungeonHelSupplimental.as";
 		include "../../includes/dungeonSandwitch.as";
 		include "../../includes/fera.as";
-		include "../../includes/items.as";
 		include "../../includes/masturbation.as";
-		include "../../includes/perkPicker.as";
 		include "../../includes/pregnancy.as";
 		include "../../includes/runa.as";
 		include "../../includes/symGear.as";
@@ -229,7 +233,7 @@
 		public var images:ImageManager;
 		public var player:Player;
 		public var player2:Player;
-		public var tempPerk:String;
+		public var tempPerk:PerkClass;
 		public var monster:Monster;
 		public var itemSwapping:Boolean;
 		public var flags:DefaultDict;
@@ -249,15 +253,8 @@
 		public var sand:Number;
 		public var giacomo:Number;
 		public var beeProgress:Number;
-		public var itemSlot1:ItemSlotClass;
-		public var itemSlot2:ItemSlotClass;
-		public var itemSlot3:ItemSlotClass;
-		public var itemSlot4:ItemSlotClass;
-		public var itemSlot5:ItemSlotClass;
-		public var itemSlots:Array;
 		public var itemStorage:Array;
 		public var gearStorage:Array;
-		public var shortName:String;
 		public var temp:int;
 		public var args:Array;
 		public var funcs:Array;
@@ -268,6 +265,11 @@
 		public var testingBlockExiting:Boolean;
 
 		public var kFLAGS_REF:*;
+
+		public function rand(max:int):int
+		{
+			return Utils.rand(max);
+		}
 
 		// holidayz
 		public function isEaster():Boolean
@@ -293,21 +295,18 @@
 			
 			this.parser = new Parser(this, CoC_Settings);
 
-
 			this.model = new GameModel();
 			this.mainView = new MainView( this.model );
 			this.mainView.name = "mainView";
 			this.stage.addChild( this.mainView );
 
-
 			// Hooking things to MainView.
-			this.mainView.onNewGameClick = newGameGo;
+			this.mainView.onNewGameClick = charCreation.newGameGo;
 			this.mainView.onAppearanceClick = appearance;
-			this.mainView.onDataClick = saveLoad;
+			this.mainView.onDataClick = saves.saveLoad;
 			this.mainView.onLevelClick = levelUpGo;
 			this.mainView.onPerksClick = displayPerks;
 			this.mainView.onStatsClick = displayStats;
-
 
 			// Set up all the messy global stuff:
 			
@@ -332,8 +331,8 @@
 			//model.debug = debug; // TODO: Set on model?
 
 			//Version NUMBER
-			ver = "0.8.4.2";
-			version = ver + " (<b>Fixes and Uma Blowjob Training</b>)";
+			ver = "0.8.4.8";
+			version = ver + " (<b>Hypnagatizing Rubi</b>)";
 
 			//Indicates if building for mobile?
 			mobile = false;
@@ -359,7 +358,7 @@
 			player2 = new Player();
 
 			//Used in perk selection, mainly eventParser, input and engineCore
-			tempPerk = "";
+			tempPerk = null;
 
 			//Create monster, used all over the place
 			monster = new Monster();
@@ -463,19 +462,8 @@
 			giacomo = 0;
 			beeProgress = 0;
 
-			//Item things
-			itemSlot1 = new ItemSlotClass();
-			itemSlot2 = new ItemSlotClass();
-			itemSlot3 = new ItemSlotClass();
-			itemSlot4 = new ItemSlotClass();
-			itemSlot5 = new ItemSlotClass();
-			
-
-			itemSlots = [itemSlot1, itemSlot2, itemSlot3, itemSlot4, itemSlot5];
-
 			itemStorage = [];
 			gearStorage = [];
-			shortName = "";
 			//}endregion
 
 
@@ -514,7 +502,7 @@
 
 			// ******************************************************************************************
 
-			mainView.aCb.dataProvider = new DataProvider(perkList); 
+			mainView.aCb.dataProvider = new DataProvider([{label:"TEMP",perk:new PerkClass(PerkLib.Acclimation)}]);
 			mainView.aCb.addEventListener(Event.CHANGE, changeHandler); 
 			 
 			//mainView._getButtonToolTipText = getButtonToolTipText;
@@ -535,7 +523,6 @@
 			registerClassAlias("StatusAffectClass", StatusAffectClass);
 			registerClassAlias("VaginaClass", VaginaClass);
 			//registerClassAlias("Enum", Enum);
-			//registerClassAlias("CockClass", CockClass);
 
 			//Hide sprites
 			mainView.hideSprite();

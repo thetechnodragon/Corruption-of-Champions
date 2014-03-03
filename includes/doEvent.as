@@ -39,12 +39,16 @@ public function doEvent(eventNo:Number):void
 		jojoScene.jojoSprite();
 		outputText("Jojo smiles and leads you off the path to a small peaceful clearing.  There is a stump in the center, polished smooth and curved in a way to be comfortable.  He gestures for you to sit, and instructs you to meditate.\n\nAn indeterminate amount of time passes, but you feel more in control of yourself.  Jojo congratulates you, but offers a warning as well.  \"<i>Be ever mindful of your current state, and seek me out before you lose yourself to the taints of this world.  Perhaps someday this tainted world can be made right again.</i>\"", true);
 		
-		dynStats("str", .5,"tou", .5, "int", .5, "lib", -1, "lus", -5, "cor", -1);
-		if (player.hasStatusAffect("Jojo Meditation Count") < 0)
-			player.createStatusAffect("Jojo Meditation Count", 1, 0, 0, 0);
+		// Workaround to avoid meditation resetting hours since cum, because BLIND FIND REPLACING ON THE ENTIRE CODEBASE IS A LEGITIMATELY FANTASTIC FUCKING IDEA.
+		var hscT:int = player.hoursSinceCum;
+		dynStats("str", .5, "tou", .5, "int", .5, "lib", -1, "lus", -5, "cor", -1);
+		player.hoursSinceCum = hscT;
+		
+		if (player.findStatusAffect(StatusAffects.JojoMeditationCount) < 0)
+			player.createStatusAffect(StatusAffects.JojoMeditationCount, 1, 0, 0, 0);
 		else
-			player.addStatusValue("Jojo Meditation Count", 1, 1);
-		temp = player.statusAffectv1("Jojo Meditation Count");
+			player.addStatusValue(StatusAffects.JojoMeditationCount, 1, 1);
+		temp = player.statusAffectv1(StatusAffects.JojoMeditationCount);
 		if (temp >= 5)
 		{
 			outputText("\n\nJojo nods respectfully at you when the meditation session is over and smiles.  ");
@@ -90,7 +94,7 @@ public function doEvent(eventNo:Number):void
 	{
 		spriteSelect(50);
 		outputText("A strange woman seems to appear from the dunes themselves.  She identifies herself as a sand witch, and politely asks if she can cast a spell on you.", true);
-		if (player.statusAffectv1("Exgartuan") == 1 && player.cockArea(0) > 100 && player.statusAffectv2("Exgartuan") == 0)
+		if (player.statusAffectv1(StatusAffects.Exgartuan) == 1 && player.cockArea(0) > 100 && player.statusAffectv2(StatusAffects.Exgartuan) == 0)
 		{
 			outputText("\n\nThe " + player.armorName + " covering your lower half hits the ground, as if yanked down by magic.  Your " + cockDescript(0) + " pulsates darkly, growing rigid in seconds as the demon within you takes over.  It barks, \"<i>Fuck, how about I cast my spell on you baby?</i>\"\n\n", false);
 			outputText("The sandwitch ", false);
@@ -271,7 +275,7 @@ public function doEvent(eventNo:Number):void
 		if (player.cor > 75)
 			outputText("You smile and stride forward, welcoming the pleasure you expect from such a monster.\n\n", false);
 		//Worms get nothing!
-		if (player.hasStatusAffect("infested") >= 0)
+		if (player.findStatusAffect(StatusAffects.Infested) >= 0)
 		{
 			outputText("It stops itself completely in a moment and twitches, as if sniffing the air, before turning around and disappearing into the underbrush.", false);
 			doNext(13);
@@ -298,7 +302,7 @@ public function doEvent(eventNo:Number):void
 				outputText("using a sucking-stroking motion on your helpless " + multiCockDescriptLight() + ". The swelling of the ass tentacle pressures your prostate in a paradoxically pleasurable and painful manner. You realize, much to your terror, that this beast is MILKING you of your semen!", false);
 			else
 				outputText("using a sucking-stroking motion on your " + multiCockDescriptLight() + ".  The swelling of the ass tentacle pressures your prostate in a paradoxical pleasurable and painful manner.  You realize, much to your terror, that this beast is MILKING you of your semen!", false);
-			buttChange(50, true);
+			player.buttChange(50, true);
 			outputText("\n\nHelpless and overwhelmed by the pleasure of such rough and primal stimulation, all you can do is give the creature what it wants; your hot cum. Your body only responds to the sensations from your ", false);
 			if (player.cockTotal() == 1)
 				outputText(multiCockDescriptLight() + " and ass and in a very short time, your phallus explodes, launching stream upon stream of hot, thick cum into the horror. Your hips and pelvis buck violently with each thrust as the creature masterfully strokes your " + multiCockDescriptLight() + "  and milks your prostate of your fluids. You cry with each orgasm, prompting the thing to milk you harder. After an eternity of successive ejaculations, the creature withdraws its unholy arms and leaves you in a bruised, lacerated, overfucked heap on the ground, discarded like a person throws away a corn cob after a meal.", false);
@@ -324,7 +328,7 @@ public function doEvent(eventNo:Number):void
 				outputText("clits. ", false);
 			else
 				outputText("clit. ", false);
-			cuntChange(player.vaginalCapacity() * .76, true);
+			player.cuntChange(player.vaginalCapacity() * .76, true);
 			outputText(" Your body betrays your resistance as pleasure hammers you from crotch to head. After some time, you begin bucking your hips in tandem to the creature's thrusts, drunk with pleasure. As you peak for your orgasm, you feel the creature bottom out inside your womb. Oceans of hot cum flood your " + vaginaDescript(0), false);
 			if (player.vaginas.length > 1)
 				outputText("s", false);
@@ -341,7 +345,7 @@ public function doEvent(eventNo:Number):void
 			{
 				outputText("A sharp tug tells you that the creature has sealed itself upon your " + cockDescript(0) + ". You see " + player.totalBreasts() + " smaller tentacles latch onto your erect nipples. You feel milk begin to leak out as the creature makes a perfect seal around your areola. A thick, phallic tentacle probes underneath your trapped " + cockDescript(0) + " until it finds your vaginal opening. You cry out as the member punches past your opening and bottoms out in your womb. The tentacle swells up until it completely fills your " + vaginaDescript(0) + ".  ", true);
 				spriteSelect(100);
-				cuntChange(player.vaginalCapacity() * .76, true, false, true);
+				player.cuntChange(player.vaginalCapacity() * .76, true, false, true);
 				outputText("With freakish coordination, the beast sucks your " + cockDescript(0) + " and tits while hammering away at your " + vaginaDescript(0) + ". The overwhelming pleasure courses through your body and triggers an immediate orgasm, sending gouts of cum into the tentacle sealed around your " + cockDescript(0) + ". The sensation of your fluids entering the creature prompts it to suck your " + cockDescript(0) + " harder as well as hammer your " + vaginaDescript(0) + " faster, leading to a chain of orgasms.\n\n", false);
 				outputText("Drunk with pleasure, you revel in the sensation of cumming into the creature while it breast feeds from you. All you can do is drown in the experience of being milked from top to bottom. The creature begins piledriving your box faster and you feel like the creature is going to impale you with its phallic tentacle.\n\n", false);
 				outputText("The creature's milking tentacles stop moving and you feel the dick-tentacle press sharply against your womb. You feel the thunderous force of hot fluid lance into your body as the creature cums repeatedly inside you, triggering yet another orgasm. The creature cums in surges and shoots repeatedly inside you. Within moments, excess cum spews out of your " + vaginaDescript(0) + " as it cannot hold anymore, but the creature keeps cumming.\n\n", false);
@@ -351,7 +355,7 @@ public function doEvent(eventNo:Number):void
 			{
 				outputText("A sharp tug tells you that the creature has sealed itself upon your " + multiCockDescriptLight() + ". You see " + player.totalBreasts() + " smaller tentacles latch onto your erect nipples. You feel milk begin to leak out as the creature makes a perfect seal around your areola. A thick, phallic tentacle probes underneath your trapped cocks until it finds your vaginal opening. You cry out as the member punches past your opening and bottoms out in your womb. The tentacle swells up until it completely fills your " + vaginaDescript(0) + ".", true);
 				spriteSelect(100);
-				cuntChange(player.vaginalCapacity() * .76, true, true, false);
+				player.cuntChange(player.vaginalCapacity() * .76, true, true, false);
 				outputText("  With freakish coordination, the beast sucks your " + multiCockDescriptLight() + " and tits while hammering away at your " + vaginaDescript(0) + ". The overwhelming pleasure courses through your body and triggers an immediate orgasm, sending gouts of cum into the tentacles sealed around your pricks. The sensation of your fluids entering the creature prompts it to suck your throbbing cocks harder as well as hammer your " + vaginaDescript(0) + " faster, leading to a chain of orgasms.\n\n", false);
 				outputText("Drunk with pleasure, you revel in the sensation of cumming into the creature while it breast feeds from you. All you can do is drown in the experience of being milked from top to bottom. The creature begins piledriving your box faster and you feel like the creature is going to impale you with its phallic tentacle.\n\n", false);
 				outputText("The creature's milking tentacles stop moving and you feel the dick-tentacle press sharply against your womb. You feel the thunderous force of hot fluid lance into your body as the creature cums repeatedly inside you, triggering yet another orgasm. The creature cums in surges and shoots repeatedly inside you. Within moments, excess cum spews out of your " + vaginaDescript(0) + " as it cannot hold anymore, but the creature keeps cumming.\n\n", false);
@@ -376,7 +380,7 @@ public function doEvent(eventNo:Number):void
 			outputText("Satisfied, the creature drops you smartly, withdraws its limbs from you, and lumbers away. Covered completely in cum, you see that your clitoris swelled up to ", true);
 			spriteSelect(100);
 			//Big clit girls get huge clits
-			if ((player.hasPerk("Big Clit") >= 0 && player.clitLength > 2) || player.clitLength > 3)
+			if ((player.findPerk(PerkLib.BigClit) >= 0 && player.clitLength > 2) || player.clitLength > 3)
 				outputText("almost " + num2Text(Math.floor(player.clitLength * 1.75)) + " inches in length. ", false);
 			//normal girls get big clits
 			else
@@ -394,7 +398,7 @@ public function doEvent(eventNo:Number):void
 		else
 			outputText("too intoxicated with lust continue the pleasure. ", false);
 		//If has big-clit grow to max of 6"
-		if (player.clitLength < 7 && player.clitLength >= 3.5 && player.hasPerk("Big Clit") >= 0)
+		if (player.clitLength < 7 && player.clitLength >= 3.5 && player.findPerk(PerkLib.BigClit) >= 0)
 		{
 			player.clitLength += .1 + player.cor / 100;
 			outputText("Your massive clitty eventually diminishes, retaining a fair portion of it's former glory.  It is now " + int(player.clitLength * 10) / 10 + " inches long when aroused, ", false);
@@ -496,7 +500,7 @@ public function doEvent(eventNo:Number):void
 				booster += 3;
 			else if (player.ballSize < 6)
 				booster += 2;
-			if (player.hasPerk("Messy Orgasms") >= 0 && player.cumMultiplier < 3)
+			if (player.findPerk(PerkLib.MessyOrgasms) >= 0 && player.cumMultiplier < 3)
 				booster += 1;
 			player.cumMultiplier += booster;
 		}
@@ -593,7 +597,7 @@ public function doEvent(eventNo:Number):void
 			if (temp == 2)
 				outputText("With a desperate grunt, you barely manage to force the obscene cock-head of the vine between your nether-lips. The swollen bulge pulses inside you, stretching you uncomfortably as it reacts to the warmth and tightness of your " + vaginaDescript(0) + ". The vine's lubricants begin to combine with your own, rapidly transforming your horny cunt into a sloppy slip-and-slide. You manage to cram the vine the rest of the way inside, bottoming it out against your cervix, reveling in the feeling of being stretched so wide, as you begin pumping it in and out of your " + vaginaDescript(0) + " like an over-sized sex-toy. Deep inside your " + vaginaDescript(0) + ", the vine's lubricants begin to make your passage tingle, intensifying until your entire channel is overloaded with clit-like levels of sensation.\n\n", false);
 			//Stretch cuuuuunt and newline if it gets stretched
-			if (cuntChange(temp2, true))
+			if (player.cuntChange(temp2, true))
 				outputText("\n\n", false);
 			//New PG
 			outputText("The rest of the world disappears as your mind tries to cope with the sensation overload coming from your groin. You're dimly aware of your hands pumping the slippery vine in and out, in and out, over and over.  Hips bucking, " + vaginaDescript(0) + " squeezing, thighs trembling, you achieve the first of many orgasms.  Incredibly, the sensitivity of your groin redoubles, nearly blacking you out from the pleasure.  Cumming over and over, you writhe in the dirt, pumping the corrupted prick-vine in and out of your spasming cunt.  Your eyes roll back in your head when the vine begins pumping you full of its strange fluid, and you finally lose your battle to remain conscious.\n\n", false);
@@ -710,7 +714,7 @@ public function doEvent(eventNo:Number):void
 		if (giacomo > 0)
 		{
 			//If infested && no worm offer yet
-			if (player.hasStatusAffect("WormOffer") < 0 && player.hasStatusAffect("infested") >= 0)
+			if (player.findStatusAffect(StatusAffects.WormOffer) < 0 && player.findStatusAffect(StatusAffects.Infested) >= 0)
 			{
 				outputText("Upon walking up to Giacomo's wagon, he turns to look at you and cocks an eyebrow in curiosity and mild amusement.\n\n", true);
 				outputText("\"<i>Been playing with creatures best left alone, I see</i>,\" he chuckles. \"<i>Infestations of any kind are annoying, yet your plight is quite challenging given the magnitude of corrupt creatures around here. It is not the first time I have seen one infested with THOSE worms.</i>\"\n\n", false);
@@ -731,14 +735,14 @@ public function doEvent(eventNo:Number):void
 					//Remove/No
 					doYesNo(2081, 2015);
 				}
-				player.createStatusAffect("WormOffer", 0, 0, 0, 0);
+				player.createStatusAffect(StatusAffects.WormOffer, 0, 0, 0, 0);
 			}
 			else
 			{
 				outputText("You spy the merchant Giacomo in the distance.  He makes a beeline for you, setting up his shop in moments.  ", true);
 				outputText("Giacomo's grin is nothing short of creepy as he offers his wares to you. What are you interested in?", false);
 				//If player is infested and knows of the cure..
-				if (player.hasStatusAffect("WormOffer") >= 0 && player.hasStatusAffect("infested") >= 0)
+				if (player.findStatusAffect(StatusAffects.WormOffer) >= 0 && player.findStatusAffect(StatusAffects.Infested) >= 0)
 				{
 					simpleChoices("Potions", 2016, "Books", 2017, "Erotica", 2018, "Worm Cure", 2082, "Leave", 13);
 				}
@@ -823,8 +827,7 @@ public function doEvent(eventNo:Number):void
 		else
 		{
 			player.gems -= 15;
-			shortName = "Vital T";
-			takeItem();
+			inventory.takeItem(consumables.VITAL_T);
 			statScreenRefresh();
 		}
 	}
@@ -847,8 +850,7 @@ public function doEvent(eventNo:Number):void
 		else
 		{
 			player.gems -= 15;
-			shortName = "Smart T";
-			takeItem();
+			inventory.takeItem(consumables.SMART_T);
 			statScreenRefresh();
 		}
 	}
@@ -870,8 +872,7 @@ public function doEvent(eventNo:Number):void
 		}
 		else
 		{
-			shortName = "Cerul P";
-			takeItem();
+			inventory.takeItem(consumables.CERUL_P);
 			player.gems -= 75;
 			statScreenRefresh();
 		}
@@ -999,8 +1000,7 @@ public function doEvent(eventNo:Number):void
 			outputText(" She gives a giggle and disappears before your eyes. At that moment the fatigue from the massive fucking you received catches up with you and you pass out in a slump.", false);
 			dynStats("str", .5,"lus", 4);
 		}
-		shortName = "Cerul P";
-		takeItem();
+		inventory.takeItem(consumables.CERUL_P);
 	}
 	//Dangerous Plants Pitch
 	else if (eventNo == 2029)
@@ -1377,7 +1377,7 @@ public function doEvent(eventNo:Number):void
 	//Encounter Rathazul
 	else if (eventNo == 2070)
 	{
-		if (player.hasStatusAffect("Camp Rathazul") >= 0)
+		if (player.findStatusAffect(StatusAffects.CampRathazul) >= 0)
 			rathazul.campRathazul();
 		else
 			rathazul.encounterRathazul();
@@ -1393,12 +1393,11 @@ public function doEvent(eventNo:Number):void
 		}
 		outputText("", true);
 		if (!debug)
-			destroyItems("IncubiD", 1);
-		shortName = "P.Draft";
-		takeItem();
+			player.destroyItems(consumables.INCUBID, 1);
+		inventory.takeItem(consumables.P_DRAFT);
 		player.gems -= 20;
 		statScreenRefresh();
-		player.addStatusValue("metRathazul", 2, 1);
+		player.addStatusValue(StatusAffects.MetRathazul, 2, 1);
 	}
 	//Purify Succubi Milk
 	else if (eventNo == 2072)
@@ -1411,12 +1410,11 @@ public function doEvent(eventNo:Number):void
 		}
 		outputText("", true);
 		if (!debug)
-			destroyItems("SucMilk", 1);
-		shortName = "P.S.Mlk";
-		takeItem();
+			player.destroyItems(consumables.SUCMILK, 1);
+		inventory.takeItem(consumables.P_S_MLK);
 		player.gems -= 20;
 		statScreenRefresh();
-		player.addStatusValue("metRathazul", 2, 1);
+		player.addStatusValue(StatusAffects.MetRathazul, 2, 1);
 	}
 	//Purify Succubi's Delight
 	else if (eventNo == 2073)
@@ -1429,12 +1427,11 @@ public function doEvent(eventNo:Number):void
 		}
 		outputText("", true);
 		if (!debug)
-			destroyItems("SDelite", 1);
-		shortName = "PSDelit";
-		takeItem();
+			player.destroyItems(consumables.SDELITE, 1);
+		inventory.takeItem(consumables.PSDELIT);
 		player.gems -= 20;
 		statScreenRefresh();
-		player.addStatusValue("metRathazul", 2, 1);
+		player.addStatusValue(StatusAffects.MetRathazul, 2, 1);
 	}
 	
 	//Grab marae's boob!
@@ -1468,12 +1465,11 @@ public function doEvent(eventNo:Number):void
 		if (player.HP > int(maxHP() * .15))
 			player.HP = int(maxHP() * .15);
 		//Maybe add a random chance of losing a random transformation with a smaller chance of losing ALL transformations except gender changes. This will probably be a bitch to implement.
-		player.removeStatusAffect("infested");
+		player.removeStatusAffect(StatusAffects.Infested);
 		dynStats("lib", -1, "lus", -99, "cor", -4);
 		player.gems -= 175;
 		statScreenRefresh();
-		shortName = "Vital T";
-		takeItem();
+		inventory.takeItem(consumables.VITAL_T);
 	}
 	//Offer to remove worms #2
 	else if (eventNo == 2082)
@@ -1514,7 +1510,7 @@ public function doEvent(eventNo:Number):void
 		if (player.HP > int(maxHP() * .5))
 			player.HP = int(maxHP() * .5);
 		player.sens = 11;
-		player.removeStatusAffect("infested");
+		player.removeStatusAffect(StatusAffects.Infested);
 		dynStats("sen", -1, "lus", -99, "cor", -15);
 		doNext(13);
 	}
@@ -1529,13 +1525,13 @@ public function doEvent(eventNo:Number):void
 		dynStats("sen", 1, "lus", 15, "cor", .5);
 		player.slimeFeed();
 		doNext(13);
-		if (player.hasStatusAffect("LustyTongue") < 0)
+		if (player.findStatusAffect(StatusAffects.LustyTongue) < 0)
 		{
 			//25% Chance of sensitive mouth status – increased lust gain/hour due to licking your lips :3
 			if (rand(4) == 0)
 			{
 				outputText("  The feeling doesn't seem to fade, only becoming more and more intense over the coming hour.  It will be hard to keep from getting turned on any time you lick your lips or eat some food.", false);
-				player.createStatusAffect("LustyTongue", 24, 0, 0, 0);
+				player.createStatusAffect(StatusAffects.LustyTongue, 24, 0, 0, 0);
 			}
 			//ELSE
 			else
@@ -1547,7 +1543,7 @@ public function doEvent(eventNo:Number):void
 			if (player.biggestTitSize() > 5)
 			{
 				outputText("  As you redress, you feel a sense of added weight on your chest.  After a few moments you realize your already-formidable chest has grown even larger.", false);
-				growTits(1, 1 + rand(3), false, 1);
+				player.growTits(1, 1 + rand(3), false, 1);
 				
 			}
 			else
@@ -1556,12 +1552,12 @@ public function doEvent(eventNo:Number):void
 				if (player.biggestTitSize() == 0)
 				{
 					outputText("  As you redress, you realize you have grown a pair of luscious breasts!  Perhaps this was a good idea after all...", false);
-					growTits(1, 2 + rand(3), false, 1);
+					player.growTits(1, 2 + rand(3), false, 1);
 				}
 				else //Small tits growth
 				{
 					outputText("  As you redress, you realize your breasts have gotten quite a bit larger!  Maybe you can come back later when you aren't so full and plump them up a bit more.", false);
-					growTits(1, 1 + rand(3), false, 1);
+					player.growTits(1, 1 + rand(3), false, 1);
 				}
 			}
 		}
@@ -1582,7 +1578,7 @@ public function doEvent(eventNo:Number):void
 	else if (eventNo == 2124)
 	{
 		outputText("Rathazul smiles happily back at you and begins packing up his equipment.  He mutters over his shoulder, \"<i>It will take me a while to get my equipment moved over, but you head on back and I'll see you within the hour.  Oh my, yes.</i>\"\n\nHe has the look of someone experiencing hope for the first time in a long time.", true);
-		player.createStatusAffect("Camp Rathazul", 0, 0, 0, 0);
+		player.createStatusAffect(StatusAffects.CampRathazul, 0, 0, 0, 0);
 		doNext(13);
 	}
 	else if (eventNo == 2125)
@@ -1598,23 +1594,23 @@ public function doEvent(eventNo:Number):void
 		var ttemp5:Function = null;
 		var ttemp6:Function = null;
 		var ttemp7:Function = null;
-		if (player.hasPerk("Marble's Milk") >= 0 && hasItem("Lactaid", 1))
+		if (player.findPerk(PerkLib.MarblesMilk) >= 0 && player.hasItem(consumables.LACTAID, 1))
 			ttemp2 = marbleScene.giveMarbleLactaid;
-		if (hasItem("P.Draft", 1) && flags[kFLAGS.MARBLE_DICK_TYPE] == 0)
+		if (player.hasItem(consumables.P_DRAFT, 1) && flags[kFLAGS.MARBLE_DICK_TYPE] == 0)
 			ttemp4 = marbleScene.MarbleDigsDraftsYo;
 		if (flags[kFLAGS.MARBLE_DICK_TYPE] > 0)
 		{
-			if (hasItem("PinkEgg", 1))
+			if (player.hasItem(consumables.PINKEGG, 1))
 				ttemp5 = marbleScene.MarblepinkEgg;
-			if (hasItem("L.PnkEg", 1))
+			if (player.hasItem(consumables.L_PNKEG, 1))
 				ttemp6 = marbleScene.MarbleLPinkEgg;
 		}
-		if (flags[kFLAGS.MARBLE_BOVA_LEVEL] < 2 && hasItem("ProBova", 1))
+		if (flags[kFLAGS.MARBLE_BOVA_LEVEL] < 2 && player.hasItem(consumables.PROBOVA, 1))
 			ttemp7 = marbleScene.giveMarbleTheProBovas4Sho;
-		if (hasItem("OviElix", 1))
+		if (player.hasItem(consumables.OVIELIX, 1))
 			ttemp3 = marbleScene.marbleOvulatesLikeMadDawg;
 		outputText("What item do you want to give Marble?", true);
-		choices("Lactaid", ttemp2, "OviElixir", ttemp3, "P.Incub Dr", ttemp4, "Pink Egg", ttemp5, "L.Pink Egg", ttemp6, "ProBova", ttemp7, "", 0, "", 0, "", 0, "Back", marbleScene.interactWithMarbleAtCamp);
+		choices("Lactaid", ttemp2, "OviElixir", ttemp3, "P.Incub Dr", ttemp4, "Pink Egg", ttemp5, "L.Pink Egg", ttemp6, "Pro Bova", ttemp7, "", 0, "", 0, "", 0, "Back", marbleScene.interactWithMarbleAtCamp);
 	}
 	else if (eventNo == 2134)
 	{
@@ -1727,31 +1723,31 @@ public function doEvent(eventNo:Number):void
 		}
 		outputText("", true);
 		if (!debug)
-			destroyItems("LaBova ", 1);
-		shortName = "P.LBova";
-		takeItem();
+			player.destroyItems(consumables.LABOVA_, 1);
+		inventory.takeItem(consumables.P_LBOVA);
 		player.gems -= 20;
 		statScreenRefresh();
-		player.addStatusValue("metRathazul", 2, 1);
+		player.addStatusValue(StatusAffects.MetRathazul, 2, 1);
 	}
 	
 	//Move Jojo into camp
 	else if (eventNo == 2149)
 	{
 		jojoScene.jojoSprite();
-		if (player.hasStatusAffect("Ever Raped Jojo") >= 0 || flags[kFLAGS.JOJO_MOVE_IN_DISABLED] == 1)
+		if (player.findStatusAffect(StatusAffects.EverRapedJojo) >= 0 || flags[kFLAGS.JOJO_MOVE_IN_DISABLED] == 1)
 		{
 			outputText("You offer Jojo the chance to stay at your camp, but before you can finish your sentance he shakes his head 'no' and stalks off into the woods, remembering.", false);
 			doNext(13);
 			return;
 		}
 		outputText("You offer Jojo the chance to stay at your camp.  He cocks his head to the side and thinks, stroking his mousey whiskers.\n\n\"<i>Yes, it would be wise.   We would be safer together, and if you like I could keep watch at night to keep some of the creatures away.  I'll gather my things and be right there!</i>\"\n\nJojo scurries into the bushes, disappearing in a flash.  Knowing him, he'll be at camp before you!", true);
-		player.createStatusAffect("PureCampJojo", 0, 0, 0, 0);
+		player.createStatusAffect(StatusAffects.PureCampJojo, 0, 0, 0, 0);
 		doNext(13);
 	}
 	//Jojo in camp
 	else if (eventNo == 2150)
 	{
+		clearOutput();
 		jojoScene.jojoSprite();
 		//Amily meets Jojo:
 		if (flags[kFLAGS.AMILY_MET_PURE_JOJO] == 0 && flags[kFLAGS.AMILY_FOLLOWER] == 1 && amilyScene.amilyFollower())
@@ -1765,45 +1761,111 @@ public function doEvent(eventNo:Number):void
 			followerInteractions.catchRathazulNapping();
 			return;
 		}
+		// Configure the options we're going to display in the menus
 		var jojoDefense:String = "N.Watch:";
 		var jojoRapeFuncNum:Number = 0;
-		outputText("You find Jojo sitting cross-legged on a flat rock with his staff leaning against his shoulder, thinking.  He looks to you and nods, \"<i>Greetings, " + player.short + ".  Is there something I could do to assist you?</i>\"\n\n", true);
-		if (player.hasStatusAffect("JojoNightWatch") >= 0)
+		
+		if (player.findStatusAffect(StatusAffects.JojoNightWatch) >= 0)
 		{
 			jojoDefense += "On";
-			outputText("(Jojo is currently watching for enemies at night.)\n\n", false);
 		}
 		else
+		{
 			jojoDefense += "Off";
+		}
+		
 		if (player.lust >= 33 && player.gender > 0)
+		{
 			jojoRapeFuncNum = 2153;
-		//Menu with worm purge
-		if (player.hasStatusAffect("infested") >= 0)
+		}
+		
+		// Worms overrides everything else
+		if (player.findStatusAffect(StatusAffects.Infested) >= 0)
 		{
 			outputText("As you approach the serene monk, you see his nose twitch.\n\n", false);
 			outputText("\"<i>It seems that the agents of corruption have taken residence within the temple that is your body,</i>\" Jojo says flatly, \"<i>This is a most unfortunate development. There is no reason to despair as there are always ways to fight the corruption. However, great effort will be needed to combat this form of corruption and may have a lasting impact upon you. If you are ready, we can purge your being of the rogue creatures of lust.</i>\"\n\n", false);
+			
+			if (player.findStatusAffect(StatusAffects.JojoNightWatch) >= 0) outputText("(Jojo is currently watching for enemies at night.)\n\n", false);
 			simpleChoices("Meditate", 2151, jojoDefense, 2152, "Purge", 2083, "Rape", jojoRapeFuncNum, "Leave", 74);
 		}
-		//normal menu
+		// Normal shit
 		else
-			simpleChoices("Meditate", 2151, jojoDefense, 2152, "", 0, "Rape", jojoRapeFuncNum, "Leave", 74);
+		{
+			// Approach text
+			if (player.cor >= 40)
+			{
+				outputText("You approach the boulder where Jojo usually sits, and as soon as you're close Jojo approaches you with urgency. “<i>By Marae! [name], we must do something! I feel the corruption surrounding you like a dense fog. We need to meditate or I’m going to lose you!</i>” Jojo pleads.\n\n");
+			}
+			else if (player.cor > 10)
+			{
+				outputText("You walk up to the boulder where Jojo usually sits, and see him sitting cross legged with his eyes closed. He seems to be deep in meditation, but when you approach his eyes open suddenly and he gets up appearing slightly distressed, “<i>Uh... [name], I can feel a bit of corruption within you.  It is not much, but I think you should be concerned about it before it gets out of hand and you do something you might regret. If you want to I'd be happy to meditate with you as you rid yourself of it.</i>” he offers with a concerned look on his face.\n\n");
+			}
+			else
+			{
+				var selector:int = rand(3);
+				
+				if (selector == 0)
+				{
+					outputText("You walk toward the boulder where Jojo usually sits, and see him cross legged with his eyes closed.  At first he seems to be deep in meditation, but when you approach his mouth curls into a smile; he gets up and opens his eyes regarding you with a welcoming expression.  “<i>Greetings [name], is there anything I can assist you with?</i>”\n\n");
+				}
+				else if (selector == 1)
+				{
+					outputText("You walk up to the boulder where Jojo usually sits and find him a few paces behind it. He is standing and practicing his form, gracefully moving from one pose to the next. As you approach him you see his ears visibly perk and he turns his head towards you without breaking his stance, saying, “<i>Greetings [name], is there anything I can assist you with?</i>”\n\n");
+				}
+				else if (selector == 2)
+				{
+					outputText("You find Jojo sitting cross-legged on a flat rock with his staff leaning against his shoulder, thinking.  He looks to you and nods, \"<i>Greetings, " + player.short + ".  Is there something I could do to assist you?</i>\"\n\n", true);
+				}
+			}
+			
+			// New "offer of help" menu
+			if (player.cor > 10)
+			{
+				outputText("Do you accept Jojo's help?\n\n");
+				simpleChoices("Yes", jojoScene.acceptOfferOfHelp, "No", jojoScene.refuseOfferOfHelp, "", 0, "", 0, "Rape", jojoRapeFuncNum);
+			}
+			else
+			{
+				// Old/regular menu
+				//simpleChoices("Meditate", 2151, jojoDefense, 2152, "", 0, "Rape", jojoRapeFuncNum, "Leave", 74);
+				if (player.findStatusAffect(StatusAffects.JojoNightWatch) >= 0) outputText("(Jojo is currently watching for enemies at night.)\n\n", false);
+				
+				menu();
+				addButton(0, "Appearance", jojoScene.jojoAppearance);
+				addButton(1, "Talk", jojoScene.talkMenu);
+				if (flags[kFLAGS.UNLOCKED_JOJO_TRAINING] == 1) addButton(2, "Train", jojoScene.apparantlyJojoDOESlift);
+				addButton(3, "Meditate", eventParser, 2151);
+				addButton(4, jojoDefense, eventParser, 2152);
+				addButton(9, "Leave", eventParser, 74);
+			}
+		}
 	}
 	//New meditate
 	else if (eventNo == 2151)
 	{
 		jojoScene.jojoSprite();
-		if (player.statusAffectv1("Meditated") > 0)
+		
+		var doClear:Boolean = jojoScene.doClear;
+		
+		if (player.statusAffectv1(StatusAffects.Meditated) > 0)
 		{
-			outputText("Jojo smiles and meditates with you.  The experience is calming, but it's so soon after your last session that you don't get much benefit from it.", true);
+			outputText("Jojo smiles and meditates with you.  The experience is calming, but it's so soon after your last session that you don't get much benefit from it.", doClear);
 			if (player.lust > 40)
+			{	
+				var hst:Number = player.hoursSinceCum;
 				dynStats("lus", -10);
+				player.hoursSinceCum = hst;
+			}
 			doNext(13);
 			return;
 		}
-		outputText("The mouse monk leads you to a quiet spot away from the portal and the two of you sit down, him cross-legged and you mimicing to the best of your ability, back to back.  You close your eyes and meditate for half-an hour, centering your body and mind.  Afterwards, he guides you through stretches and exercises to help keep your bodies fit and healthy.\n\nWhen you are done, Jojo nods to you, and climbs back onto his rock, still thinking.", true);
+		outputText("The mouse monk leads you to a quiet spot away from the portal and the two of you sit down, him cross-legged and you mimicing to the best of your ability, back to back.  You close your eyes and meditate for half-an hour, centering your body and mind.  Afterwards, he guides you through stretches and exercises to help keep your bodies fit and healthy.\n\nWhen you are done, Jojo nods to you, and climbs back onto his rock, still thinking.", doClear);
 		//OLD STAT LINE - dynStats("str", .25,"tou", .25, "spe", .25, "int", .25, "lib", -1, "lus", -10, "cor", -2);
 		//Reduces lust
+		var leSigh:Number = player.hoursSinceCum;
 		dynStats("lus", -30);
+		player.hoursSinceCum = leSigh;
+		
 		//Corruption reduction - faster at high corruption
 		if (player.cor > 80)
 			dynStats("cor", -1);
@@ -1828,21 +1890,21 @@ public function doEvent(eventNo:Number):void
 		if (player.lib > 15)
 			dynStats("lib", -1);
 		doNext(13);
-		player.createStatusAffect("Meditated", 1, 0, 0, 0);
+		player.createStatusAffect(StatusAffects.Meditated, 1, 0, 0, 0);
 	}
 	//Jojo defense toggle
 	else if (eventNo == 2152)
 	{
 		jojoScene.jojoSprite();
 		clearOutput();
-		if (player.hasStatusAffect("JojoNightWatch") >= 0)
+		if (player.findStatusAffect(StatusAffects.JojoNightWatch) >= 0)
 		{
-			player.removeStatusAffect("JojoNightWatch");
+			player.removeStatusAffect(StatusAffects.JojoNightWatch);
 			outputText("You tell Jojo that you no longer need him to watch the camp at night.  He nods, then speaks.  \"<i>Alright.  Please let me know if you require my help again.</i>\"");
 		}
 		else
 		{
-			player.createStatusAffect("JojoNightWatch", 0, 0, 0, 0);
+			player.createStatusAffect(StatusAffects.JojoNightWatch, 0, 0, 0, 0);
 			outputText("You ask the monk if he could guard the camp for you at night.  He smiles politely.  \"<i>Certainly, [name].</i>\"");
 		}
 		doNext(2150);
@@ -1851,8 +1913,8 @@ public function doEvent(eventNo:Number):void
 	else if (eventNo == 2153)
 	{
 		jojoScene.jojoSprite();
-		player.removeStatusAffect("JojoNightWatch");
-		player.removeStatusAffect("PureCampJojo");
+		player.removeStatusAffect(StatusAffects.JojoNightWatch);
+		player.removeStatusAffect(StatusAffects.PureCampJojo);
 		outputText("You ask Jojo if he'd like to go on a hunt through the woods to clear out some of the corrupted creatures, and the mouse readily agrees.  He asks if you've been getting a bit stir-crazy from having your camp in one place as the two of you walk into the woods...", true);
 		doNext(jojoScene.jojoRape);
 	}
@@ -1902,7 +1964,7 @@ public function doEvent(eventNo:Number):void
 			outputText("reluctantly.", false);
 		outputText("\n\nOnly now do you notice other faces peeking over ledges and ridges. You count at least two goblins and one imp who quickly pull back. From the sounds, they were busy getting themselves off.", false);
 		//[if first appearance of this event]
-		if (player.statusAffectv1("Mino + Cowgirl") == 0)
+		if (player.statusAffectv1(StatusAffects.MinoPlusCowgirl) == 0)
 			outputText("  Apparently this isn't an uncommon show, and the locals enjoy it immensely.", false);
 		//Lust!
 		dynStats("lus", 5 + player.lib / 20 + player.minoScore() + player.cowScore());
@@ -2005,7 +2067,7 @@ public function doEvent(eventNo:Number):void
 	{
 		player.gems += 50;
 		statScreenRefresh();
-		if (player.hasStatusAffect("Camp Rathazul") >= 0)
+		if (player.findStatusAffect(StatusAffects.CampRathazul) >= 0)
 			rathazul.campRathazul();
 		else
 			rathazul.encounterRathazul();
@@ -2124,9 +2186,8 @@ public function doEvent(eventNo:Number):void
 	else if (eventNo == 2638)
 	{
 		outputText("", true);
-		shortName = "BonStrp";
 		flags[kFLAGS.ZETAZ_LAIR_TOOK_BONDAGE_STRAPS]++;
-		takeItem();
+		inventory.takeItem(armors.BONSTRP);
 	}
 	else if (eventNo == 2639)
 	{
@@ -2151,30 +2212,21 @@ public function doEvent(eventNo:Number):void
 	else if (eventNo == 2643)
 	{
 		spriteSelect(52);
-		shortName = "NumbRox";
-		incubusBuy();
+		incubusBuy(consumables.NUMBROX);
 	}
 	else if (eventNo == 2644)
 	{
 		spriteSelect(52);
-		shortName = "SensDrf";
-		incubusBuy();
+		incubusBuy(consumables.SENSDRF);
 	}
 	else if (eventNo == 2645)
 	{
 		spriteSelect(52);
-		shortName = "Reducto";
-		incubusBuy();
-	}
-	else if (eventNo == 2646)
-	{
-		spriteSelect(52);
-		incubusTransact();
+		incubusBuy(consumables.REDUCTO);
 	}
 	else if (eventNo == 2653)
 	{
-		shortName = "SucWhip";
-		incubusBuy();
+		incubusBuy(weapons.SUCWHIP);
 	}
 	else if (eventNo == 2739)
 	{
@@ -2468,39 +2520,39 @@ public function doEvent(eventNo:Number):void
 	}
 	else if (eventNo == 3879)
 	{
-		telAdre.rubi.giveRubiClothes("ClssyCl");
+		telAdre.rubi.giveRubiClothes(armors.CLSSYCL);
 	}
 	else if (eventNo == 3880)
 	{
-		telAdre.rubi.giveRubiClothes("RbbrClt");
+		telAdre.rubi.giveRubiClothes(armors.RBBRCLT);
 	}
 	else if (eventNo == 3881)
 	{
-		telAdre.rubi.giveRubiClothes("AdvClth");
+		telAdre.rubi.giveRubiClothes(armors.ADVCLTH);
 	}
 	else if (eventNo == 3882)
 	{
-		telAdre.rubi.giveRubiClothes("TubeTop");
+		telAdre.rubi.giveRubiClothes(armors.TUBETOP);
 	}
 	else if (eventNo == 3883)
 	{
-		telAdre.rubi.giveRubiClothes("T.BSuit");
+		telAdre.rubi.giveRubiClothes(armors.T_BSUIT);
 	}
 	else if (eventNo == 3884)
 	{
-		telAdre.rubi.giveRubiClothes("B.Dress");
+		telAdre.rubi.giveRubiClothes(armors.B_DRESS);
 	}
 	else if (eventNo == 3885)
 	{
-		telAdre.rubi.giveRubiClothes("LthrPnt");
+		telAdre.rubi.giveRubiClothes(armors.LTHRPNT);
 	}
 	else if (eventNo == 3886)
 	{
-		telAdre.rubi.giveRubiClothes("NurseCl");
+		telAdre.rubi.giveRubiClothes(armors.NURSECL);
 	}
 	else if (eventNo == 3887)
 	{
-		telAdre.rubi.giveRubiClothes("S.Swmwr");
+		telAdre.rubi.giveRubiClothes(armors.S_SWMWR);
 	}
 	else if (eventNo == 3893)
 	{
@@ -2584,11 +2636,7 @@ public function doEvent(eventNo:Number):void
 	}
 	else if (eventNo == 3968)
 	{
-		chickenHarpy();
-	}
-	else if (eventNo == 3988)
-	{
-		lustyMaidenPaizuri();
+		highMountains.chickenHarpy();
 	}
 	else if (eventNo == 3989)
 	{

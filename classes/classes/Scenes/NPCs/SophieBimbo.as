@@ -1,6 +1,7 @@
 ﻿package classes.Scenes.NPCs{
-	import classes.GlobalFlags.kGAMECLASS;
+	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
+	import classes.GlobalFlags.kGAMECLASS;
 
 	public class SophieBimbo extends NPCAwareContent
 	{
@@ -67,7 +68,7 @@ public function sophieCapacity():Number {
 internal function bimbotizeMeCaptainSophie():void {
 	sophieSprite();
 	outputText("", true);
-	consumeItem("BimboLq",1);
+	player.consumeItem(consumables.BIMBOLQ);
 	outputText("A wicked idea takes hold of you while you watch the harpy ", false);
 	if(monster.lust > 99) outputText("touch herself", false);
 	else outputText("squirm in the dirt around her nest", false);
@@ -133,7 +134,7 @@ private function acceptBimboSophie():void {
 	
 	outputText("You sigh and show the bimbo around.  She seems extremely pleased by the arrangements, and once the tour is complete, she prances off to touch up her make-up, though you see her masturbating the whole time.", false);
 	
-	if(player.hasStatusAffect("Camp Rathazul") >= 0) outputText("  Afterwards, she offers to suck Rathazul's cock.  The old rat looked about ready to have a heart attack, but he managed to decline her offer with some amount of dignity, after a few moments of stammering.", false);
+	if(player.findStatusAffect(StatusAffects.CampRathazul) >= 0) outputText("  Afterwards, she offers to suck Rathazul's cock.  The old rat looked about ready to have a heart attack, but he managed to decline her offer with some amount of dignity, after a few moments of stammering.", false);
 	else if(flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00238] == 1) outputText("  Afterwards, she offers to suck Izma's cock.  Izma looks at you for a moment before shaking her head, no.  Her skirt rises visibly in spite of her negative response.  Maybe she'll like having someone lower on the food chain to boss around?", false);
 	else if(flags[kFLAGS.AMILY_FOLLOWER] > 0 && flags[kFLAGS.AMILY_BLOCK_COUNTDOWN_BECAUSE_CORRUPTED_JOJO] == 0) {
 		outputText("  Afterwards, she offers to lick Amily's twat, if Amily will do the same to her.  Amily ", false);
@@ -141,9 +142,9 @@ private function acceptBimboSophie():void {
 		else outputText("flushes hotly and wiggles her hips Sophie's way.  The slutty, corrupted mouse and Sophie will clearly be helping to sate each other's needs in your absence.", false);
 	}
 	//(After, she offers to lick Marble's cunt.  Marble doesn't even answer her.  She just turns to you and says, \"<i>Really?  Sweetie... just... keep her away from me.  She's so far gone, I guess you can keep her around if you need to, but don't let her bug me.</i>\")  
-	else if(monk >= 5 && player.hasStatusAffect("noJojo") < 0 && flags[kFLAGS.JOJO_DEAD_OR_GONE] == 0)
+	else if(monk >= 5 && player.findStatusAffect(StatusAffects.NoJojo) < 0 && flags[kFLAGS.JOJO_DEAD_OR_GONE] == 0)
 		outputText("  Afterwards, she offers to suck Jojo's cock.  The corrupted slut-mouse nods and stiffens in delight, though he keeps glancing back your way.  Those two will probably spend a lot of time together...", false);
-	else if(player.hasStatusAffect("PureCampJojo") >= 0) outputText("  Afterwards, she offers to suck Jojo's cock.  The chaste mouse's jaw drops, but when he picks it up, he answers, \"<i>Never.  My body is as pure as my soul!</i>\"", false);
+	else if(player.findStatusAffect(StatusAffects.PureCampJojo) >= 0) outputText("  Afterwards, she offers to suck Jojo's cock.  The chaste mouse's jaw drops, but when he picks it up, he answers, \"<i>Never.  My body is as pure as my soul!</i>\"", false);
 	else if(kGAMECLASS.isabellaFollowerScene.isabellaFollower())
 		outputText("  Afterwards, she offers to lick Isabella's cunt.  Isabella answers sternly, \"<i>Nein!  But you can drink mein milk from time to time.</i>\"  The cow-girl is blushing hotly.  You've no doubt after a few nipple-licks she'll be spreading her thick thighs for the bimbo harpy.", false);
 	outputText("\n\n", false);
@@ -223,7 +224,7 @@ public function approachBimboSophieInCamp(output:Boolean = true):void {
 	else if(player.lust >= 33) {
 		addButton(0,"Sex",bimboSophieSexMenu);
 	}
-	if(hasItem("Debimbo",1)) {
+	if(player.hasItem(consumables.DEBIMBO)) {
 		addButton(4,"Debimbo",sophieFollowerScene.unbimboSophie);
 		if(output) outputText("\n\n<b>You could use the bottle of debimbo to return Sophie's intellect...</b>");
 	}
@@ -278,7 +279,7 @@ private function bimboSophieSexMenu():void {
 	}
 	if(player.hasVagina()) addButton(3,"Get Licked",bimboSophieLicksRugs);
 	if(flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00284] > 0 && (player.gender > 0) && flags[kFLAGS.SOPHIE_INCUBATION] == 0) {
-		if(hasItem("OviElix",1) || kGAMECLASS.hasItemInStorage("OviElix")) {
+		if(player.hasItem(consumables.OVIELIX) || inventory.hasItemInStorage(consumables.OVIELIX)) {
 			addButton(4,"Ovi Elixir",sophieEggApocalypse);
 		}
 		else outputText("\n\n<b>If you had an Oviposition Elixir in your inventory or camp storage, Sophie could have some fun with it...</b>", false);
@@ -390,7 +391,7 @@ public function unlockResistance():void {
 	}
 	else outputText("\nYou've gotten so used to having harpy lipstick on your lips that you're sure you're immune to it, even if you were to sprout a dick.  You would even feel comfortable wearing it around to use on male enemies, if you could find any.\n\n", false);
 	outputText("<b>(Perk Unlocked: Luststick Adapted - your minimum lust is permanently raised, but you are 20% more lust resistant.  In combat, you're immune to it, though it still gives you a rush during sex.  You're also comfortable enough with it to use it like a harpy if you find any.)</b>\n", false);
-	player.createPerk("Luststick Adapted",0,0,0,0,"Minimum lust is permanently raised, but you are also more lust resistant.  In combat, you're immune to harpy lipstick, though it still gives you a rush during sex.  You can also wear the lipstick yourself.");
+	player.createPerk(PerkLib.LuststickAdapted,0,0,0,0);
 }
 //Get oral as female.  
 private function bimboSophieLicksRugs():void {
@@ -662,8 +663,8 @@ private function beBimboSophiesSugarDaddy():void {
 	outputText("", true);
 	var x:Number = player.cockThatFits(sophieCapacity());
 	if(x < 0) x = player.smallestCockIndex();
-	if(hasItem("OviElix",1)) consumeItem("OviElix",1);
-	else if(kGAMECLASS.hasItemInStorage("OviElix")) kGAMECLASS.consumeItemInStorage("OviElix");
+	if(player.hasItem(consumables.OVIELIX)) player.consumeItem(consumables.OVIELIX);
+	else if(inventory.hasItemInStorage(consumables.OVIELIX)) inventory.consumeItemInStorage(consumables.OVIELIX);
 	outputText("Giving Sophie a sly smile, you pluck the Ovi Elixir from her talons and run a fingertip along her sharp jaw line as you move around her in slow, contemplative circles. The anticipation drives the slutty harpy mad, her chest heaving and mouth agape as she puffs moist breath over her thickly-lacquered, golden lips. Pausing behind her, you seize the enraptured woman's feathery hair with one hand, jerking her head back so suddenly she gasps before giggling uncontrollably. Popping the delicate glass stopper from the hexagonal bottle, you hold it several feet above her waiting mouth, tilting the vial ever so slowly until a tiny drop of the viridian ichor bubbles at the elixir's tip. Sophie sticks out her tongue, impatiently, wriggling it in the air, as if her sheer, lascivious desire could pull the potion into her gullet. Finally, agonizingly, you upend the potent brew into her gluttonous maw, the whore's expertly honed instincts catching the emerald fluid in her drool-slick mouth without missing a single drop. She rolls the mixture over her tongue, savoring the promise of the concoction before sealing her glistening mouth in the pleased pucker of a kiss, swallowing the load with a single, satisfied gulp.\n\n", false);
 
 	outputText("Settling down next to Sophie, you can't help but notice that she looks thicker already. \"<i>OoOoOo…</i>\" she moans, \"<i>I can feel them inside my tummy! Sweet little eggs growing in mommy's belly.</i>\" She guides your hand to her midsection, your fingers stroking the soft flesh of her pouting abdomen. Sure enough, you can feel a tremor rippling through her womb as it expands with the surging growth of eggs. Cupping her dripping sex, you delight in the heat pouring off of her pussy, the promise of pregnancy thrilling the simple, sex-starved slut to vulgar wetness. You slip a few fingers into her creaming cunny, provoking a high-pitched squeal of pleasure from the squirming milf. She grinds her hips into you, drawing your honey-slick hand out from between her legs and pressing it against her belly again. It seems the eggs are still growing, and quite rapidly! Her gut has already expanded into an unmistakable bulge and every gurgling grumble from her body adds another inch to her waistline. \"<i>You have to fertilize me,</i>\" she begs with half-lidded eyes. \"<i>Mommy needs that thick spunk inside her,</i>\" she moans, face flushed, hands sliding between her legs, frantically rubbing her sopping snatch with both thumbs.\n\n", false);
@@ -682,16 +683,15 @@ private function beBimboSophiesSugarDaddy():void {
 	sophieScene.luststickApplication(2);
 	//[player gains random large egg]
 	menuLoc = 2;
-	shortName = randomLargeEgg();
-	takeItem();
+	inventory.takeItem(consumables.LARGE_EGGS[rand(consumables.LARGE_EGGS.length)]);
 }
  
 //[Mommy]
 private function beBimboSophiesSugarMommy():void {
 	sophieSprite();
 	outputText("", true);
-	if(hasItem("OviElix",1)) consumeItem("OviElix",1);
-	else if(kGAMECLASS.hasItemInStorage("OviElix")) kGAMECLASS.consumeItemInStorage("OviElix");
+	if(player.hasItem(consumables.OVIELIX)) player.consumeItem(consumables.OVIELIX);
+	else if(inventory.hasItemInStorage(consumables.OVIELIX)) inventory.consumeItemInStorage(consumables.OVIELIX);
 	outputText("Grinning, you playfully shrug. You suppose you can make a gift of it, if she's a good girl. Nodding energetically, Sophie puffs out her chest and stretches out her arms and wings, displaying her silvery plumage, vainly. \"<i>Don't you worry, Momma Sophie's done this a hundred times!</i>\" She flicks the bottle open and pours the green fluid into her mouth, her expression one of intense delight as the thick liquid splashes across her tongue, full of promise. She flutters into the air, barely able to lift her tremendous tits, and wraps her arms around your shoulders, legs hooking around your waist. Smiling sweetly, she leans in for a kiss and presses her glistening lips against yours, the heat of her aphrodisiac-laced lipstick coursing through your body instantly. You part your mouth to gasp softly and she uses the opening to deepen the kiss. Through the drugged excitement, you almost don't notice the cool elixir trickling into your mouth. You start to back away, but Sophie's muscular tongue forces your lips open and she eagerly snowballs more of the potion past your teeth, into your throat. Then, taking a big gulp herself, she nuzzles your nose with hers, gleefully. \"<i>Now we'll both be mommies!</i>\"\n\n", false);
 
 	outputText("You try to throw the bimbo off of you in annoyance, but a trembling lurch from your abdomen robs you of your anger. Something strange is going on with the Ovi Elixir- the gradual process of its effects seem to be wildly accelerated. You're not sure if it's the drugged lipstick or something about Harpy saliva, but Sophie's kiss has clearly affected the potion. It seems she's suffering the same effects, at least: the harpy's belly swells against your skin with every passing moment, the skinny slut's waist ballooning under the impregnating draft. Your own tummy grows against hers and a wave of contentment thrills down your " + player.skin() + ", the weight of your swelling womb making your " + vaginaDescript(0) + " drool in anticipation. Even your " + allBreastsDescript() + " feels heavier as your body is kicked into the depths of pregnancy in a matter of minutes. The mischievous harpy moans, stroking her belly with one hand while she grinds her pert nipples into your " + nippleDescript(0) + ", getting off on the tension of your jutting bellies, distended with eggs, mushrooming against each other. Through her groping contact, you can feel the contents of your stretching womb gaining shape and firmness within you, the suddenness of the conception robbing you of your restraint. Despite yourself, you let out a whorish moan, your body clenching down in orgasm at your bloating growth.\n\n", false);
@@ -706,22 +706,10 @@ private function beBimboSophiesSugarMommy():void {
 	dynStats("sen", -1, "lus=", 0);
 	//[player gains random large egg]
 	menuLoc = 2;
-	shortName = randomLargeEgg();
 	sophieScene.luststickApplication(2);
-	takeItem();
+	inventory.takeItem(consumables.LARGE_EGGS[rand(consumables.LARGE_EGGS.length)]);
 }
 
-private function randomLargeEgg():String {
-	var choice:Number = rand(6);
-	var hold:String = "L.BrnEg";
-	if(choice == 0) hold = "L.BrnEg";
-	if(choice == 1) hold = "L.PrpEg";
-	if(choice == 2) hold = "L.BluEg";
-	if(choice == 3) hold = "L.PnkEg";
-	if(choice == 4) hold = "L.WhtEg";
-	if(choice == 5) hold = "L.BlkEg";
-	return hold;
-}
 
 //Butts McGee
 //=====================================================

@@ -1,6 +1,6 @@
 package classes.Scenes.NPCs
 {
-	import classes.CockTypesEnum;
+	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
 
 	public class Vapula extends NPCAwareContent
@@ -82,7 +82,7 @@ package classes.Scenes.NPCs
 				else outputText("Vapula is busy caressing your corrupted mousette, Amily while softly kissing her breasts.  Her fingers are buried in your fuck-toy's pussy, and Amily is moaning whorishly and doesn't even bother to stop when she looks at you, her helpless eyes betraying her lack of control over her own lust.");
 			}
 			if (choice == 9) {
-				if (player.hasStatusAffect("Camp Rathazul") < 0) choice = 10;
+				if (player.findStatusAffect(StatusAffects.CampRathazul) < 0) choice = 10;
 				else outputText("Vapula is having a very active conversation with Rathazul, the alchemist.  They seem to be discussing the chemical properties of demonic mixtures and the various taints that could occur from their ingestion.  The succubus is holding a bottle of a purplish white fluid that appears to be her own milk, probably waiting for an analysis.");
 			}
 			if (choice == 10) outputText("Vapula is resting on her stomach, a buttplug shoved into her ass.  She doesn't seem to notice you watching her butt jiggle under the effect of her unconscious anal contractions.");
@@ -116,8 +116,8 @@ package classes.Scenes.NPCs
 			if (jojo) {
 				outputText("\n\n\"<i>I'm leaving, " + player.short + ",</i>\" Jojo says.  \"<i>I only hope for your sake that you come to your senses soon... I will return to my place in the forest when you require assistance in freeing your soul of taint.</i>\"");
 				flags[kFLAGS.JOJO_MOVE_IN_DISABLED] = 1;
-				player.removeStatusAffect("JojoNightWatch");
-				player.removeStatusAffect("PureCampJojo");
+				player.removeStatusAffect(StatusAffects.JojoNightWatch);
+				player.removeStatusAffect(StatusAffects.PureCampJojo);
 			}
 			if (amily) {
 				outputText("\n\nAmily shakes her head.  \"<i>Goodbye, [name].  You've changed.  What you did is pure folly.</i>\"");
@@ -218,7 +218,7 @@ package classes.Scenes.NPCs
 				haremT = "Don'tFuck";
 			}
 			//IF PC has cerulean succubused before
-			if (player.hasStatusAffect("repeatSuccubi") >= 0) {
+			if (player.findStatusAffect(StatusAffects.RepeatSuccubi) >= 0) {
 				if (flags[kFLAGS.VAPULA_THREESOMES] == 0) {
 					outputText("\n\nShe won't currently assist the cerulean succubus if you invite her over.");
 					threesomeT = "Assist On";
@@ -576,10 +576,9 @@ package classes.Scenes.NPCs
 			//standard night succubus stat increases
 			flags[kFLAGS.VAPULA_DAYS_SINCE_FED] = 0;
 			flags[kFLAGS.VAPULA_TEASE_COUNT] = 0;
-			shortName = "Cerul P";
 			dynStats("str", rand(2), "tou", rand(2), "spe", rand(2), "int", rand(2), "lus=", 0, "cor", 2.5);
 			menuLoc = 14;
-			takeItem();
+			inventory.takeItem(consumables.CERUL_P);
 		}
 
 //Vapula/Jojo threesome
@@ -979,7 +978,7 @@ package classes.Scenes.NPCs
 			outputText("  Her tail goes wild at the impact, whipping around in a frenzy and actually managing to slap your cheek!  That bitch!");
 			outputText("\n\nThis time, your hand cocks and releases in a split-second, coming down with even more force than before.  Vapula screams, \"<i>Ow! Stop it, by Lethice, please!</i>\"  This time, her thrashing, spaded tail stays obediently low, harmlessly cutting through the air so as not to irritate you.");
 			outputText("\n\n\"<i>That's better,</i>\" you growl as you admire her gradually reddening bottom.  It's certainly unusual to watch a purple behind turn red, quite the opposite of how it would look on a normal person.  Still, two red handprints quickly become apparent on the closest cheek, one laid over top of the other.  \"<i>Now hold still and take your punishment,</i>\" you order, \"<i>I expect a demon like you ought to be enough of a pain-loving masochist to get off before I finish.  Isn't that right?</i>\"  You smack her other, untouched cheek for a bit of audible punctuation and smile at the high pitched peep of pain that she makes.");
-			if (player.hasPerk("Sadist") >= 0) outputText("  Dishing out all this suffering is getting you a little hot under the collar, and you squirm a bit in place in anticipation of the pain to come.");
+			if (player.findPerk(PerkLib.Sadist) >= 0) outputText("  Dishing out all this suffering is getting you a little hot under the collar, and you squirm a bit in place in anticipation of the pain to come.");
 			outputText("\n\nVapula scrunches her eyes shut and shakes her purple hair around, barely making a sound outside of her instinctive peep at the hit.  You lift your palm again and bring it down in another spank, not quite as hard as the last but in the same place.  She bites her lip but stays blissfully silent.  Well, at least she's not calling every imp in a five mile radius to come bother you.  You paddle her again, finding some untouched lavender flesh to abuse while you watch the new handprints appear on her shapely behind.  Tears well up at the corners of the succubus's eyes, and she makes a start at talking.");
 			outputText("\n\nYou interrupt, scolding, \"<i>Don't even start.  You swore to obey me as your [master] and you broke that promise.  Now you have to endure this.  Buckle up, sweatheart.</i>\"");
 			outputText("\n\nYou begin to attack her bottom with a barrage of quick slaps, bouncing the purple derriere back and forth from the hard-hitting strikes.  You don't spend too much time in any one place, instead trying to make sure you hit every untouched, unmarked portion of that beautiful butt.  Soon your slave's bouncy cheeks are tanned to the point where they seem to glow a rosy red, tender and sore.  Vapula bites her lips with each impact and tries to hold back her tears, but they flow on, unabated.");
@@ -994,7 +993,7 @@ package classes.Scenes.NPCs
 			//{+20ish lust}
 			dynStats("lus", (10 + player.lib / 7));
 			//{Sadist: + 20 lust}
-			if (player.hasPerk("Sadist") >= 0) dynStats("lus", (10 + player.lib / 7));
+			if (player.findPerk(PerkLib.Sadist) >= 0) dynStats("lus", (10 + player.lib / 7));
 			flags[kFLAGS.VAPULA_EARNED_A_SPANK] = 0;
 			doNext(13);
 		}

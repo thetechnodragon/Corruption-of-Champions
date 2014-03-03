@@ -1,13 +1,10 @@
 package classes.Scenes.Areas.Forest
 {
+	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
-	import classes.Monster;
 	import classes.Scenes.Monsters.Goblin;
+	import classes.internals.*;
 
-	/**
-	 * ...
-	 * @author aimozg
-	 */
 	public class Tamani extends Goblin
 	{
 
@@ -93,7 +90,7 @@ package classes.Scenes.Areas.Forest
 				var temp2:Function = null;
 				if(player.hasCock() && player.cockThatFits(analCapacity()) >= 0) temp = game.forest.tamaniScene.tamaniAnalShits;
 				//NOT PREGGERS
-				if(player.statusAffectv1("Tamani") <= -500 && player.canOvipositSpider()) {
+				if(player.statusAffectv1(StatusAffects.Tamani) <= -500 && player.canOvipositSpider()) {
 					temp2 = game.forest.tamaniScene.tamaniBeaten;
 				}
 				game.simpleChoices("Fuck",game.forest.tamaniScene.tamaniSexWon,"Buttfuck",temp,"",0,"Lay Eggs",temp2,"Leave",game.cleanupAfterCombat);
@@ -129,20 +126,48 @@ package classes.Scenes.Areas.Forest
 		public function Tamani()
 		{
 			super(false);
-			init01Names("", "Tamani", "tamani", "She keeps her arms folded across her " + game.forest.tamaniScene.tamaniChest() + " and glares at you.  The little thing is only about four feet tall, with pink and black dyed hair cut into a cute little 'do.  The greenish-gray skin of her breasts bulges out around her arms, supported by a few leather straps, amplifying her cleavage.  Her cunt lips are pierced multiple times, inflamed, and slightly parted.  There really isn't any clothing on her to hide them, just more of the ever-present straps wrapping around her thighs.");
-			init02Female(VAGINA_WETNESS_DROOLING,VAGINA_LOOSENESS_NORMAL,55);
-			init03BreastRows("E");
-			init04Ass(ANAL_LOOSENESS_TIGHT,ANAL_WETNESS_DRY,40);
-			init05Body(40,HIP_RATING_AMPLE+2,BUTT_RATING_LARGE);
-			init06Skin("greenish gray");
-			init07Hair("pink and black",16);
-			init08Face();
-			init09PrimaryStats(32,43,55,62,65,65,50);
-			init10Weapon("fists","tiny punch");
-			init11Armor("leather straps");
-			init12Combat(40,40,0.9,Monster.TEMPERMENT_RANDOM_GRAPPLES);
-			init13Level(4,rand(25) + 5);
-			initX_Specials(goblinDrugAttack,goblinTeaseAttack);
+			this.a = "";
+			this.short = "Tamani";
+			this.imageName = "tamani";
+			this.long = "She keeps her arms folded across her " + game.forest.tamaniScene.tamaniChest() + " and glares at you.  The little thing is only about four feet tall, with pink and black dyed hair cut into a cute little 'do.  The greenish-gray skin of her breasts bulges out around her arms, supported by a few leather straps, amplifying her cleavage.  Her cunt lips are pierced multiple times, inflamed, and slightly parted.  There really isn't any clothing on her to hide them, just more of the ever-present straps wrapping around her thighs.";
+			// this.plural = false;
+			this.createVagina(false, VAGINA_WETNESS_DROOLING, VAGINA_LOOSENESS_NORMAL);
+			this.createStatusAffect(StatusAffects.BonusVCapacity, 55, 0, 0, 0);
+			createBreastRow(Appearance.breastCupInverse("E"));
+			this.ass.analLooseness = ANAL_LOOSENESS_TIGHT;
+			this.ass.analWetness = ANAL_WETNESS_DRY;
+			this.createStatusAffect(StatusAffects.BonusACapacity,40,0,0,0);
+			this.tallness = 40;
+			this.hipRating = HIP_RATING_AMPLE+2;
+			this.buttRating = BUTT_RATING_LARGE;
+			this.skinTone = "greenish gray";
+			this.hairColor = "pink and black";
+			this.hairLength = 16;
+			initStrTouSpeInte(32, 43, 55, 62);
+			initLibSensCor(65, 65, 50);
+			this.weaponName = "fists";
+			this.weaponVerb="tiny punch";
+			this.armorName = "leather straps";
+			this.bonusHP = 40;
+			this.lust = 40;
+			this.lustVuln = 0.9;
+			this.temperment = TEMPERMENT_RANDOM_GRAPPLES;
+			this.level = 4;
+			this.gems = rand(25) + 5;
+			this.drop = new WeightedDrop().add(consumables.GOB_ALE,4)
+					.addMany(1,
+							consumables.L_DRAFT,
+							consumables.PINKDYE,
+							consumables.BLUEDYE,
+							consumables.ORANGDY,
+							consumables.PURPDYE,
+							consumables.INCUBID,
+							consumables.REDUCTO,
+							consumables.L_BLUEG,
+							null);
+			this.special1 = goblinDrugAttack;
+			this.special2 = goblinTeaseAttack;
+			checkMonster();
 		}
 		
 	}

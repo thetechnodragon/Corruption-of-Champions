@@ -1,12 +1,8 @@
 package classes.Scenes.Dungeons.HelDungeon
 {
-	import classes.Monster;
-	
-	/**
-	 * ...
-	 * @author aimozg
-	 */
-	public class Brigid extends Monster 
+	import classes.*;
+
+	public class Brigid extends Monster
 	{
 
 		//Attack One: Hot Poker, Right Up Your Ass!
@@ -27,8 +23,8 @@ package classes.Scenes.Dungeons.HelDungeon
 			var damage:Number = 5;
 			damage = player.takeDamage(5);
 			outputText(" (" + damage + ")");
-			if(player.hasPerk("Resolute") >= 0) outputText("  Of course, your resolute posture prevents her from accomplishing much.");
-			else player.createStatusAffect("Stunned",0,0,0,0);
+			if(player.findPerk(PerkLib.Resolute) >= 0) outputText("  Of course, your resolute posture prevents her from accomplishing much.");
+			else player.createStatusAffect(StatusAffects.Stunned,0,0,0,0);
 			game.combatRoundOver();
 		}
 
@@ -40,8 +36,8 @@ package classes.Scenes.Dungeons.HelDungeon
 		}
 		override protected function performCombatAction():void
 		{
-			if(player.hasStatusAffect("Stunned") >= 0) {
-				player.removeStatusAffect("Stunned");
+			if(player.findStatusAffect(StatusAffects.Stunned) >= 0) {
+				player.removeStatusAffect(StatusAffects.Stunned);
 				if(rand(2) == 0) BrigidAssGrind();
 				else brigidPoke();
 				return;
@@ -64,22 +60,44 @@ package classes.Scenes.Dungeons.HelDungeon
 
 		public function Brigid()
 		{
-			init01Names("", "Brigid the Jailer", "brigid", "Brigid is a monster of a harpy, standing a foot taller than any other you've seen. She's covered in piercings, and her pink-dyed hair is shaved down to a long mohawk. She's nude, save for the hot poker in her right hand and the shield in her left, which jingles with every step she takes thanks to the cell keys beneath it.");
-			init02Female(VAGINA_WETNESS_SLAVERING, VAGINA_LOOSENESS_LOOSE,LOWER_BODY_TYPE_HARPY);
-			init03BreastRows("D");
-			init04Ass(ANAL_LOOSENESS_STRETCHED,ANAL_WETNESS_DRY);
-			init05Body(rand(8) + 70,HIP_RATING_AMPLE+2,BUTT_RATING_LARGE);
-			init06Skin("red");
-			init07Hair("black",15);
-			init08Face();
-			init09PrimaryStats(90,60,120,40,40,45,50);
-			init10Weapon("poker","burning stab",30);
-			init11Armor("armor",20);
-			init12Combat(1000,20,.25,TEMPERMENT_LOVE_GRAPPLES);
-			init13Level(19,rand(25)+140,50);
-			initX_Wings(WING_TYPE_FEATHERED_LARGE);
-			initX_Tail(TAIL_TYPE_DEMONIC);
-			initX_Horns(HORNS_DEMON);
+			this.a = "";
+			this.short = "Brigid the Jailer";
+			this.imageName = "brigid";
+			this.long = "Brigid is a monster of a harpy, standing a foot taller than any other you've seen. She's covered in piercings, and her pink-dyed hair is shaved down to a long mohawk. She's nude, save for the hot poker in her right hand and the shield in her left, which jingles with every step she takes thanks to the cell keys beneath it.";
+			// this.plural = false;
+			this.createVagina(false, VAGINA_WETNESS_SLAVERING, VAGINA_LOOSENESS_LOOSE);
+			if (LOWER_BODY_TYPE_HARPY > 0) {
+				this.createStatusAffect(StatusAffects.BonusVCapacity, LOWER_BODY_TYPE_HARPY, 0, 0, 0);
+			}
+			createBreastRow(Appearance.breastCupInverse("D"));
+			this.ass.analLooseness = ANAL_LOOSENESS_STRETCHED;
+			this.ass.analWetness = ANAL_WETNESS_DRY;
+			this.tallness = rand(8) + 70;
+			this.hipRating = HIP_RATING_AMPLE+2;
+			this.buttRating = BUTT_RATING_LARGE;
+			this.skinTone = "red";
+			this.hairColor = "black";
+			this.hairLength = 15;
+			initStrTouSpeInte(90, 60, 120, 40);
+			initLibSensCor(40, 45, 50);
+			this.weaponName = "poker";
+			this.weaponVerb="burning stab";
+			this.weaponAttack = 30;
+			this.armorName = "armor";
+			this.armorDef = 20;
+			this.bonusHP = 1000;
+			this.lust = 20;
+			this.lustVuln = .25;
+			this.temperment = TEMPERMENT_LOVE_GRAPPLES;
+			this.level = 19;
+			this.gems = rand(25)+140;
+			this.additionalXP = 50;
+			this.wingType = WING_TYPE_FEATHERED_LARGE;
+			this.tailType = TAIL_TYPE_DEMONIC;
+			this.hornType = HORNS_DEMON;
+			this.horns = 2;
+			this.drop = NO_DROP;
+			checkMonster();
 		}
 		
 	}

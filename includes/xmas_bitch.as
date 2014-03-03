@@ -3,48 +3,56 @@
 	return false;
 }
 
-public function xmasBitchEncounter():void {
+public function xmasBitchEncounter():void
+{
 	outputText("", true);
 	spriteSelect(9);
 	outputText("Your sleep is disturbed by something repeatedly smacking into your side.  Groggily at first, you grumble and throw back your blanket.  Then you remember where you are, and snap to full wakefulness.  You launch onto your feet, bring up your fists, and stare bewildered at the sight in front of you.\n\n", false);
-		
+
 	outputText("Standing there, innocent as can be, ");
-	if(flags[kFLAGS.PC_ENCOUNTERED_CHRISTMAS_ELF_BEFORE] == 0) outputText("is an elf.  She can't be more than four and a half feet tall, and though she has fairly womanly hips, her chest is nothing to speak of.  Her clothing is strange – a red two piece lined with some kind of white fur.  She has typically pointed ears, blond hair, and a red fur-lined cap topped with a white puffball. She's holding a large box in front of her and looking at you expectantly as you stare, dumbfounded.\n\n", false);
+	if (flags[kFLAGS.PC_ENCOUNTERED_CHRISTMAS_ELF_BEFORE] == 0) outputText("is an elf.  She can't be more than four and a half feet tall, and though she has fairly womanly hips, her chest is nothing to speak of.  Her clothing is strange – a red two piece lined with some kind of white fur.  She has typically pointed ears, blond hair, and a red fur-lined cap topped with a white puffball. She's holding a large box in front of her and looking at you expectantly as you stare, dumbfounded.\n\n", false);
 	else outputText("is the same elf you met last year.  She can't be more than four and a half feet tall, and though she has fairly womanly hips, her chest is nothing to speak of.  Her clothing is strange – a red two piece lined with some kind of white fur.  She has typically pointed ears, blond hair, and a red fur-lined cap topped with a white puffball. She's holding a large box in front of her and looking at you expectantly as you stare, dumbfounded.\n\n", false);
-	
+
 	outputText("The elf says, \"<i>Hiya " + player.short + "!  I brought you a");
-	if(flags[kFLAGS.PC_ENCOUNTERED_CHRISTMAS_ELF_BEFORE] > 0) outputText("nother");
+	if (flags[kFLAGS.PC_ENCOUNTERED_CHRISTMAS_ELF_BEFORE] > 0) outputText("nother");
 	outputText(" present, straight from the big man himself!</i>\"\n\n", false);
-	
-	if(flags[kFLAGS.PC_ENCOUNTERED_CHRISTMAS_ELF_BEFORE] > 0) {
+
+	if (flags[kFLAGS.PC_ENCOUNTERED_CHRISTMAS_ELF_BEFORE] > 0)
+	{
 		outputText("Confused by her sudden re-appearance, you dumbly ask if you'll be getting the same thing as last year.\n\n");
-		outputText("She giggles, \"<i>Oh silly, that would spoil the surprise, wouldn't it?  We've got EVERYONE on our list, even Kelt, though he's getting coal AGAIN.  You'll get what you're supposed to get!</i>\"\n\n", false);
+
+		outputText("She giggles, \"<i>Oh silly, that would spoil the surprise, wouldn't it?  We've got EVERYONE on our list, even ");
+		if (flags[kFLAGS.KELT_BREAK_LEVEL] < 4) outputText("Kelt, though he's getting coal AGAIN");
+		else outputText("Kelly, though I think she's getting another big fat dildo");
+		outputText(".  You'll get what you're supposed to get!</i>\"\n\n", false);
 	}
-	else {
+	else
+	{
 		outputText("Confused by her appearance and the fact that she already knows you by name, you dumbly ask how she can possibly know who you are.\n\n", false);
 
 		outputText("She giggles, \"<i>Oh silly, don't you know what time of year it is?  We've got EVERYONE on our list, even ");
-		if(flags[kFLAGS.KELT_BREAK_LEVEL] < 4) outputText("Kelt, though he's getting coal this year");
+		if (flags[kFLAGS.KELT_BREAK_LEVEL] < 4) outputText("Kelt, though he's getting coal this year");
 		else outputText("Kelly, though I think she's getting a big fat dildo this year");
 		outputText(".</i>\"\n\n", false);
 	}
 	outputText("You wonder out loud, \"<i>So this... present is mine?</i>\"\n\n", false);
-	if(player.cor >= 90 || monk >= 5 || player.hasStatusAffect("Exgartuan") >= 0 || amilyScene.amilyCorrupt() || flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00283] > 0 || flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00282] > 0 || flags[kFLAGS.NIAMH_STATUS] > 0) {
+	if (player.cor >= 90 || monk >= 5 || player.findStatusAffect(StatusAffects.Exgartuan) >= 0 || amilyScene.amilyCorrupt() || flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00283] > 0 || flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00282] > 0 || flags[kFLAGS.NIAMH_STATUS] > 0)
+	{
 		outputText("She nods, bouncing up and down in excitement and flushing slightly, \"<i>Yup, just tear the lid off and get your gift!</i>\"\n\n", false);
-		if(flags[kFLAGS.PC_ENCOUNTERED_CHRISTMAS_ELF_BEFORE] > 0) outputText("Here we go again...\n\n");
+		if (flags[kFLAGS.PC_ENCOUNTERED_CHRISTMAS_ELF_BEFORE] > 0) outputText("Here we go again...\n\n");
 		//[Open Present] [Unwrap Elf] [Decline]
-		simpleChoices("OpenPresent",openXmasPresent,"",0,"Decline",declineXmasPresent,"",0,"",0);
+		simpleChoices("OpenPresent", openXmasPresent, "", 0, "Decline", declineXmasPresent, "", 0, "", 0);
 		return;
 	}
-	if(player.gender == 0) {
+	if (player.gender == 0)
+	{
 		outputText("She nods, bouncing up in down in excitement, \"<i>Yup!  Just open it up!  Are you ready?</i>\"\n\n", false);
-		simpleChoices("OpenPresent",openXmasPresent,"",0,"Decline",declineXmasPresent,"",0,"",0);
+		simpleChoices("OpenPresent", openXmasPresent, "", 0, "Decline", declineXmasPresent, "", 0, "", 0);
 		return;
 	}
 	outputText("She nods, bouncing up in down in excitement, \"<i>Yup!  You can unwrap it or unwrap me.  What'll it be?</i>\"\n\n", false);
 	//[Open Present] [Unwrap Elf] [Decline]
-	simpleChoices("OpenPresent",openXmasPresent,"Unwrap Elf",unwrapElfyPresent,"Decline",declineXmasPresent,"",0,"",0);
-	
+	simpleChoices("OpenPresent", openXmasPresent, "Unwrap Elf", unwrapElfyPresent, "Decline", declineXmasPresent, "", 0, "", 0);
 }
 
 //[Decline]
@@ -62,42 +70,34 @@ public function openXmasPresent():void {
 	spriteSelect(9);
 	outputText("", true);
 	outputText("You easily rip through the ribbons holding the box together and pull off the top.   You gasp in ", false);
-	//[Bad Present]
-	if(player.cor >= 90 || monk >= 5 || player.hasStatusAffect("Exgartuan") >= 0 || amilyScene.amilyCorrupt() || flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00283] > 0 || flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00282] > 0 || flags[kFLAGS.NIAMH_STATUS] > 0) {
+	if(player.cor >= 90 || monk >= 5 || player.findStatusAffect(StatusAffects.Exgartuan) >= 0 || amilyScene.amilyCorrupt() || flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00283] > 0 || flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00282] > 0 || flags[kFLAGS.NIAMH_STATUS] > 0) {
+		//[Bad Present]
 		outputText("shock at the box's contents – a nine inch cock with damn near a dozen buzzing, elliptical devices taped to it.  A pair of coal lumps rattles around underneath it, positioned as if they were the dick's testicles.\n\n", false);
 		
 		outputText("Before you can utter a single word of confusion or protest, the elf moans and the cock erupts, spurting a rope of cum into your hair.  The next blast takes you across the nose, then on your lips, then your chin, and finally onto your " + allBreastsDescript() + ".  Shocked and dripping, you stand dumbfounded as the elf plants a kiss on your lips, tears off the box, and runs away with her cock flopping and buzzing in time with each step.  There's no way to catch her in this darkness.\n\n", false);
 		
 		outputText("The empty 'present' is on the ground with the coal still inside.  You wonder if the coal has any special effect. Everything else in this place does.  In the distance you can hear sleigh bells, and you know it's going to be hard to sleep with all that racket on top of the threat of more intruders...\n\n", false);
-		shortName = "Coal   ";
-		takeItem();
+		inventory.takeItem(consumables.COAL___);
 		flags[kFLAGS.PC_ENCOUNTERED_CHRISTMAS_ELF_BEFORE] = date.fullYear;
-		return;
 	}
-	//Great present!
 	else if(player.cor <= 33) {
+		//Great present!
 		outputText("surprise at the box's contents - there's a carefull arranged set of equipment here, made from woven spider-silk!  Somebody must think you're pretty good.\n\n");
-		if(rand(2) == 0) shortName = "SS.Robe";
-		else shortName = "SSArmor";
-		takeItem();
+		if(rand(2) == 0) inventory.takeItem(armors.SS_ROBE);
+		else inventory.takeItem(armors.SSARMOR);
 		flags[kFLAGS.PC_ENCOUNTERED_CHRISTMAS_ELF_BEFORE] = date.fullYear;
-		return;
 	}
-	//[Good present]
 	else if(player.cor < 60) {
+		//[Good present]
 		outputText("surprise at the box's contents – there's a vial labeled gro+.  It looks like it's going to be a 'big' Christmas this year...\n\n", false);
-		shortName = "GroPlus";
-		takeItem();
+		inventory.takeItem(consumables.GROPLUS);
 		flags[kFLAGS.PC_ENCOUNTERED_CHRISTMAS_ELF_BEFORE] = date.fullYear;
-		return;
 	}
-	//[Mediocre Present]
 	else {
+		//[Mediocre Present]
 		outputText("surprise at the box's contents – there is a single vial of succubi's delight packed inside.  It's going to be a white Christmas after all...\n\n", false);
-		shortName = "SDelite";
-		takeItem();
+		inventory.takeItem(consumables.SDELITE);
 		flags[kFLAGS.PC_ENCOUNTERED_CHRISTMAS_ELF_BEFORE] = date.fullYear;
-		return;
 	}
 }
 
@@ -206,7 +206,7 @@ public function vagFuckXmasElf():void {
 	outputText("In seconds the elf has her hands around a striped, red, double-sided dildo.  It wiggles back and forth obscenely, and now that you have a good look at it, you realize the red sections are slightly raised, to better stimulate the user.  She pants and runs her hand over its pussy-slicked surface, shivering in remembered pleasure till her attention returns to you.  Her lips curl into a knowing smile and she kneels between your " + player.legs() + ", spreading them apart for better access to your " + vaginaDescript(0) + ".\n\n", false);
 	
 	outputText("The diminutive elf rubs the tip over your lower lips and " + clitDescript() + " a few times, getting you nice and hot before she slides it up your " + vaginaDescript(0) + ".  The dildo feels wonderful inside, each curved ridge sending shivers up your spine as it enters you, then stroking along your walls as you take it deeper and deeper.  The motion is interrupted once your 'present' has decided she's lodged her candy-cane-like toy deep enough inside you.  She lies back and scoots forwards, taking the rest of the striped dildo into her hairless snatch until your mounds are locked together, feminine fluids mixing on an artificial cock.");
-	cuntChange(15,true,true,false);
+	player.cuntChange(15,true,true,false);
 	outputText("\n\n", false);
 	
 	outputText("The elf giggles, \"<i>Merry Christmas,</i>\" as she starts rocking against you.  The dildo slides through your passage, massaging your inner walls and bumping against your " + clitDescript() + "'s underside with each stroke.   She's got such great muscle control that she's clamped down on the double-sided dildo and started using it as a cock to fuck you!  She smirks and pounds your vulnerable " + vaginaDescript(0) + ", raping it with increasingly forceful strokes.  You grunt and moan as each stroke loudly smacks into your hips.  You feel yourself closing in on an orgasm, but the elf-girl relaxes her grip and simply grinds against you, taking the stimulation down a notch.\n\n", false);
@@ -234,7 +234,7 @@ public function xmasFuckFollowup():void {
 	outputText("", true);
 	outputText("You awaken in the morning, sore and exhausted, but more satisfied than you've ever felt before.  Your body feels INCREDIBLY sensitive from head to toe, but particularly on your well-used " + cockDescript(0) + ".  In spite of the traumatic lovemaking, you feel remarkably clear-headed.\n\n", false);
 	outputText("Did you enjoy being able to cum so much");
-	if(player.hasPerk("Elven Bounty") >= 0) outputText(" <b>again</b>");
+	if(player.findPerk(PerkLib.ElvenBounty) >= 0) outputText(" <b>again</b>");
 	outputText("?", false);
 	//[Yes][No] – yes awards (+250 mls cum volume), no awards +15 intellect
 	doYesNo(xmasPerkM,xmasSmart);
@@ -253,7 +253,7 @@ public function xmasFuckFollowupFems():void {
 	outputText("You awaken in the morning, sore and exhausted, but more satisfied than you've ever felt before.  Your body feels INCREDIBLY sensitive from head to toe, but particularly in your well-used " + vaginaDescript(0) + ".  In spite of the traumatic lovemaking, you feel remarkably clear-headed.  The dildo appears to have completely dissolved inside you, leaving behind a pinkish fluid that drips from your lips.\n\n", false);
 	
 	outputText("Do you think it might have done anything to you");
-	if(player.hasPerk("Elven Bounty") >= 0) outputText(" <b>again</b>");
+	if(player.findPerk(PerkLib.ElvenBounty) >= 0) outputText(" <b>again</b>");
 	outputText("?", false);
 	//[Yes][No] – yes awards (+15 fertility!), no awards +15 intellect
 	doYesNo(xmasPerkM,xmasSmart);
@@ -267,20 +267,20 @@ public function xmasFuckFollowupFems():void {
 }
 
 public function xmasPerkM():void {
-	if(player.hasPerk("Elven Bounty") < 0) {
-		if(temp == 1001) player.createPerk("Elven Bounty",250,0,0,0,"After an encounter with an elf, her magic permanently increased how messy your orgasms are.");
-		else player.createPerk("Elven Bounty",0,15,0,0,"After your encounter with an elf, her magic has left you with increased fertility.");
+	if(player.findPerk(PerkLib.ElvenBounty) < 0) {
+		if(temp == 1001) player.createPerk(PerkLib.ElvenBounty,250,0,0,0);
+		else player.createPerk(PerkLib.ElvenBounty,0,15,0,0);
 		outputText("<b>New Perk Acquired - Elven Bounty!</b>", true);
 	}
 	else {
 		clearOutput();
 		outputText("<b>Perk Enhanced - Elven Bounty!</b>");
 		if(temp == 1001) {
-			player.addPerkValue("Elven Bounty",1,250);
+			player.addPerkValue(PerkLib.ElvenBounty,1,250);
 			outputText("<b> - +250mL cum production!</b>");
 		}
 		else {
-			player.addPerkValue("Elven Bounty",2,15);
+			player.addPerkValue(PerkLib.ElvenBounty,2,15);
 			outputText("<b> - +15 bonus fertility!</b>");
 		}
 		

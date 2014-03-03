@@ -3,7 +3,7 @@
  */
 package classes.Scenes.Areas
 {
-	import classes.BaseContent;
+	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
 	import classes.GlobalFlags.kGAMECLASS;
 	import classes.Scenes.Areas.Plains.*;
@@ -101,16 +101,14 @@ package classes.Scenes.Areas
 			//OVI
 			if (rand(2) == 0) {
 				outputText("While exploring the plains you nearly trip over a discarded, hexagonal bottle.  ", false);
-				shortName = "OviElix";
 				menuLoc = 2;
-				takeItem();
+				inventory.takeItem(consumables.OVIELIX);
 			}
 			// FIND KANGAAA
 			else {
 				outputText("While exploring the plains you come across a strange-looking plant.  As you peer at it, you realize it has some fruit you can get at.  ", false);
-				shortName = "KangaFt";
 				menuLoc = 2;
-				takeItem();
+				inventory.takeItem(consumables.KANGAFT);
 			}
 		}
 	}

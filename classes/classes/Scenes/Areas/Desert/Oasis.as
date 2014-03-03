@@ -1,6 +1,7 @@
 ﻿package classes.Scenes.Areas.Desert {
+	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
-	import classes.BaseContent;
+
 	public class Oasis extends BaseContent{
 
 		public function Oasis()
@@ -66,9 +67,9 @@ private function oasisTalkAccept():void {
 	else outputText("legs falling open in the process.  ", false);
 	outputText("Suddenly the silence is broken by a shrill screeching laugh, then a howl and the movement of the demons begins to accelerate. The deep bass laugh of the demon leader breaks over you like a crashing wave and the demons shriek with frenzied lust as they take you on the sand of the oasis.", false);
 	//Count voluntary submissions
-	if(player.hasStatusAffect("Voluntary Demonpack") < 0) player.createStatusAffect("Voluntary Demonpack",0,0,0,0);
+	if(player.findStatusAffect(StatusAffects.VoluntaryDemonpack) < 0) player.createStatusAffect(StatusAffects.VoluntaryDemonpack,0,0,0,0);
 	else {
-		player.addStatusValue("Voluntary Demonpack",1,1);
+		player.addStatusValue(StatusAffects.VoluntaryDemonpack,1,1);
 	}
 	//TO THE SECKSIN!
 	doNext(oasisSexing);
@@ -121,7 +122,7 @@ internal function oasisSexing():void {
 		else {
 			outputText("Eventually one of the demons wins out and sets the tip of his hefty dog-cock at the entrance to your pussy. He rams his member into your " + vaginaDescript(0) + " with one swift thrust and begins to pump himself in and out of your cunt. But the other demons will not be denied. You feel a pressure at your lips and without warning a second slightly smaller dick shoves itself into your already-stuffed " + vaginaDescript(0) + ".  ", false);
 			//vaginal streeeetch
-			cuntChange(40, true);
+			player.cuntChange(40, true);
 			outputText("The two cocks pump you hard until you feel one of them shooting your " + vaginaDescript(0) + " full of hot demon cum. Eventually both the dicks release inside you and slip out one after the other, but each time another takes their place so that your pussy is never empty.", false);
 		}
 		//Orgasmzzzzz
@@ -136,7 +137,7 @@ internal function oasisSexing():void {
 	outputText("Soon you feel hands and dicks grabbing and jabbing at your " + buttDescript() + ", edging inwards bit by bit and jostling for position as a slippery cock positions itself at the opening of your " + assholeDescript() + ". It pauses for a second and then dives straight into your waiting asshole.  ", false);
 	if(player.vaginas.length > 0) outputText("You feel the cocks in your ass and pussy rubbing into each other as your lower body becomes a temple of friction. The feeling of so much demon stuffing you as full as possible is almost unbearable, and you are inches away from blacking out as you come again.  ", false);
 	outputText("The cock fucks you hard and fast for a dozen strokes and then you feel it begin to pump its cum into your stuffed ass until it can't come any more. It slips out of your " + buttDescript() + " and is quickly replaced by another which comes and then is itself replaced in what becomes a seemingly endless cycle.  ", false);
-	buttChange(monster.cockArea(0), true);
+	player.buttChange(monster.cockArea(0), true);
 	//More fucking!
 	outputText("Around you you see the demons wrapped up in the frenzy of fucking that they've fallen into. No hole is unfilled and not a single cock isn't sunk into some being's flesh. The moans and screams are almost contagious and you feel them clouding your brain making you want more, harder.", false);
 	dynStats("int", -1, "lib", 1);
@@ -166,7 +167,7 @@ internal function oasisSexing():void {
 	{
 		//►Oasis Demons Defeat PC as part of antm
 		//Antmorph stuff
-		if(monster.hasStatusAffect("phyllafight") >= 0) {
+		if(monster.findStatusAffect(StatusAffects.phyllafight) >= 0) {
 			outputText("You sought to save the ant-girl from being raped, and looking around, you don't see her anywhere.  She must have gotten away safely.  Mission... accomplished?  Wait, that ungrateful little bitch just left you to suffer in her place!  Your ass is gonna be sore for a while, but not as sore as your pride...  ");
 			flags[kFLAGS.ANTS_PC_FAILED_PHYLLA] = 1;
 		}
@@ -176,7 +177,7 @@ internal function oasisSexing():void {
 		return;
 	}
 	//If you submitted willingly - chance of bad end
-	if(player.statusAffectv1("Voluntary Demonpack") >= 6 && player.hasVagina()) {
+	if(player.statusAffectv1(StatusAffects.VoluntaryDemonpack) >= 6 && player.hasVagina()) {
 		doNext(oasisBadEnd);
 		return;
 	}

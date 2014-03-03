@@ -3,8 +3,7 @@
  */
 package classes.Scenes.Areas.Plains
 {
-	import classes.Scenes.*;
-	import classes.BaseContent;
+	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
 	import classes.GlobalFlags.kGAMECLASS;
 
@@ -67,7 +66,7 @@ package classes.Scenes.Areas.Plains
 		{
 			spriteSelect(54);
 			//Oh shit get anal raped.
-			if (hasItem("S.Dream", 1)) {
+			if (player.hasItem(consumables.S_DREAM)) {
 				kGAMECLASS.plains.gnollScene.yoDawgIHeardULiekGNollBallzzzdahdakjldh();
 				return;
 			}

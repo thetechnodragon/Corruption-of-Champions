@@ -1,12 +1,8 @@
 package classes.Scenes.Areas.Lake
 {
-	import classes.Appearance;
-	import classes.Monster;
+	import classes.*;
+	import classes.internals.*;
 
-	/**
-	 * ...
-	 * @author aimozg
-	 */
 	public class GooGirl extends Monster
 	{
 		/*Fight-
@@ -22,39 +18,39 @@ package classes.Scenes.Areas.Lake
 			var damage:Number = 0;
 			//return to combat menu when finished
 			doNext(1);
-			if (hasPerk("Acid") >= 0) outputText("Her body quivering from your flames, the goo-girl ", false);
+			if (findPerk(PerkLib.Acid) >= 0) outputText("Her body quivering from your flames, the goo-girl ", false);
 			else outputText("The slime holds its hands up and they morph into a replica of your " + player.weaponName + ".  Happily, she swings at you", false);
 			//Determine if dodged!
 			if (player.spe - spe > 0 && int(Math.random() * (((player.spe - spe) / 4) + 80)) > 80) {
-				if (hasPerk("Acid") >= 0) outputText("tries to slap you, but you dodge her attack.", false);
+				if (findPerk(PerkLib.Acid) >= 0) outputText("tries to slap you, but you dodge her attack.", false);
 				else outputText(", missing as you dodge aside.", false);
 				return;
 			}
 			//Determine if evaded
-			if (short != "Kiha" && player.hasPerk("Evade") >= 0 && rand(100) < 10) {
-				if (hasPerk("Acid") >= 0) outputText("tries to slap you, but you evade her attack.", false);
+			if (short != "Kiha" && player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
+				if (findPerk(PerkLib.Acid) >= 0) outputText("tries to slap you, but you evade her attack.", false);
 				else outputText(", but you evade the clumsy attack.", false);
 				return;
 			}
 			//("Misdirection"
-			if (player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
-				if (hasPerk("Acid") >= 0) outputText("tries to slap you.  You misdirect her, avoiding the hit.", false);
+			if (player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+				if (findPerk(PerkLib.Acid) >= 0) outputText("tries to slap you.  You misdirect her, avoiding the hit.", false);
 				else outputText(", missing as you misdirect her attentions.", false);
 				return;
 			}
 			//Determine if cat'ed
-			if (player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
-				if (hasPerk("Acid") >= 0) outputText("tries to slap you, but misses due to your cat-like evasion.", false);
+			if (player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
+				if (findPerk(PerkLib.Acid) >= 0) outputText("tries to slap you, but misses due to your cat-like evasion.", false);
 				else outputText(", missing due to your cat-like evasion.", false);
 				return;
 			}
 			//Determine damage - str modified by enemy toughness!
-			if (hasPerk("Acid") >= 0) damage = int((str + 10 + weaponAttack) - rand(player.tou) - player.armorDef);
+			if (findPerk(PerkLib.Acid) >= 0) damage = int((str + 10 + weaponAttack) - rand(player.tou) - player.armorDef);
 			else damage = int((str + weaponAttack) - rand(player.tou) - player.armorDef);
 			if (damage > 0) damage = player.takeDamage(damage);
 			if (damage <= 0) {
 				damage = 0;
-				if (hasPerk("Acid") >= 0) {
+				if (findPerk(PerkLib.Acid) >= 0) {
 					if (rand(player.armorDef + player.tou) < player.armorDef) outputText("tries to slap you, but the acid-bearing slap spatters weakly off your " + player.armorName + ".", false);
 					else outputText("tries to slap you with an acid-loaded hand, but it splatters off you ineffectually.", false);
 				}
@@ -66,9 +62,9 @@ package classes.Scenes.Areas.Lake
 			}
 			//everyone else
 			else {
-				if (hasPerk("Acid") >= 0) {
+				if (findPerk(PerkLib.Acid) >= 0) {
 					outputText("delivers a painful slap across your cheek.  You gasp when the light stinging becomes a searing burn that seems to get worse as time goes on!", false);
-					if (player.hasStatusAffect("Acid Slap") < 0) player.createStatusAffect("Acid Burn", 0, 0, 0, 0);
+					if (player.findStatusAffect(StatusAffects.AcidSlap) < 0) player.createStatusAffect(StatusAffects.AcidSlap, 0, 0, 0, 0);
 				}
 				else outputText(", painfully smacking her gooey limbs against your head.  You shake your " + player.hairDescript() + ", clearing your head of the dazing slap.", false);
 				outputText(" (" + damage + ")", false);
@@ -107,14 +103,14 @@ package classes.Scenes.Areas.Lake
 		private function gooEngulph():void
 		{
 			outputText("The goo-girl gleefully throws her entire body at you and, before you can get out of the way, she has engulfed you in her oozing form! Tendrils of " + skinTone + " slime slide up your nostrils and through your lips, filling your lungs with the girl's muck. You begin suffocating!", false);
-			if (player.hasStatusAffect("GooBind") < 0) player.createStatusAffect("GooBind", 0, 0, 0, 0);
+			if (player.findStatusAffect(StatusAffects.GooBind) < 0) player.createStatusAffect(StatusAffects.GooBind, 0, 0, 0, 0);
 			combatRoundOver();
 		}
 
 		override protected function performCombatAction():void
 		{
 			//1/3 chance of base attack + bonus if in acid mode
-			if ((hasPerk("Acid") >= 0 && rand(3) == 0) || rand(3) == 0)
+			if ((findPerk(PerkLib.Acid) >= 0 && rand(3) == 0) || rand(3) == 0)
 				gooGalAttack();
 			else if (rand(5) == 0) gooEngulph();
 			else if (rand(3) == 0) gooPlay();
@@ -151,21 +147,46 @@ package classes.Scenes.Areas.Lake
 		{
 			if (noInit) return;
 			var playerHasBigBoobs:Boolean = player.biggestTitSize() >= 3;
-			init01Names("the ", "goo-girl", "googirl", "The goo-girl has a curious expression on her youthful, shimmering face. Her body is slender and globs of slime regularly drip from her limbs, splattering into the goo puddle pooling beneath her hips. A small, heart-shaped nucleus pulses in her chest with a red glow." + (playerHasBigBoobs ? ("  She has apparently made herself a bit more like you, as her chest appears to be a perfect copy of your " + game.biggestBreastSizeDescript() + ".") : ""));
-			init02Female(VAGINA_WETNESS_SLAVERING, VAGINA_LOOSENESS_NORMAL, 9001);
-			init03BreastRows(playerHasBigBoobs ? player.biggestTitSize() : 3);
-			init04Ass(ANAL_LOOSENESS_TIGHT, ANAL_WETNESS_SLIME_DROOLING, 9001);
-			init05Body(rand(8) + 70, HIP_RATING_AMPLE, BUTT_RATING_LARGE, LOWER_BODY_TYPE_GOO);
-			var tone:String = Appearance.randomChoice("blue", "purple", "crystal");
-			init06Skin(tone, SKIN_TYPE_GOO);
-			init07Hair(tone, 12 + rand(10));
-			init08Face();
-			init09PrimaryStats(25, 25, 20, 30, 50, 40, 10);
-			init10Weapon("hands", "slap");
-			init11Armor("gelatinous skin");
-			init12Combat(40, 45, .75, Monster.TEMPERMENT_LOVE_GRAPPLES);
-			init13Level(3, rand(5) + 1);
-			initX_Specials(5040, 5039, 5039);
+			this.a = "the ";
+			this.short = "goo-girl";
+			this.imageName = "googirl";
+			this.long = "The goo-girl has a curious expression on her youthful, shimmering face. Her body is slender and globs of slime regularly drip from her limbs, splattering into the goo puddle pooling beneath her hips. A small, heart-shaped nucleus pulses in her chest with a red glow." + (playerHasBigBoobs ? ("  She has apparently made herself a bit more like you, as her chest appears to be a perfect copy of your " + game.biggestBreastSizeDescript() + ".") : "");
+			// this.long = false;
+			this.createVagina(false, VAGINA_WETNESS_SLAVERING, VAGINA_LOOSENESS_NORMAL);
+			this.createStatusAffect(StatusAffects.BonusVCapacity, 9001, 0, 0, 0);
+			this.createBreastRow(playerHasBigBoobs ? player.biggestTitSize() : 3);
+			this.ass.analLooseness = ANAL_LOOSENESS_TIGHT;
+			this.ass.analWetness = ANAL_WETNESS_SLIME_DROOLING;
+			this.createStatusAffect(StatusAffects.BonusACapacity,9001,0,0,0);
+			this.tallness = rand(8) + 70;
+			this.hipRating = HIP_RATING_AMPLE;
+			this.buttRating = BUTT_RATING_LARGE;
+			this.lowerBody = LOWER_BODY_TYPE_GOO;
+			var tone:String = randomChoice("blue", "purple", "crystal");
+			this.skinTone = tone;
+			this.skinType = SKIN_TYPE_GOO;
+			//this.skinDesc = Appearance.Appearance.DEFAULT_SKIN_DESCS[SKIN_TYPE_GOO];
+			this.skinAdj = "goopey";
+			this.hairColor = tone;
+			this.hairLength = 12 + rand(10);
+			initStrTouSpeInte(25, 25, 20, 30);
+			initLibSensCor(50, 40, 10);
+			this.weaponName = "hands";
+			this.weaponVerb="slap";
+			this.armorName = "gelatinous skin";
+			this.bonusHP = 40;
+			this.lust = 45;
+			this.lustVuln = .75;
+			this.temperment = TEMPERMENT_LOVE_GRAPPLES;
+			this.level = 3;
+			this.gems = rand(5) + 1;
+			this.drop = new ChainedDrop().add(weapons.PIPE,1/10)
+					.add(consumables.WETCLTH,1/2)
+					.elseDrop(useables.GREENGL);
+			this.special1 = 5040;
+			this.special2 = 5039;
+			this.special3 = 5039;
+			checkMonster();
 		}
 
 //Color types are presented as [Blue slimes/Purple Slimes/Clear Slimes]

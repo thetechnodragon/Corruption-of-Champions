@@ -1,10 +1,8 @@
 ﻿package classes.Scenes.Areas.HighMountains{
-import classes.GlobalFlags.kFLAGS;
-import classes.GlobalFlags.kGAMECLASS;
-import classes.BaseContent;
-import classes.Appearance;
-import classes.CockTypesEnum;
-public class MinotaurMobScene extends BaseContent{
+	import classes.*;
+	import classes.GlobalFlags.kFLAGS;
+
+	public class MinotaurMobScene extends BaseContent{
 
 	public function MinotaurMobScene()
 	{
@@ -290,7 +288,7 @@ private function nonAddictMinotaurGangBang():void {
 	outputText("\n\n", false);
 	
 	outputText("The pressure on your " + assholeDescript() + " suddenly subsides, not because the minotaur is pulling back, but because part of the flare suddenly slipped through the ring of your tightly-stretched hole.  You swoon and try to relax, fighting with your sphincter's natural reaction to squeeze shut against the intruder.  A pleased rumble echoes behind you, and the minotaur penetrating your " + assholeDescript() + " pushes hard.  His flare slips inside with an audible, gut-stretching 'pop'.  ", false);
-	buttChange(60,true,true,false);
+	player.buttChange(60,true,true,false);
 	if(flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00326] >= 10) outputText("The assembled beasts snicker at the noise, stroking themselves slowly while awaiting a chance at your hungry holes.", false);
 	else outputText("The minitaur giggles at the noise, stroking himself and mewling while he waits permission to join.", false);
 	outputText("  You can do naught but gurgle as the dual minotaur dicks each push deeper and completely, utterly spit-roasting you on their incestuous hardnesses.\n\n", false);
@@ -320,7 +318,7 @@ private function nonAddictMinotaurGangBang():void {
 	outputText(" as he laughs, \"<i>You can have Mom's backdoor.  I went ahead and opened it for you.</i>\"  A crestfallen look spreads over the minitaur's face, but it doesn't stop him for walking up behind you to line his smaller shaft up with your gaping, sloppy asshole.\n\n", false);
 	
 	outputText("The rock-solid mass of muscle holding you aloft softens, and your body weight drags you down.  Your juicy twat and abused anus throb, impaled on your own offspring's penises.  ", false);
-	cuntChange(60,true,false,true);
+	player.cuntChange(60,true,false,true);
 	outputText("They part your flesh with ease, sheathing themselves deeply in your body and rubbing against each other through the narrow divide inside you.  Your asshole tingles, actually finding more pleasure from the act than your suddenly-stretched vagina thanks to the more comfortable pole residing in its depths.  They go deeper and deeper, until the stud supporting you is pushing on your distended cervix while his sheath bunches up against your outer lips.\n\n", false);
 	
 	outputText("\"<i>Fuck, Mom, your pussy is great!  ", false);
@@ -330,7 +328,7 @@ private function nonAddictMinotaurGangBang():void {
 	outputText("I can feel it coming, are you ready, Ma?</i>\" asks the beast-man.  You nod enthusiastically, rocking back and forth while the minitaur clutches your " + buttDescript() + " and fucks your stationary form.\n\n", false);
 	
 	outputText("A huge, bloated mass stretches past your pussy lips, forcing out a squirt of girlcum and feminine lube.  ", false);
-	cuntChange(60,true,false,true);
+	player.cuntChange(60,true,false,true);
 	outputText("The head flares wide as it squirts into your womb; warmth blooms from the uterine cum-deposit, turning your muscles slack, and setting off an orgasm of your own.  Your pussy ripples and squeezes at the invader, matched in its orgasmic contractions by your cock-stuffed asshole.  The minitaur behind you whines and hilts himself as hard as his relatively lithe body will allow, slapping his balls into his brother's slowly emptying cum-sacks.", false);
 	if(player.hasCock()) {
 		outputText("  " + SMultiCockDesc() + " explodes against the minotaur's belly, weakly spurting ", false);
@@ -355,7 +353,7 @@ private function nonAddictMinotaurGangBang():void {
 	}
 	outputText("You black out at that point, but when you wake up soaked in cum with a bottle of it next to you, you know it was a good night.", false);
 	//Force cum bottle loot!
-	flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00234] = "MinoCum";
+	flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID] = consumables.MINOCUM.id;
 	//Preggers chance!
 	player.knockUp(2,432,75);
 	dynStats("spe", -.5, "int", -.5, "lib", .5, "sen", -.5, "lus=", 0, "cor", 1);
@@ -365,8 +363,7 @@ private function nonAddictMinotaurGangBang():void {
 	else {
 		menuLoc = 18;
 		outputText("\n\n", false);
-		shortName = flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00234];
-		takeItem();
+		inventory.takeItem(ItemType.lookupItem(flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID]));
 	}
 }
 
@@ -495,7 +492,7 @@ private function analSpearSemiPregMinotaurGangbang():void {
 	if(player.isTaur()) outputText("haunches", false);
 	else outputText(assDescript(), false);
 	outputText(" skyward, your back bowing from the sudden strain.  A wide, drippy tip butts up against your back-door, and though you had heard them talk about fucking your ass through your lusty daze, nothing could prepare you for the feeling of a hot, male member pushing at your pucker.  You relax your " + player.legs() + " and feel your " + assholeDescript() + " loosen, slowly dilating to let the beast's slippery pre-cum inside your rectum.  Yet, even in the face of your complete submission, he holds back, letting you hang there in the air, panting around a cock and aching for greater levels of penetration.", false);
-	buttChange(60,true,true,false);
+	player.buttChange(60,true,true,false);
 	outputText("\n\n", false);
 	
 	outputText("A voice like an avalanche laughs uproariously, \"<i>Look at her squirm!  Okay Mom, hold your horses.</i>\"\n\n", false);
@@ -631,7 +628,7 @@ private function victoryMinotaurGangTitFuck():void {
 		outputText("There're so many minotaurs left for you to milk that it makes your head spin.  Then again, it might just be the minotaur spooge addling your poor brain.  You dully remember your pledge to punish them all, and before your 'boys' can take the initiative, you grab the next two studs with your hands and begin jerking them off, slowly egging them closer to you.  The over-sized dicks eagerly advance in response, sliding right between mommy's mammaries where they belong.  Like their bigger bothers, these two obediently hold still once properly positioned and allow you to milk their cocks with your " + biggestBreastSizeDescript() + ".\n\n", false);
 	
 		outputText("\"<i>Good boys.  Now give Mommy more cum... she's ", false);
-		if(player.hasPerk("Bimbo Brains") >= 0) outputText("like, ", false);
+		if(player.findPerk(PerkLib.BimboBrains) >= 0) outputText("like, ", false);
 		outputText("getting sooo wasted on it,</i>\" you command.  Bouncing your breasts up and down, you keep the soaked flesh in constant motion around the swollen, slowly flaring shafts.  A sudden gout of wetness splashes your cheek, and as you turn to investigate, a leaking prick is pressed through your confusion-pursed lips.  Salty-sweet pre-cum tingles on your tongue, and you begin to lap at it eagerly, running your tongue over the hot, flaring tongue.  It tastes absolutely divine.  You focus on it completely, trying to block out the voice of its owner.\n\n", false);
 		
 		outputText("The runt of your litter, the minitaur, is whining, \"<i>I-I'm sorry Mom but I just couldn't hold b-back anymore.  Ung... your mouth is so hot.  I can't control it!</i>\"  He grabs your ", false);
@@ -662,7 +659,7 @@ private function victoryMinotaurGangTitFuck():void {
 			outputText(", pulling them hard towards your cum-slicked tits.  You waste no time burying their twin members in the cum-slicked crevasse that is their mommy's mammaries, right where they belong.", false);
 		}
 		outputText("  \"<i>Good boys.  Now give Mommy more cum... she's ", false);
-		if(player.hasPerk("Bimbo Brains") >= 0) outputText("like, ", false);
+		if(player.findPerk(PerkLib.BimboBrains) >= 0) outputText("like, ", false);
 		outputText("getting sooo wasted on it,</i>\" you command.\n\n", false);
 		
 		outputText("The minitaur wobbles unsteadily, completely unused to having such a wet and gentle hold squeezing down on his shaft.  He whines, \"<i>Mom I-I-I'm g-gonna... ungh... blow!</i>\"  The obedient fem-o-taur squirts with reckless abandon, his smaller shaft not even clearing your cleavage, but he still manages to make even more of a mess than before.  ", false);
@@ -687,7 +684,7 @@ private function victoryMinotaurGangTitFuck():void {
 		}
 	}
 	//Force cum bottle loot!
-	flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00234] = "MinoCum";
+	flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID] = consumables.MINOCUM.id;
 	dynStats("spe", -.5, "int", -.5, "lib", .5, "sen", .5, "lus=", 0, "cor", .5);
 	player.slimeFeed();
 	player.minoCumAddiction(15);
@@ -695,8 +692,7 @@ private function victoryMinotaurGangTitFuck():void {
 	else {
 		menuLoc = 2;
 		outputText("\n\n", false);
-		shortName = flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00234];
-		takeItem();
+		inventory.takeItem(ItemType.lookupItem(flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID]));
 	}
 }
 
@@ -715,7 +711,7 @@ private function victoryAllThePenetrationsMinotaurGangBang():void {
 	else outputText("It stretches your " + vaginaDescript(0) + " with painful force as it penetrates you, forcibly widening your quim until it's able to nestle its sheath against your vulva.", false);
 	outputText("  It pulsates wetly inside you with each beat of the minotaur's hammering heart.", false);
 	//(CUNT CHECK, REGISTER 4! And hymens are out of stock again!)
-	cuntChange(60,true,true,false);
+	player.cuntChange(60,true,true,false);
 	outputText("\n\n", false);
 	
 	outputText("You arch your back and wiggle your exposed rump in the air as you ask, \"<i>Now which of my sons wants to show Mommy how much they love her?</i>\"\n\n", false);
@@ -727,7 +723,7 @@ private function victoryAllThePenetrationsMinotaurGangBang():void {
 	else if(player.analCapacity() < 60) outputText("Your " + assholeDescript() + " slowly widens to accept the cock that's being deposited into its depths.  You find yourself somewhat grateful that you've been stretched enough to prevent this from being painful.", false);
 	else outputText("Your " + assholeDescript() + " devours the cock easily.  The only thing even close to a tight fit is the feeling of your pucker being stretched at his very base.", false);
 	outputText("  Balls gently come to rest against your taint.  You relish the feeling of being so exquisitely stuffed, those thick, ribbed shafts rubbing against each other through your holes, but something's missing.", false);
-	buttChange(60,true,true,false);
+	player.buttChange(60,true,true,false);
 	outputText("\n\n", false);
 	
 	outputText("While beginning to rock your hips, you ask, \"<i>Would any of you boys like to help Momma with her other hole?</i>\"  A dribbling dick appears before your face as if by magic.  You lick your lips as the smell of his pre-cum slowly overpowers your conscious thought and look up at the marvelous cock's owner as you open wide.  He plunges forward, sliding along your tongue as if it's a red carpet laid out for his use.  The dick buries itself into your throat, the leaking pre obliterating your gag reflex along the way. You put your hand on his belly to indicate he should remain still, and he reluctantly agrees, for now.  Deliberately, you rock your " + hipDescript() + " up and down, fucking your sons' twin penises while the action works your throat up and down the dick in your mouth.", false);
@@ -1067,23 +1063,23 @@ private function disciplineEldestMinotaurSon():void {
 	spriteSelect(94);
 	outputText("Your wayward sons thought that they could get the drop on you.  Their macho machismo blinded them to the fact that they were nowhere in your league.  You sigh as you realize they will probably try to coax you into fucking them next time.  What is a mother to do?  As you loom over their battered bodies, they look up to you with eyes full of longing and engorged, twitching dicks.  You return their gaze by cracking your knuckles, causing your brutish progeny to cringe in fear.  Scrambling to their hooves, they all begin to make a hasty retreat.  The largest of your minotaur sons trips over his own hooves in a desperate attempt to flee from his mother.  When he tries to get back up, you put your weight on him, holding him down.  He turns his head back, trembling at the sight of you standing on his tail.\n\n", false);
 
-	outputText("\"Are you the oldest?\" you ask him with crossed arms and a stern gaze.\n\n", false);
+	outputText("\"<i>Are you the oldest?</i>\" you ask him with crossed arms and a stern gaze.\n\n", false);
 
-	outputText("\"Yeah,\" he snorted, trying to put up a facade of bravery.  He turns over, now lying on his back as if lounging on the ground.\n\n", false);
+	outputText("\"<i>Yeah,</i>\" he snorted, trying to put up a facade of bravery.  He turns over, now lying on his back as if lounging on the ground.\n\n", false);
 
-	outputText("\"Explain yourself,\" you demand.  \"As the oldest, you're supposed to set an example for your younger brothers.\"\n\n", false);
+	outputText("\"<i>Explain yourself,</i>\" you demand.  \"As the oldest, you're supposed to set an example for your younger brothers.\"\n\n", false);
 
-	outputText("\"A mother is supposed to set an example, and the only example you've set is being a dirty whore,\" he laughs.  \"Is it so wrong to want to give Mom her cum fix?\"\n\n", false);
+	outputText("\"<i>A mother is supposed to set an example, and the only example you've set is being a dirty whore,</i>\" he laughs.  \"<i>Is it so wrong to want to give Mom her cum fix?</i>\"\n\n", false);
 
 	outputText("Dissatisfied with your son's response, you promptly smack the taste out of his mouth, reminding him who has the real power.  The force of the smack causes him to simper like the minitaur he no doubt abuses routinely.  Sometimes a mother has to give her son some tough love.\n\n", false);
 
 	outputText("After the slap, you quickly remove the lower portion of your " + player.armorName + ", your son's wandering eyes meets your " + vaginaDescript(0) + ".  He's clearly pleased with what he sees; his equine-like cock twitches with approval and anticipation.  You certainly are not mother of the year; your womanhood glistens with sexual excitement.  Leaning down, you grab his chin with your right and force him to look you in the eyes.\n\n", false);
 
-	outputText("\"Your dick isn't getting any of mommy's pussy,\" you coo to him, causing him to sink into despair.\n\n", false);
+	outputText("\"<i>Your dick isn't getting any of mommy's pussy,</i>\" you coo to him, causing him to sink into despair.\n\n", false);
 
-	outputText("\"I-I just wanted to show you how much I love you,\" he said with a hint of honesty in his voice.\n\n", false);
+	outputText("\"<i>I-I just wanted to show you how much I love you,</i>\" he said with a hint of honesty in his voice.\n\n", false);
  
-	outputText("\"And wreck my pussy while you're at it?\" you point out, remembering one of the comments said during battle.  Before he has the chance to come up with some half-baked excuse, you grab the bull by the horns and thrust his head forward, silencing him with your " + vaginaDescript(0) + ".  \"If you want to show mommy how much you love her, then fuck my cunt with your tongue,\" you demand.\n\n", false);
+	outputText("\"<i>And wreck my pussy while you're at it?</i>\" you point out, remembering one of the comments said during battle.  Before he has the chance to come up with some half-baked excuse, you grab the bull by the horns and thrust his head forward, silencing him with your " + vaginaDescript(0) + ".  \"<i>If you want to show mommy how much you love her, then fuck my cunt with your tongue,</i>\" you demand.\n\n", false);
 
 	outputText("The burly beast is clearly unaccustomed to pleasuring another.  His eyes glance back up to you in confusion, unsure of what he's supposed to do.  For a few moments, his snout is just pressed against your skin.  When you give him a disapproving gaze, he begins to lick you with fervor.  Your son has absolutely no finesse at all.  His broad tongue sloppily slurps all over your " + vaginaDescript(0) + ".  In between his vehement slurps, his cold snout unintentionally caresses you.  The cold sensation of his snout is quickly overwhelmed by the warmth of his breath and tongue.  Your body trembles from the unexpected pleasure your amateurish son provides.\n\n", false);
 

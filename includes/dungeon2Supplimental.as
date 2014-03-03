@@ -1,4 +1,6 @@
-﻿//Index:
+﻿import classes.internals.Utils;
+
+//Index:
 //-Imp Gang
 //-Plant - "Encapsulation Start"
 //-Vala - "OH GOD THE FAERIE STUFF"
@@ -11,7 +13,7 @@
 // TIMES_VAPULA_AND_GIANT_VALA:int = 768;
 
 public function impGangAI():void {
-	if(monster.hasStatusAffect("ImpUber") >= 0) impGangUber();
+	if(monster.findStatusAffect(StatusAffects.ImpUber) >= 0) impGangUber();
 	else if(monster.lust > 50 && rand(2) == 0) impGangBukkake();
 	else {
 		var choice:Number = rand(4);
@@ -29,7 +31,7 @@ public function impGangAI():void {
 //IMP GANG [ATTACKS!]  
 public function imtacularMultiHitzilla():void {
 	//Multiattack:
-	if(monster.hasStatusAffect("Blind") < 0) outputText("The imps come at you in a wave, tearing at you with claws!\n", false);
+	if(monster.findStatusAffect(StatusAffects.Blind) < 0) outputText("The imps come at you in a wave, tearing at you with claws!\n", false);
 	//(ALT BLINDED TEXT)
 	else outputText("In spite of their blindness, most of them manage to find you, aided by the clutching claws of their brothers.\n", false);
 	//(2-6 hits for 10 damage each)
@@ -41,7 +43,7 @@ public function imtacularMultiHitzilla():void {
 		//Clear damage from last loop
 		damage = 0;
 		//Blind dodge change
-		if(monster.hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+		if(monster.findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 			outputText(monster.capitalA + monster.short + " completely misses you with a blind attack!\n", false);
 		}
 		//Determine if dodged!
@@ -51,14 +53,14 @@ public function imtacularMultiHitzilla():void {
 			else if(player.spe - monster.spe >= 20) outputText("You deftly avoid " + monster.a + monster.short + "'s slow " + monster.weaponVerb + ".\n", false);
 		}
 		//Determine if evaded
-		else if(player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+		else if(player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 			outputText("Using your skills at evading attacks, you anticipate and sidestep " + monster.a + monster.short + "'s attack.\n", false);
 		}
-		else if(player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+		else if(player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 			outputText("With the easy movement afforded by your bodysuit and Raphael's teachings, you easily avoid " + monster.a + monster.short + "'s attack.\n", false);
 		}
 		//Determine if cat'ed
-		else if(player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
+		else if(player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
 			outputText("With your incredible flexibility, you squeeze out of the way of " + monster.a + monster.short + "", false);
 			if(monster.plural) outputText("' attacks.\n", false);
 			else outputText("'s attack.\n", false);
@@ -94,7 +96,7 @@ public function impGangBukkake():void {
 		//Clear damage from last loop
 		damage = 0;
 		//Blind dodge change
-		if(monster.hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+		if(monster.findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 			outputText(monster.capitalA + monster.short + "' misguided spooge flies everyone.  A few bursts of it don't even land anywhere close to you!\n", false);
 		}
 		//Determine if dodged!
@@ -106,7 +108,7 @@ public function impGangBukkake():void {
 			else if(damage == 3) outputText("You easily evade a blast of white fluid.\n", false);
 		}
 		//Determine if evaded
-		else if(player.hasPerk("Evade") >= 0 && rand(100) < 30) {
+		else if(player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 30) {
 			damage = rand(4);
 			outputText("(Evade) ", false);
 			if(damage == 0) outputText("A wad of cum spatters into the floor as you narrowly sidestep it.\n", false);
@@ -114,7 +116,7 @@ public function impGangBukkake():void {
 			else if(damage == 2) outputText("You duck a glob of spooge and it passes harmlessly by.  A muffled grunt of disgust can be heard from behind you.\n", false);
 			else if(damage == 3) outputText("You easily evade a blast of white fluid.\n", false);
 		}
-		else if(player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+		else if(player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 			outputText("(Misdirection) ", false);
 			if(damage == 0) outputText("A wad of cum spatters into the floor as you narrowly sidestep it.\n", false);
 			else if(damage == 1) outputText("One of the imps launches his seed so hard it passes clean over you, painting the wall white.\n", false);
@@ -122,7 +124,7 @@ public function impGangBukkake():void {
 			else if(damage == 3) outputText("You easily evade a blast of white fluid.\n", false);
 		}
 		//Determine if cat'ed
-		else if(player.hasPerk("Flexibility") >= 0 && rand(100) < 15) {
+		else if(player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 15) {
 			damage = rand(4);
 			outputText("(Agility) ", false);
 			if(damage == 0) outputText("A wad of cum spatters into the floor as you narrowly sidestep it.\n", false);
@@ -148,9 +150,9 @@ public function impGangBukkake():void {
 
 //Mass Arousal
 public function impGangUber():void {
-	if(monster.hasStatusAffect("ImpUber") < 0) {
+	if(monster.findStatusAffect(StatusAffects.ImpUber) < 0) {
 		outputText("Three imps on the far side of the room close their eyes and begin murmuring words of darkness and power.  Your eyes widen, recognizing the spell.  Anything but that!  They're building up a massive arousal spell!  They keep muttering and gesturing, and you realize you've got one round to stop them!\n", false);
-		monster.createStatusAffect("ImpUber",0,0,0,0);
+		monster.createStatusAffect(StatusAffects.ImpUber,0,0,0,0);
 	}
 	else {
 		//(OH SHIT IT GOES OFF) 
@@ -171,7 +173,7 @@ public function impGangUber():void {
 		}
 		if(player.gender == 0) outputText("rub the sensitive skin of your thighs and featureless groin in a way that makes you wish you had a sex of some sort", false);
 		outputText(".\n", false);
-		monster.removeStatusAffect("ImpUber");
+		monster.removeStatusAffect(StatusAffects.ImpUber);
 	}
 }
 		
@@ -211,14 +213,14 @@ public function loseToImpMob():void {
 	//(SINGLE PEN) 
 	if(!player.hasVagina()) {
 		outputText("Most of the crowd centers itself around your lower body, taking a good long look at your " + assholeDescript() + ".  An intrepid imp steps forwards and pushes his member into the unfilled orifice.  You're stretched wide by the massive and unexpectedly forceful intrusion.  The tiny corrupted nodules stroke every inch of your interior, eliciting uncontrollable spasms from your inner muscles.  The unintentional dick massage gives your rapist a wide smile, and he reaches down to smack your ass over and over again throughout the ordeal.", false);
-		buttChange(12,true,true,false);
+		player.buttChange(12,true,true,false);
 		outputText("\n\n", false);
 	}
 	//(DOUBLE PEN)
 	else {
 		outputText("Most of the crowd centers itself around your lower body, taking a good long look at your pussy and asshole.  Two intrepid imps step forward and push their members into the unplugged orifices.  You're stretched wide by the massive, unexpectedly forceful intrusions.  The tiny corrupted nodules stroke every inch of your interiors, eliciting uncontrollable spasms from your inner walls.  The unintentional dick massage gives your rapists knowing smiles, and they go to town on your ass, slapping it repeatedly as they double-penetrate you.", false);
-		buttChange(12,true,true,false);
-		cuntChange(12,true,true,false);
+		player.buttChange(12,true,true,false);
+		player.cuntChange(12,true,true,false);
 		outputText("\n\n", false);
 	}
 	//(DICK!)
@@ -333,7 +335,7 @@ public function impGangGetsRapedByFemale():void {
 	outputText("You walk around to one of the demons and push him onto his back.  Your " + player.armorName + " falls to the ground around you as you disrobe, looking over your tiny conquest.  A quick ripping motion disposes of his tiny loincloth, leaving his thick demon-tool totally unprotected. You grab and squat down towards it, rubbing the corrupted tool between your legs ", false);
 	if(player.vaginas[0].vaginalWetness >= VAGINA_WETNESS_SLICK) outputText("and coating it with feminine drool ", false);
 	outputText("as you become more and more aroused.  It parts your lips and slowly slides in.  The ring of tainted nodules tickles you just right as you take the oddly textured member further and further into your willing depths.", false);
-	cuntChange(15,true,true,false);
+	player.cuntChange(15,true,true,false);
 	outputText("\n\n", false);
 	
 	outputText("At last you feel it bottom out, bumping against your cervix with the tiniest amount of pressure.  Grinning like a cat with the cream, you swivel your hips, grinding your " + clitDescript() + " against him in triumph.  ", false);
@@ -387,7 +389,7 @@ public function getTrappedContinuation():void {
 
 public function encapsulationPodAI():void {
 	//[Round 1 Action]
-	if(monster.hasStatusAffect("Round") < 0) {
+	if(monster.findStatusAffect(StatusAffects.Round) < 0) {
 		outputText("You shiver from the feeling of warm wetness crawling up your " + player.legs() + ".   Tentacles brush against your ", false);
 		if(player.balls > 0) {
 			outputText(ballsDescriptLight() + " ", false);
@@ -403,7 +405,7 @@ public function encapsulationPodAI():void {
 		}
 	}
 	//[Round 2 Action]
-	else if(monster.statusAffectv1("Round") == 2) {
+	else if(monster.statusAffectv1(StatusAffects.Round) == 2) {
 		outputText("The tentacles under your " + player.armorName + " squirm against you, seeking out openings to penetrate and genitalia to caress.  ", false);
 		if(player.balls > 0) outputText("One of them wraps itself around the top of your " + sackDescript() + " while its tip slithers over your " + ballsDescriptLight() + ".  Another ", false);
 		else outputText("One ", false);
@@ -447,7 +449,7 @@ public function encapsulationPodAI():void {
 		}
 	}
 	//[Round 3 Action]
-	else if(monster.statusAffectv1("Round") == 3) {
+	else if(monster.statusAffectv1(StatusAffects.Round) == 3) {
 		outputText("The wet, warm pressure of the fungus' protrusion working their way up your body feels better than it has any right to be.  It's like a combination of a warm bath and a gentle massage, and when combined with the thought-numbing scent in the air, it's nigh-impossible to resist relaxing a little.  In seconds the mass of tentacles is underneath your " + player.armorName + " and rubbing over your chest and " + nippleDescript(0) + "s.  You swoon from the sensation and lean back against the wall while they stroke and caress you, teasing your sensitive " + nippleDescript(0) + ".", false);
 		if(player.hasFuckableNipples()) outputText("  Proof of your arousal leaks from each " + nippleDescript(0) + " as their entrances part for the probing tentacles.  They happily dive inside to begin fucking your breasts, doubling your pleasure.", false);
 		outputText("  Moans escape your mouth as your hips begin to rock in time with the tentacles and the pulsing luminance of your fungus-pod.  It would be easy to lose yourself here.  You groan loudly enough to startle yourself back to attention.  You've got to get out!\n\n", false);
@@ -498,10 +500,10 @@ public function encapsulationPodAI():void {
 		return;
 	}
 	//Set flags for rounds
-	if(monster.hasStatusAffect("Round") < 0) {
-		monster.createStatusAffect("Round",2,0,0,0);
+	if(monster.findStatusAffect(StatusAffects.Round) < 0) {
+		monster.createStatusAffect(StatusAffects.Round,2,0,0,0);
 	}
-	else monster.addStatusValue("Round",1,1);
+	else monster.addStatusValue(StatusAffects.Round,1,1);
 	combatRoundOver();
 }
 
@@ -669,8 +671,8 @@ public function freeValazLooseCoochie():void {
 	
 	//[Heal (if the player has Pure Honey)] [Sex] [Reject]
 	var Heal:Number = 0;
-	if(hasItem("PurHony",1)) Heal = 2597;
-	if(hasItem("P.Pearl",1)) Heal = 2597;
+	if(player.hasItem(consumables.PURHONY,1)) Heal = 2597;
+	if(player.hasItem(consumables.P_PEARL,1)) Heal = 2597;
 	var Sex:Number = 0;
 	if(player.gender > 0) Sex = 2599;
 	//Choicez go here.  I can haz fucks?
@@ -681,8 +683,8 @@ public function freeValazLooseCoochie():void {
 public function healVala():void {
 	spriteSelect(85);
 	outputText("", true);
-	if(hasItem("PurHony",1)) {
-		consumeItem("PurHony",1);
+	if(player.hasItem(consumables.PURHONY,1)) {
+		player.consumeItem(consumables.PURHONY,1);
 		outputText("You're not sure if Pure Honey will do the trick, but it seems like the most likely candidate. You set the broken girl down and step over to the alchemy table. She clings onto your ", false);
 		if(player.lowerBody == LOWER_BODY_TYPE_NAGA) outputText("tail", false);
 		else outputText(player.leg(), false);
@@ -694,7 +696,7 @@ public function healVala():void {
 	}
 	//Pearl!
 	else {
-		consumeItem("P.Pearl",1);
+		player.consumeItem(consumables.P_PEARL,1);
 		outputText("A soft, warm breeze rustles your " + hairDescript() + " and for a moment the foul stench of the dungeon vanishes, setting your mind at ease and draining the tension that has been building in your gut. In a moment of clarity, you remember the beautiful, Pure Pearl that Marae granted you as a reward for shutting down the demons' factory. It seems only right to use the goddess' gift to rescue one of her wayward children. Perhaps she gave it to you for this very reason? The oblivious girl has managed to work her way to a sitting position and is grinding her dripping sex against your " + player.foot() + ". You lean down and gently lift her chin up, bringing her empty, pink eyes to stare into yours. Mistaking the gentle motion for a command, she gleefully opens wide, tongue thrashing about in anticipation. You place the pink pearl at the fairy's lips and she wraps her mouth around the pale jewel, trying obediently to swallow it. However, the little fairy's mouth is far smaller than you would've thought and it seems stuck just behind her teeth, like a pink ball-gag. She coos a muffled moan and begins to masturbate without breaking eye contact with you.\n\n", false);
 
 		outputText("Not exactly what you had in mind. It looks like you're going to have to be a bit more forceful.  You stoop down and take the fairy's head in your arms. Placing your fingers on the drool-soaked orb wrenching her mouth open, you begin to shove the pure pearl into her throat. With ecstatic joy, she swallows as hard as she can, trying to accommodate this new, exciting insertion. The gem squeezes past her tonsils and is forced into her esophagus with an audible 'pop!' the mass of the pearl leaving an orb-shaped bulge in her throat. Her masturbation becomes frenzied as she begins choking on the gem and you hurry to stroke the girl's neck, coaxing the pearl down, out of her windpipe. Finally, it drops into her stomach and the change is immediate. Just as she climaxes, her empty pink eyes focus and sharpen, the lusty haze fading as Marae's gift burns away the pollution of the imps' drugs and rape. She gives you a genuine smile and speaks with a voice like the rushing of wind over reeds. \"<i>Thank you. I cannot express my gratitude for what you've done. You are a godsend, hero. I will never forget what you've done for me.</i>\"\n\n", false);
@@ -824,78 +826,7 @@ public function rejectFuckingVala():void {
 	doNext(1);
 }
 
-//Vala AI
-public function valaAI():void {
-	//VALA SPEAKS!
-	valaCombatDialogue();
-	outputText("\n\n", false);
-	//Select Attack	
-	//BLood magic special
-	if(monster.HPRatio() < .85 && rand(3) == 0) valaSpecial1();
-	//25% chance of milksquirt.
-	else if(rand(4) == 0) valaSpecial2();
-	else valaMasturbate();
-}
 
-//Blood magic?
-public function valaSpecial1():void {
-	outputText("Vala dabs at one of her wounds and swoons.  Is she actually getting off from the wounds?  Damn she's damaged!  Vala licks the blood from her fingers, winks, and blows pink mist from her mouth.", false);
-	//Lightly wounded.
-	if(monster.HPRatio() > .7) {
-		outputText("  The sweet-smelling cloud rapidly fills the room, but the volume of mist is low enough that you don't end up breathing in that much of it.  It does make your pulse quicken in the most pleasant way though...", false);
-		dynStats("lus", 5 + player.lib/20);
-	}
-	else if(monster.HPRatio() > .4) {
-		outputText("  The rose-colored vapor spreads throughout the room, forcing you to breathe it in or pass out from lack of air.  It smells sweet and makes your head swim with sensual promises and your crotch tingle with desire.  Panicked by the knowledge that you're being drugged, you gasp, but it only draws more of the rapidly disappating cloud into your lungs, fueling your lust.", false);
-		dynStats("lus", 10 + player.lib/20);
-	}
-	else {
-		outputText("  The cloying, thick cloud of pink spools out from her mouth and fills the room with a haze of bubblegum-pink sweetness.  Even the shallowest, most experimental breath makes your heart pound and your crotch thrum with excitement.  You gasp in another quick breath and sway back and forth on your feet, already on the edge of giving in to the faerie.", false);
-		dynStats("lus", 30 + player.lib/10);
-	}
-	combatRoundOver();
-}
-//Milk magic
-public function valaSpecial2():void {
-	outputText("With a look of ecstasy on her face, Vala throws back her head and squeezes her pillowy chest with her hands, firing gouts of thick faerie milk from her over-sized bosom!  You try to dodge, but she's squirting so much it's impossible to dodge it all, and in no time you're drenched with a thick coating of Vala's milk.", false);
-	outputText("  She releases her breasts, shaking them back and forth for your benefit, and flutters her wings, blowing shiny, glitter-like flakes at you.  They stick to the milk on your skin, leaving you coated in milk and faerie-dust.", false);
-	outputText("\nVala says, \"<i>Now you can be sexy like Vala!</i>\"\n", false);
-
-	if(monster.hasStatusAffect("milk") >= 0) {
-		monster.addStatusValue("milk",1,5);
-		outputText("Your " + player.skinDesc + " tingles pleasantly, making you feel sexy and exposed.  Oh no!  It seems each coating of milk and glitter is stronger than the last!", false);		
-	}
-	else {
-		monster.createStatusAffect("milk",5,0,0,0);
-		outputText("You aren't sure if there's something in her milk, the dust, or just watching her squirt and shake for you, but it's turning you on.", false);
-	}
-	dynStats("lus", monster.statusAffectv1("milk") + player.lib/20);
-	combatRoundOver();
-}
-//Masturbation
-public function valaMasturbate():void {
-	outputText("The mind-fucked faerie spreads her alabaster thighs and dips a finger into the glistening slit between her legs, sliding in and out, only pausing to circle her clit.  She brazenly masturbates, putting on quite the show.  Vala slides another two fingers inside herself and finger-fucks herself hard, moaning and panting lewdly.  Then she pulls them out and asks, \"<i>Did you like that?  Will you fuck Vala now?</i>\"", false);
-	dynStats("lus", 4 + player.cor/10);
-	combatRoundOver();
-}
-
-
-//[Fight dialog]
-public function valaCombatDialogue():void {
-	if(monster.hasStatusAffect("vala") < 0) {
-		outputText("\"<i>Sluts needs to service the masters!</i>\" the fairy wails, flying high. \"<i>If they are not pleased, Bitch doesn't get any cum!</i>\"", false);
-		monster.createStatusAffect("vala",0,0,0,0);
-	}
-	else {
-		monster.addStatusValue("vala",1,1);
-		if(monster.statusAffectv1("vala") == 1) outputText("\"<i>If you won't fuck Bitch, you must not be a master,</i>\" she realizes, the fight invigorating her lust-deadened brain. \"<i>You get to be a pet for the masters, too!</i>\"", false);
-		else if(monster.statusAffectv1("vala") == 2) outputText("\"<i>If the masters like you, maybe they will let Bitch keep you for herself? Won't you like that?</i>\"", false);
-		else if(monster.statusAffectv1("vala") == 3) outputText("\"<i>We obey the masters. They fed Bitch until she became big enough to please them. The masters love their pets so much, you'll see.</i>\"", false);
-		else if(monster.statusAffectv1("vala") == 4) outputText("\"<i>Thoughts are so hard. Much easier to be a toy slut. Won't you like being a toy? All that nasty memory fucked out of your head.</i>\"", false);
-		else if(monster.statusAffectv1("vala") == 5) outputText("\"<i>Bitch has given birth to many of the masters' children. She will teach you to please the masters. Maybe you can birth more masters for us to fuck?</i>\"", false);
-		else outputText("\"<i>Bitch loves when her children use her as their fathers did. Sluts belong to them. Slut love them. You will love them too!</i>\"", false);
-	}
-}
 
 public function loseToVala():void {
 	spriteSelect(85);
@@ -1220,25 +1151,23 @@ public function tryToHealVala():void {
 	spriteSelect(85);
 	outputText("", true);
 	//(Without Pure Honey)
-	if(!(hasItem("PurHony",1) || hasItem("P.Pearl",1))) {
+	if(!(player.hasItem(consumables.PURHONY,1) || player.hasItem(consumables.P_PEARL,1))) {
 		outputText("You try your best with what you've got, but nothing seems to restore the broken fairy's mind to her sex-addled  body. You're going to have to go out and gather more materials. Surely there's something that can break the damage the imps have done to Vala.", false);
 		doNext(1);
-		return;
 	}
 	//(With Pure Honey)
-	else if(hasItem("PurHony",1)) {
-		consumeItem("PurHony",1);
+	else if(player.hasItem(consumables.PURHONY,1)) {
+		player.consumeItem(consumables.PURHONY,1);
 		outputText("You're not sure if Pure Honey will do the trick, but it seems like the most likely candidate. You set the broken girl down and step over to the alchemy table. Vala clings onto your leg as you walk, and you end up dragging her across the dungeon floor. Before things can get too out of hand with the needy girl, you pull out the vial of Pure Honey and arrange the equipment in front of you. Using the cleanest of the pipettes, you take a small portion of the honey and mix it with what you hope to be water, diluting the rich mixture to a more viscous state. Working quickly, you manage to produce a draught that the weak girl can tolerate. By now, she's managed to work her way to a sitting position and is grinding her dripping sex against your shin. You lean down and hold her nose to make her open her mouth. She gleefully opens wide, tongue thrashing about in anticipation. You pour the sweet-smelling concoction down her anxious throat and begin to re-cork the rest of your honey.\n\n", false);
 
 		outputText("The effects of your cure are more violent than you expected. The fairy thrashes wildly, causing you to drop your bottle of Pure Honey, sending it spilling over the table, shattering the delicate equipment and ruining the unlabeled concoctions within. Moving to keep the girl from hurting herself in her seizure, you hold her head against your chest and wait out the wild bucking. Gradually, her motions slow and her breath calms to a more normal pace. When she looks back up at you, her eyes are clear at last, the pollution of lust burned away by the honey's restorative properties. She gives you a genuine smile and speaks with a voice like the rushing of wind over reeds. \"<i>Thank you,</i>\" she gasps. \"<i>Thank you. I cannot express my gratitude for what you've done. The fate you've saved me from was worse than any death those wretched creatures could have subjected me to.</i>\"", false);
 		
 		//[Next]
 		doNext(tryToHealValaWHoney2);
-		return;
 	}
-	//Pure Pearl
 	else {
-		consumeItem("P.Pearl",1);
+		//Pure Pearl
+		player.consumeItem(consumables.P_PEARL,1);
 		outputText("A soft, warm breeze rustles your " + hairDescript() + " and for a moment the foul stench of the dungeon vanishes, setting your mind at ease and draining the tension that has been building in your gut. In a moment of clarity, you remember the beautiful, Pure Pearl that Marae granted you as a reward for shutting down the demons' factory. It seems only right to use the goddess' gift to rescue one of her wayward children. Perhaps she gave it to you for this very reason? The oblivious girl has managed to work her way to a sitting position and is grinding her dripping sex against your " + player.foot() + ". You lean down and gently lift her chin up, bringing her empty, pink eyes to stare into yours. Mistaking the gentle motion for a command, she gleefully opens wide, tongue thrashing about in anticipation. You place the pink pearl at the fairy's lips and she wraps her mouth around the pale jewel, trying obediently to swallow it. However, the little fairy's mouth is far smaller than you would've thought and it seems stuck just behind her teeth, like a pink ball-gag. She coos a muffled moan and begins to masturbate without breaking eye contact with you.\n\n", false);
 
 		outputText("Not exactly what you had in mind. It looks like you're going to have to be a bit more forceful.  You stoop down and take the fairy's head in your arms. Placing your fingers on the drool-soaked orb wrenching her mouth open, you begin to shove the pure pearl into her throat. With ecstatic joy, she swallows as hard as she can, trying to accommodate this new, exciting insertion. The gem squeezes past her tonsils and is forced into her esophagus with an audible 'pop!' the mass of the pearl leaving an orb-shaped bulge in her throat. Her masturbation becomes frenzied as she begins choking on the gem and you hurry to stroke the girl's neck, coaxing the pearl down, out of her windpipe. Finally, it drops into her stomach and the change is immediate. Just as she climaxes, her empty pink eyes focus and sharpen, the lusty haze fading as Marae's gift burns away the pollution of the imps' drugs and rape. She gives you a genuine smile and speaks with a voice like the rushing of wind over reeds. \"<i>Thank you. I cannot express my gratitude for what you've done. You are a godsend, hero. I will never forget what you've done for me.</i>\"\n\n", false);
@@ -1693,22 +1622,22 @@ public function faerieOrgyFuckFemaleContinue():void {
 
 //ZETAZ START
 public function zetazTaunt():void {
-	if(monster.hasStatusAffect("round") < 0) {
-		monster.createStatusAffect("round",1,0,0,0);
+	if(monster.findStatusAffect(StatusAffects.round) < 0) {
+		monster.createStatusAffect(StatusAffects.round,1,0,0,0);
 		outputText("Zetaz asks, \"<i>Do you even realize how badly you fucked up my life, ", false);
 		if(player.humanScore() >= 4) outputText("human", false);
 		else outputText("'human'", false);
 		outputText("?  No, of course not.  That's the kind of attitude I'd expect from one of you!</i>\"", false);
 	}
 	else {
-		monster.addStatusValue("round",1,1);
-		if(monster.statusAffectv1("round") == 2) outputText("\"<i>I lost my post!  And when you screwed up the factory?  I barely escaped with my life!  You ruined EVERYTHING!</i>\" screams Zetaz.", false);
-		else if(monster.statusAffectv1("round") == 3) outputText("Zetaz snarls, \"<i>Do you know how hard it is to hide from Lethice?  DO YOU HAVE ANY IDEA!?  I've had to live in this fetid excuse for a jungle, and just when I found some friends and made it livable, you show up and DESTROY EVERYTHING!</i>\"", false);
-		else if(monster.statusAffectv1("round") == 4) outputText("Zetaz explains, \"<i>I won't let you go.  I'm going to break you.</i>\"", false);
-		else if(monster.statusAffectv1("round") == 5) outputText("\"<i>Would it have been that bad to go along with me?  You've seen the factory.  We would've kept you fed, warm, and provided you with limitless pleasure.  You would've tasted heaven and served a greater purpose.  It's not too late.  If you come willingly I can make sure they find a good machine to milk you with,</i>\" offers the imp lord.", false);
-		else if(monster.statusAffectv1("round") == 6) outputText("\"<i>Why won't you fall?</i>\" questions Zetaz incredulously.", false);
-		else if(monster.statusAffectv1("round") == 7) outputText("The imp lord suggests, \"<i>If you give up and let me fuck your ass maybe I'll let you go.</i>\"", false);
-		else if(monster.statusAffectv1("round") == 8) outputText("Zetaz pants, \"<i>Just give up!  I'm nothing like the weakling you met so long ago!  I've been through hell to get here and I'm not giving it up just because you've shown up to destroy my hard work!</i>\"", false);
+		monster.addStatusValue(StatusAffects.round,1,1);
+		if(monster.statusAffectv1(StatusAffects.round) == 2) outputText("\"<i>I lost my post!  And when you screwed up the factory?  I barely escaped with my life!  You ruined EVERYTHING!</i>\" screams Zetaz.", false);
+		else if(monster.statusAffectv1(StatusAffects.round) == 3) outputText("Zetaz snarls, \"<i>Do you know how hard it is to hide from Lethice?  DO YOU HAVE ANY IDEA!?  I've had to live in this fetid excuse for a jungle, and just when I found some friends and made it livable, you show up and DESTROY EVERYTHING!</i>\"", false);
+		else if(monster.statusAffectv1(StatusAffects.round) == 4) outputText("Zetaz explains, \"<i>I won't let you go.  I'm going to break you.</i>\"", false);
+		else if(monster.statusAffectv1(StatusAffects.round) == 5) outputText("\"<i>Would it have been that bad to go along with me?  You've seen the factory.  We would've kept you fed, warm, and provided you with limitless pleasure.  You would've tasted heaven and served a greater purpose.  It's not too late.  If you come willingly I can make sure they find a good machine to milk you with,</i>\" offers the imp lord.", false);
+		else if(monster.statusAffectv1(StatusAffects.round) == 6) outputText("\"<i>Why won't you fall?</i>\" questions Zetaz incredulously.", false);
+		else if(monster.statusAffectv1(StatusAffects.round) == 7) outputText("The imp lord suggests, \"<i>If you give up and let me fuck your ass maybe I'll let you go.</i>\"", false);
+		else if(monster.statusAffectv1(StatusAffects.round) == 8) outputText("Zetaz pants, \"<i>Just give up!  I'm nothing like the weakling you met so long ago!  I've been through hell to get here and I'm not giving it up just because you've shown up to destroy my hard work!</i>\"", false);
 		else outputText("He glares at you silently.", false);
 	}
 }
@@ -1721,36 +1650,35 @@ public function zetazAI():void {
 	//If afflicted by blind or whispered and over 50% lust,
 	//burns lust and clears statuses before continuing with 
 	//turn.
-	if(monster.lust > 50 && (monster.hasStatusAffect("Fear") >= 0 || monster.hasStatusAffect("Blind") >= 0)) {
-		monster.removeStatusAffect("Fear");
-		monster.removeStatusAffect("Blind");
+	if(monster.lust > 50 && (monster.findStatusAffect(StatusAffects.Fear) >= 0 || monster.findStatusAffect(StatusAffects.Blind) >= 0)) {
+		monster.removeStatusAffect(StatusAffects.Fear);
+		monster.removeStatusAffect(StatusAffects.Blind);
 		monster.lust -= 10;
 		outputText("Zetaz blinks and shakes his head while stroking himself.  After a second his turgid member loses some of its rigidity, but his gaze has become clear.  He's somehow consumed some of his lust to clear away your magic!", false);
 	}
 	
 	//STANDARD COMBAT STATUS AFFECTS HERE
-	if(monster.hasStatusAffect("Stunned") >= 0) {
-		if(monster.plural) outputText("Your foes are too dazed from your last hit to strike back!", false);
-		else outputText("Your foe is too dazed from your last hit to strike back!", false);
-		monster.removeStatusAffect("Stunned");
+	if(monster.findStatusAffect(StatusAffects.Stunned) >= 0) {
+		outputText("Your foe is too dazed from your last hit to strike back!", false);
+		monster.removeStatusAffect(StatusAffects.Stunned);
 		combatRoundOver();
 		return;
 	}
 	var select:Number=1;
 	var rando:Number=1;
 	//Exgartuan gets to do stuff!
-	if(player.hasStatusAffect("Exgartuan") >= 0 && player.statusAffectv2("Exgartuan") == 0 && rand(3) == 0) {
+	if(player.findStatusAffect(StatusAffects.Exgartuan) >= 0 && player.statusAffectv2(StatusAffects.Exgartuan) == 0 && rand(3) == 0) {
 		exgartuan.exgartuanCombatUpdate();
 		outputText("\n\n", false);
 	}
-	if(monster.hasStatusAffect("Constricted") >= 0) {
+	if(monster.findStatusAffect(StatusAffects.Constricted) >= 0) {
 		//Enemy struggles - 
 		outputText("Your prey pushes at your tail, twisting and writing in an effort to escape from your tail's tight bonds.", false);
-		if(monster.statusAffectv1("Constricted") <= 0) {
+		if(monster.statusAffectv1(StatusAffects.Constricted) <= 0) {
 			outputText("  " + monster.capitalA + monster.short + " proves to be too much for your tail to handle, breaking free of your tightly bound coils.", false);
-			monster.removeStatusAffect("Constricted");
+			monster.removeStatusAffect(StatusAffects.Constricted);
 		}
-		monster.addStatusValue("Constricted",1,-1);
+		monster.addStatusValue(StatusAffects.Constricted,1,-1);
 		combatRoundOver();
 		return;
 	}
@@ -1768,16 +1696,16 @@ public function zetazAI():void {
 		if(attackChoice == 0) {
 			//Chucks faux-heat draft ala goblins. - 
 			outputText("Zetaz grabs a bottle from a drawer and hurls in your direction!  ", false);
-			if((player.hasPerk("Evade") >= 0 && rand(4) == 0) ||
-				(player.hasPerk("Flexibility") >= 0 && rand(6) == 0) ||
+			if((player.findPerk(PerkLib.Evade) >= 0 && rand(4) == 0) ||
+				(player.findPerk(PerkLib.Flexibility) >= 0 && rand(6) == 0) ||
 				(player.spe > 65 && rand(10) == 0) ||
-				(player.hasPerk("Misdirection") >= 0 && rand(100) < 20 && player.armorName == "red, high-society bodysuit")) {
+				(player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 20 && player.armorName == "red, high-society bodysuit")) {
 				outputText("You sidestep it a moment before it shatters on the wall, soaking the tapestries with red fluid!", false);
 			}
 			else {
 				outputText("You try to avoid it, but the fragile glass shatters against you, coating you in sticky red liquid.  It seeps into your " + player.skinDesc + " and leaves a pleasant, residual tingle in its wake.  Oh no...", false);
 				//[Applies: "Temporary Heat" status]
-				if(player.hasStatusAffect("Temporary Heat") < 0) player.createStatusAffect("Temporary Heat",0,0,0,0);
+				if(player.findStatusAffect(StatusAffects.TemporaryHeat) < 0) player.createStatusAffect(StatusAffects.TemporaryHeat,0,0,0,0);
 			}
 		}
 		else if(attackChoice == 1) {
@@ -1794,7 +1722,7 @@ public function zetazAI():void {
 				
 			}
 			outputText(" while the dust gets into your eyes, temporarily blinding you!", false);
-			player.createStatusAffect("Blind",1,0,0,0);
+			player.createStatusAffect(StatusAffects.Blind,1,0,0,0);
 		}
 		//Gigarouse – A stronger version of normal imp's 
 		//'arouse' spell. - copy normal arouse text and 
@@ -2025,7 +1953,7 @@ public function femaleZetazOver():void {
 	else if(player.vaginas[0].vaginalWetness >= VAGINA_WETNESS_WET) outputText("drools a heavy flow of liquid arousal onto the hardwood table", false);
 	else outputText("begins to dribble a steady flow of liquid on to the table's girl-slicked boards", false);
 	outputText(".  ", false);
-	if(player.hasStatusAffect("heat") >= 0) outputText("D", false);
+	if(player.findStatusAffect(StatusAffects.Heat) >= 0) outputText("D", false);
 	else outputText("Foreign d", false);
 	outputText("esires wash through your doped up body, and your hungry slit practically demands to be filled with cock and injected with semen.  It wants to be filled with... with males, and with their hot, sticky cum. No, your hot little pussy doesn't want that – you do.  Gods above and below, you want to feel your belly pumped full of imp sperm until their offspring are wriggling in your womb.  And then you want them to come in you some more!\n\n", false);
 	
@@ -2292,33 +2220,38 @@ public function incubusShop():void {
 	outputText("", true);
 	outputText("Sean nods at you and slicks his hair back into place, threading it carefully around the small nubs of his horns before asking, \"<i>What can I do for you?</i>\"", false);
 	var bimbo:Number = 0;
-	if(hasItem("BimboCh",1) && flags[kFLAGS.NIAMH_SEAN_BREW_BIMBO_LIQUEUR_COUNTER] == 0) outputText("\n\nSean could probably do something with the Bimbo Champagne if you had enough of it...");
-	if(hasItem("BimboCh",5) && flags[kFLAGS.NIAMH_SEAN_BREW_BIMBO_LIQUEUR_COUNTER] == 0) {
+	if(player.hasItem(consumables.BIMBOCH) && flags[kFLAGS.NIAMH_SEAN_BREW_BIMBO_LIQUEUR_COUNTER] == 0) outputText("\n\nSean could probably do something with the Bimbo Champagne if you had enough of it...");
+	if(player.hasItem(consumables.BIMBOCH,5) && flags[kFLAGS.NIAMH_SEAN_BREW_BIMBO_LIQUEUR_COUNTER] == 0) {
 		bimbo = 3542;
 		outputText("  Luckily, you do!");
 	}
-	choices("Numb Rox",2643,"Sens. Draft",2644,"Reducto",2645,"Demon Whip",2653,"Bimbo Liq",bimbo,"",0,"",0,"",0,"",0,"Leave",1);
+	choices(consumables.NUMBROX.shortName,2643,
+			consumables.SENSDRF.shortName,2644,
+			consumables.REDUCTO.shortName,2645,
+			weapons.SUCWHIP.shortName,2653,
+			consumables.BIMBOLQ.shortName,bimbo,
+			"",0,"",0,"",0,"",0,"Leave",1);
 }
 
-public function incubusBuy():void {
+public function incubusBuy(itype:ItemType):void {
 	spriteSelect(52);
 	outputText("", true);
-	outputText("The incubus lifts " + itemLongName(shortName) + " from his shelves and says, \"<i>That will be " + (itemValue(shortName) * 3) + " gems.  Are you sure you want to buy it?</i>\"", false);
-	if(player.gems < (itemValue(shortName) * 3)) {
+	outputText("The incubus lifts " + itype.longName + " from his shelves and says, \"<i>That will be " + (itype.value * 3) + " gems.  Are you sure you want to buy it?</i>\"", false);
+	if(player.gems < (itype.value * 3)) {
 		outputText("\n<b>You don't have enough gems...</b>", false);
 		doNext(2642);
 		return;
 	}
-	doYesNo(2646,2642);
+	doYesNo(Utils.curry(incubusTransact,itype),2642);
 }
 
-public function incubusTransact():void {
+public function incubusTransact(itype:ItemType):void {
 	spriteSelect(52);
 	outputText("", true);
-	player.gems -= itemValue(shortName) * 3;
+	player.gems -= itype.value * 3;
 	menuLoc = 16;
 	statScreenRefresh();
-	takeItem();
+	inventory.takeItem(itype);
 }
 
 //[Cum Bath]
@@ -2419,7 +2352,7 @@ public function valaBigYou():void {
 	addButton(0,"Dom Me",bigValaDomsPC);
 	if(player.hasCock()) addButton(1,"Lick Me",bigValaLicksOffDudes);
 	if(vapula.vapulaSlave() && player.gender > 0 && (player.hasCock() || (player.hasVagina() && player.hasKeyItem("Demonic Strap-On") >= 0))) {
-		addButton(2,"Dom Vapula",valaDommyVapula3Some)
+		addButton(2,"Dom Vapula",valaDommyVapula3Some);
 		addButton(3,"Vapula3Some",valaLoveyVapula3Some);
 	}
 }

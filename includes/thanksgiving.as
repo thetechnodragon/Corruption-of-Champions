@@ -176,8 +176,8 @@ public function thatllDoTurkey():void {
 	outputText("Running your hand through the turkey-girl's hair, you whisper what a good little cockgobbler she is. However, you soon find that the poor thing's passed out, your rut finally over with.  You give her a gentle push over her back, giving you a nice soft tit-pillow to lay your head down upon as you pick up the lunch you'd been preparing to eat before the eager slut arrived.");
 	
 	outputText("\n\n\"<i>That'll do, turkey,</i>\" you say, patting her jiggling tit. \"<i>That'll do.</i>\"");
-	if(player.hasPerk("Pilgrim's Bounty") < 0) {
-		player.createPerk("Pilgrim's Bounty",0,0,0,0);
+	if(player.findPerk(PerkLib.PilgrimsBounty) < 0) {
+		player.createPerk(PerkLib.PilgrimsBounty,0,0,0,0);
 		outputText("\n\n(<b>Perk Gained: Pilgrim's Bounty - Lower lust values no longer reduce the size of your orgasm.</b>)");
 	}
 	doNext(14);
@@ -289,9 +289,9 @@ public function haveTurkeyGirlDesertInYourCunt():void {
 	outputText("\n\nLurching to your feet, you stretch your arms, feeling completely refreshed after the short nap.  If it wasn't for the sweet taste of pumpkin still lingering on your lips, you'd be prepared to call what had just happened one of the weirdest dreams you've had since arriving in Mareth.");
 	
 	outputText("\n\nThen again, you have to admit that it would also class as one of the most fun...");
-	if(player.hasPerk("Cornucopia") < 0) {
+	if(player.findPerk(PerkLib.Cornucopia) < 0) {
 		outputText("\n\n(<b>Gained Perk: Cornucopia - increases vaginal and anal capacities by 30.</b>)");
-		player.createPerk("Cornucopia",0,0,0,0,"Get out of here, you dirty hobo!");
+		player.createPerk(PerkLib.Cornucopia,0,0,0,0);
 	}
 	//HP set to full, fatigue to 0?
 	fatigue(-100);
@@ -314,7 +314,7 @@ public function turkeyGirlTwoTheTurkeningBySavinWhatADickInAButt():void {
 	menu();
 	if(player.hasCock())
 	{
-		if(player.hasKeyItem("Deluxe Dildo") >= 0 || hasItem("L.Draft",1) || hasItem("F.Draft",1)) {
+		if(player.hasKeyItem("Deluxe Dildo") >= 0 || player.hasItem(consumables.L_DRAFT) || player.hasItem(consumables.F_DRAFT)) {
 			outputText("\n\n<b>You could let her come, like last year, or great her in a whole new way (by clicking 'Hello Again')</b>");
 			addButton(2,"Hello Again",helloAgain);
 			flags[kFLAGS.MORE_TURKEY] = 0;
@@ -393,8 +393,8 @@ public function seasonHerDatTurkeyBitch():void {
 	
 	outputText("\n\nBut what's a turkey without a little seasoning, hmm? Sweet as she is, and as eager to gobble your cock as can be, things could still turn up a notch.  Still servicing her box, you reach an arm out to your discarded pack, searching through it until you feel the familiar shape of ");
 	if(player.hasKeyItem("Deluxe Dildo") >= 0) outputText("Tamani's dildo");
-	else if(hasItem("L.Draft",1)) outputText("a bottle of Lust draft");
-	else if(hasItem("F.Draft",1)) outputText("a bottle of Fuck draft");
+	else if(player.hasItem(consumables.L_DRAFT)) outputText("a bottle of Lust draft");
+	else if(player.hasItem(consumables.F_DRAFT)) outputText("a bottle of Fuck draft");
 	else outputText("A FUCKIN ERROR");
 	outputText(".  You pull it out and squeeze a copious load of the bubblegum pink aphrodisiac out into your hand.  The second it touches your skin, you feel a palpable warmth spreading out through your nerves, skin burning with sensitivity as the roiling, viscous substance pools in your cupped hand.  You can't help but shudder as the pink veno's effect reaches out through your body, setting your whole person to tingling - and especially your " + multiCockDescriptLight() + ", which rises to an almost painful hardness.");
 	
@@ -706,10 +706,10 @@ public function getDoneEatingOutPigSlut():void {
 	}
 	if(player.biggestTitSize() < 20) {
 		outputText(" Your boobs also grow, gaining size as it seems that every part of your body wants to join in on the growth.");
-		if(player.biggestTitSize() < 3) growTits(3, player.bRows(), false, 1);
-		if(player.biggestTitSize() < 6) growTits(2, player.bRows(), false, 1);
-		if(player.biggestTitSize() < 12) growTits(2, player.bRows(), false, 1);
-		if(player.biggestTitSize() < 20) growTits(2, player.bRows(), false, 1);
+		if(player.biggestTitSize() < 3) player.growTits(3, player.bRows(), false, 1);
+		if(player.biggestTitSize() < 6) player.growTits(2, player.bRows(), false, 1);
+		if(player.biggestTitSize() < 12) player.growTits(2, player.bRows(), false, 1);
+		if(player.biggestTitSize() < 20) player.growTits(2, player.bRows(), false, 1);
 		changed = true;
 	}
 	outputText("\n\nYou sigh");

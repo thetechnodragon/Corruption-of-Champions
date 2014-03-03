@@ -3,10 +3,9 @@
  */
 package classes.Scenes.Areas.Forest
 {
-	import classes.BaseContent;
-	import classes.CockTypesEnum;
+	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
-	import classes.GlobalFlags.kGAMECLASS;
+	import classes.Items.Armors.LustyMaidensArmor;
 	import classes.Scenes.Monsters.Imp;
 
 	public class KitsuneScene extends BaseContent
@@ -43,7 +42,7 @@ package classes.Scenes.Areas.Forest
 			outputText("You are about to question her, but are interrupted as an imp flies out of the thicket, growling and clawing at you menacingly.  At least...  clearly it's <i>trying</i> to be menacing.  The melodramatic display comes off as more hilarious than anything, but the woman cowering behind you obviously feels threatened, so you might as well deal with the pest.");
 			// -> Standard Imp Battle
 			startCombat(new Imp());
-			monster.createStatusAffect("Kitsune Fight", 0, 0, 0, 0);
+			monster.createStatusAffect(StatusAffects.KitsuneFight, 0, 0, 0, 0);
 			doNext(1);
 			flags[kFLAGS.MET_KITSUNES]++;
 		}
@@ -91,7 +90,7 @@ package classes.Scenes.Areas.Forest
 				doNext(createCallBackFunction(followTheWillOWisp, true));
 			}//PC did NOT see through glamour
 			//With Religious BG:
-			else if (player.hasPerk("History: Religious") >= 0) {
+			else if (player.findPerk(PerkLib.HistoryReligious) >= 0) {
 				outputText("The instant she touches you, she recoils with a yelp, a brilliant flash temporarily blinding you both.\n\n");
 				outputText("\"<i>Ow, ow, ow!</i>\"\n\n");
 				outputText("When the spots clear from your eyes, the kitsune's glamour has been dispelled, revealing her for what she truly is.  A pair of large triangular fox ears poke up from her ");
@@ -228,14 +227,13 @@ package classes.Scenes.Areas.Forest
 			outputText("She holds out a small white package tied with string, grinning eagerly.  You hesitate, wondering whether it would be wise to take a gift from this strange woman, but before you can protest, she shoves the package into your hands.  When you look up from the featureless wrapping, there is no sign of her save for the echo of a mischievous giggle through the trees.\n\n");
 			outputText("<b>You have received a Kitsune's Gift!</b>\n");
 			if (inCombat()) {
-				flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00234] = "KitGift";
+				flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID] = consumables.KITGIFT.id;
 				cleanupAfterCombat();
 			}
 			else {
 				//add Kitsune's Gift to inventory
 				menuLoc = 2;
-				shortName = "KitGift";
-				takeItem();
+				inventory.takeItem(consumables.KITGIFT);
 			}
 		}
 
@@ -940,9 +938,9 @@ package classes.Scenes.Areas.Forest
 			//Advance time 8 hours, lose X gems, return to camp. +Sensitivity, +Libido, +Lactation Amount
 			dynStats("lib", 1, "sen", 1, "lus=", 0);
 			player.boostLactation(1.5);
-			if (player.hasPerk("Feeder") >= 0) {
-				player.addStatusValue("Feeder", 1, 1);
-				player.changeStatusValue("Feeder", 2, 0);
+			if (player.findPerk(PerkLib.Feeder) >= 0) {
+				player.addStatusValue(StatusAffects.Feeder, 1, 1);
+				player.changeStatusValue(StatusAffects.Feeder, 2, 0);
 			}
 			cleanupAfterCombat();
 		}
@@ -1076,17 +1074,17 @@ package classes.Scenes.Areas.Forest
 			if (monster.hairColor == "blonde") {
 				if (player.hasCock()) {
 					//[Fuck Draft]
-					if (hasItem("F.Draft", 1)) {
+					if (player.hasItem(consumables.F_DRAFT)) {
 						if (display) outputText("  You could dose her with a fuck draft...");
 						button = kitsuneButton(button, "Use F.Draft", fuckDraftBlond);
 					}
 					//[Lactaid]
-					if (hasItem("Lactaid", 1)) {
+					if (player.hasItem(consumables.LACTAID)) {
 						if (display) outputText("  You could dose her with lactad...");
 						button = kitsuneButton(button, "Use L-Aid", lactaidDoseAKitSune);
 					}
 					//[Ovi Elixir]
-					if (hasItem("OviElix", 1)) {
+					if (player.hasItem(consumables.OVIELIX)) {
 						if (display) outputText("  You could use an oviposition elixir on her...");
 						button = kitsuneButton(button, "Use OviElix", doseAKitsuneWithOviElixirs);
 					}
@@ -1129,10 +1127,10 @@ package classes.Scenes.Areas.Forest
 				if (player.hasVagina() && flags[kFLAGS.redheadIsFuta] > 0)
 					button = kitsuneButton(button, "RideHerCock", rideDatRedheadKitsuneCockIntoTheSkyDiamonds);
 				if (flags[kFLAGS.redheadIsFuta] > 0 && player.hasVagina() && player.biggestTitSize() >= 4 && player.armorName == "lusty maiden's armor")
-					button = kitsuneButton(button, "B.Titfuck", kGAMECLASS.lustyMaidenPaizuri);
+					button = kitsuneButton(button, "B.Titfuck", (player.armor as LustyMaidensArmor).lustyMaidenPaizuri);
 			}
 			//[Feeder]
-			if (player.hasPerk("Feeder") >= 0)
+			if (player.findPerk(PerkLib.Feeder) >= 0)
 				button = kitsuneButton(button, "Breastfeed", feederTheKitsunes);
 			addButton(9, "Leave", cleanupAfterCombat);
 		}
@@ -1457,7 +1455,7 @@ package classes.Scenes.Areas.Forest
 
 			outputText("She cries out in protest as you wrestle her to the ground, uncorking the draft with your thumb and using your other hand to plug her nose.  You press the mouth of the vial up to her lips insistently, and it isn't long before she has to gasp for fresh air, allowing you to dump the contents down her throat.  She coughs and sputters a little, trying to spit it out, but you put a bit of pressure on her jaw to prevent exactly that, massaging her neck gently to help coerce her to swallow.  The moment the potent aphrodisiac begins to flow down her throat, you can feel the surface of her skin turn feverish with lust, a blush of deepest crimson spreading across her face.\n\n");
 
-			outputText("The powerful scent of feminine musk fills the air almost instantly, a viscous puddle spreading between her legs and soaking through the crotch of her robes." + ((player.dogCocks() > 0) || (player.hasStatusAffect("rut") >= 0) ? "  As the potent smell fills your nostrils, your " + cockDescript(x) + " swells in anticipation, reacting instinctively to the scent of a female in heat.  Lurid fantasies of plugging her sloppy snatch with your " + ((player.dogCocks() > 0) ? "knot" : cockDescript(x)) + " and stuffing her belly full of kits rush into your mind unbidden" + ((player.cor < 20) ? ", disturbing you slightly" : "") + "." : "") + "  Her body trembles and quakes with carnal need, pure animalistic desire burning in her eyes.  As the effects of her chemical-induced heat come into full swing, she struggles to maintain some semblance of rational thought, desperately willing herself to crawl away.\n\n");
+			outputText("The powerful scent of feminine musk fills the air almost instantly, a viscous puddle spreading between her legs and soaking through the crotch of her robes." + ((player.dogCocks() > 0) || (player.findStatusAffect(StatusAffects.Rut) >= 0) ? "  As the potent smell fills your nostrils, your " + cockDescript(x) + " swells in anticipation, reacting instinctively to the scent of a female in heat.  Lurid fantasies of plugging her sloppy snatch with your " + ((player.dogCocks() > 0) ? "knot" : cockDescript(x)) + " and stuffing her belly full of kits rush into your mind unbidden" + ((player.cor < 20) ? ", disturbing you slightly" : "") + "." : "") + "  Her body trembles and quakes with carnal need, pure animalistic desire burning in her eyes.  As the effects of her chemical-induced heat come into full swing, she struggles to maintain some semblance of rational thought, desperately willing herself to crawl away.\n\n");
 
 			outputText("You look on with mild amusement as she drags herself one, two, three feet away, and collapses in a shivering wreck, raising her ample rear into the air.  Her hips flex and pump in defiance of her will, all six of her golden tails raised high and fanned out as she claws out of her robes, exposing her drenched fuckhole and gorgeous tattooed ass.\n\n");
 
@@ -1471,7 +1469,7 @@ package classes.Scenes.Areas.Forest
 
 			outputText("You grin a bit at her declaration, reaching forward and sliding your finger down her spine gently.  She practically collapses under your light touch, convulsing in pleasure as every one of her tails bristles in response, nearly orgasming again from that alone." + ((player.cor < 33) ? "  You wonder if you've gone too far, and whether you should be somewhat concerned for the poor thing's sanity.  If you don't do something to satisfy her insatiable lust, though, that alone might be enough to break her." : "  You grin evilly, dragging your fingertips down your new pet's back and laughing as she spasms uncontrollably, spraying femcum unceasingly.  The little cocktease was so keen on making a fool of you before - where's her smug sense of superiority now?") + "\n\n");
 
-			if (player.dogCocks() > 0 || player.hasStatusAffect("rut") >= 0) outputText("The sweet musk of her voluminous fem-jizz fills your mind with a lustful haze, higher-order thought processes gradually shutting down as animalistic mating instinct begins to take over.  ");
+			if (player.dogCocks() > 0 || player.findStatusAffect(StatusAffects.Rut) >= 0) outputText("The sweet musk of her voluminous fem-jizz fills your mind with a lustful haze, higher-order thought processes gradually shutting down as animalistic mating instinct begins to take over.  ");
 			outputText("You slide your " + cockDescript(x) + " up between the supple mounds of her ass, groaning in pleasure as she begins to glide her hips back and forth along the shaft, cooing softly.  The warm, moist breath radiating off her sodden vagina caresses your ");
 			if (player.balls > 0) outputText(ballsDescriptLight());
 			else outputText(player.legs());
@@ -1480,7 +1478,7 @@ package classes.Scenes.Areas.Forest
 			outputText("  She raises her hips higher, whimpering a little as she desperately tries to line up your " + cockDescript(x) + " with her hungry fuckhole.\n\n");
 
 			outputText("\"<i>S-stop t-teasing...</i>\" she says breathlessly, whimpering as she fails to catch your " + cockHead(x) + " in her quivering snatch for the third time in a row.  Her hips clumsily rock back, a desperate whine escaping her throat as she tries to calm her shaking body enough to finally impale herself on your ever-hardening rod.");
-			if (player.dogCocks() > 0 || player.hasStatusAffect("rut") >= 0) {
+			if (player.dogCocks() > 0 || player.findStatusAffect(StatusAffects.Rut) >= 0) {
 				outputText("  Your animalistic need to impregnate the fertile female in front of you battles with your desire to tease her, but impulse is quickly winning out over rationality.  You can only hold yourself back for a few moments longer before you give in to baser instincts and plunge your shaft into her needy pussy");
 				if (player.cockArea(x) > 50) outputText(" heedless of whether she can handle it or not.  Thankfully, you needn't worry - her cunt eagerly swallows your cock whole with room to spare, somehow");
 			}
@@ -1495,7 +1493,7 @@ package classes.Scenes.Areas.Forest
 			outputText("\"<i>Nngah!  Fuck!  I-it feels s-so good!</i>\"\n\n");
 
 			outputText("You dig your fingertips into her massive, plush ass and begin to pound her wet snatch with all your might, grunting and groaning passionately.");
-			if (player.dogCocks() > 0 || player.hasStatusAffect("rut") >= 0) outputText("  Vivid fantasies of stuffing her pussy full of your virile semen race through your mind, unable to think of anything else.  Come whatever may, you know you MUST impregnate her - there's simply no other option.");
+			if (player.dogCocks() > 0 || player.findStatusAffect(StatusAffects.Rut) >= 0) outputText("  Vivid fantasies of stuffing her pussy full of your virile semen race through your mind, unable to think of anything else.  Come whatever may, you know you MUST impregnate her - there's simply no other option.");
 			outputText("  The force with which she mashes her voluptuous derriere back into your pelvis would surely leave you sore in the morning were it not for the expansive tattoo-adorned ass cushioning the blows.\n\n");
 
 			//if (dogCocks > 0)
@@ -1508,7 +1506,7 @@ package classes.Scenes.Areas.Forest
 			}
 			outputText("Gathering her tails into your arms, you pull them tight to your chest, eliciting a pleasured moan from the lust-maddened kitsune.  She lets out a pained squeal when you tug on them suddenly, using them for additional leverage as you redouble your powerful thrusting.  You can feel every pulse of her fluttering heartbeat through the walls of her vagina, liquid heat caressing and milking your cock as more juices squirt out around your " + ((player.dogCocks() > 0) ? "knot" : cockDescript(x) ) + ".\n\n");
 
-			outputText("Your pleasure begins to rise to a head, every passionate thrust bringing you closer and closer to your final, incredible release.  In preparation, you drop down over her, placing your hands on top of " + ((player.cor < 33) ? "hers." : "her wrists to pin her down.") + ( ((player.dogCocks() > 0) || player.hasStatusAffect("rut") >= 0) ? "  You are stricken with the urge to bite her neck, and indulge it, pinching the scruff of her shoulder between your teeth." : "") + "  With a roaring moan, you buck your hips one last time, slamming down against her well-cushioned rear with one final thrust, holding there as the pressure in your " + ((player.balls > 0) ? ballsDescriptLight() : "prostate" ) + " finally boils over.  ");
+			outputText("Your pleasure begins to rise to a head, every passionate thrust bringing you closer and closer to your final, incredible release.  In preparation, you drop down over her, placing your hands on top of " + ((player.cor < 33) ? "hers." : "her wrists to pin her down.") + ( ((player.dogCocks() > 0) || player.findStatusAffect(StatusAffects.Rut) >= 0) ? "  You are stricken with the urge to bite her neck, and indulge it, pinching the scruff of her shoulder between your teeth." : "") + "  With a roaring moan, you buck your hips one last time, slamming down against her well-cushioned rear with one final thrust, holding there as the pressure in your " + ((player.balls > 0) ? ballsDescriptLight() : "prostate" ) + " finally boils over.  ");
 
 			if (player.cumQ() <= 150) {
 				outputText("Your cock spasms uncontrollably, spewing stream after stream of potent jizz into her hungry snatch.  The instant it begins to flow inside her, she locks down into another incredible orgasm, fingers digging into the dirt while tears flow from the corner of her eyes, moaning powerfully.  Her walls milk and massage you, drinking deeply of your virile cum.");
@@ -1537,7 +1535,7 @@ package classes.Scenes.Areas.Forest
 			outputText("You can't be certain how long you were asleep, but when you come to your senses, you are alone.  A musky trail of fluids leads into the underbrush, and though you doubt that she could have gotten far in her condition, you need to return to check on your camp.  As you gather your things, you pause briefly and smirk, certain you can hear the sound of moaning filtering through the trees.");
 			//Advance time 1hr and return to camp. +Sensitivity, +Libido
 			dynStats("lib", 1, "sen", 1, "lus=", 0);
-			consumeItem("F.Draft", 1);
+			player.consumeItem(consumables.F_DRAFT);
 			cleanupAfterCombat();
 		}
 
@@ -1597,32 +1595,20 @@ package classes.Scenes.Areas.Forest
 
 			outputText("They are ");
 
-			shortName = "BrownEg";
+			var itype:ItemType;
 			//Large eggs
 			if (rand(3) == 0) {
-				temp = rand(6);
-				if (temp == 0) shortName = "L.BrnEg";
-				if (temp == 1) shortName = "L.PrpEg";
-				if (temp == 2) shortName = "L.BluEg";
-				if (temp == 3) shortName = "L.PnkEg";
-				if (temp == 4) shortName = "L.WhtEg";
-				if (temp == 5) shortName = "L.BlkEg";
+				itype = consumables.LARGE_EGGS[rand(consumables.LARGE_EGGS.length)];
 			}
 			//Small eggs
 			else {
-				temp = rand(6);
-				if (temp == 0) shortName = "BrownEg";
-				if (temp == 1) shortName = "PurplEg";
-				if (temp == 2) shortName = "BlueEgg";
-				if (temp == 3) shortName = "PinkEgg";
-				if (temp == 4) shortName = "WhiteEg";
-				if (temp == 5) shortName = "BlackEg";
+				itype = consumables.SMALL_EGGS[rand(consumables.SMALL_EGGS.length)];
 			}
 			outputText(" about the size of ostrich eggs.  You pick one up and examine it, rolling it in your hand a bit.  A rustling in the bushes brings your focus back to the kitsune, but by the time you look up, all you see is a set of golden tails slipping into the underbrush.\n\n");
-			consumeItem("OviElix", 1);
+			player.consumeItem(consumables.OVIELIX);
 			outputText("\"<i>Take good care of my little eggies, darling!</i>\"");
 			//{replace normal kitsune loot tables with randomly colored eggs}
-			flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00234] = shortName;
+			flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID] = itype.id;
 			//Advance time 1hr and return to camp. +Sensitivity, +Libido
 			dynStats("lib", 1, "sen", 1, "lus=", 0);
 			cleanupAfterCombat();
@@ -1684,7 +1670,7 @@ package classes.Scenes.Areas.Forest
 			//Advance time 1hr and return to camp. +Sensitivity, +Libido
 			dynStats("lib", 1, "sen", 1, "lus=", 0);
 			//consume lactaid
-			consumeItem("Lactaid", 1);
+			player.consumeItem(consumables.LACTAID);
 			cleanupAfterCombat();
 		}
 
@@ -1810,8 +1796,8 @@ package classes.Scenes.Areas.Forest
 			outputText("You carefully lay her on the ground, standing and donning your " + player.armorName + " once again.  The kitsune remains rooted in the spot, weighed down by her oversized tummy.  Something tells you she won't be moving from that spot for some time.");
 			//Advance time 1hr and return to camp. +Sensitivity
 			//You've now been milked, reset the timer for that
-			player.addStatusValue("Feeder", 1, 1);
-			player.changeStatusValue("Feeder", 2, 0);
+			player.addStatusValue(StatusAffects.Feeder, 1, 1);
+			player.changeStatusValue(StatusAffects.Feeder, 2, 0);
 			dynStats("sen", 3, "lus=", 0);
 			cleanupAfterCombat();
 		}
@@ -2254,7 +2240,7 @@ package classes.Scenes.Areas.Forest
 			menu();
 			addButton(0, "Read Books", readKitsuneBooks);
 			if (flags[kFLAGS.TOOK_KITSUNE_STATUE] == 0) addButton(1, "Meditate", meditateLikeAKitsuneEhQuestionMark);
-			if (hasItem("GldStat", 1) || flags[kFLAGS.TOOK_KITSUNE_STATUE] == 0) addButton(2, "Statue", stealAStatue);
+			if (player.hasItem(useables.GLDSTAT) || flags[kFLAGS.TOOK_KITSUNE_STATUE] == 0) addButton(2, "Statue", stealAStatue);
 			addButton(4, "Leave", eventParser, 13);
 		}
 
@@ -2289,7 +2275,7 @@ package classes.Scenes.Areas.Forest
 		private function meditateLikeAKitsuneEhQuestionMark():void
 		{
 			clearOutput();
-			if (hasItem("FoxJewl", 1) && player.tailType == TAIL_TYPE_FOX && player.tailVenom < 9 && player.tailVenom + 1 <= player.level && player.tailVenom + 1 <= player.inte / 10 && player.earType == EARS_FOX && player.hasPerk("Corrupted Nine-tails") < 0 && player.hasPerk("Enlightened Nine-tails") < 0) {
+			if (player.hasItem(consumables.FOXJEWL) && player.tailType == TAIL_TYPE_FOX && player.tailVenom < 9 && player.tailVenom + 1 <= player.level && player.tailVenom + 1 <= player.inte / 10 && player.earType == EARS_FOX && player.findPerk(PerkLib.CorruptedNinetails) < 0 && player.findPerk(PerkLib.EnlightenedNinetails) < 0) {
 				//20% chance if PC has fox ears, 1 or more fox tails, carries a Fox Jewel, and meets level & INT requirements for the next tail:
 				outputText("You sit down carefully on a small mat in front of the shrine and clear your mind.  Closing your eyes, you meditate on the things you've learned in your journey thus far, and resolve to continue fighting against the forces of corruption that permeate the land.\n\n");
 
@@ -2306,10 +2292,10 @@ package classes.Scenes.Areas.Forest
 					//Increment tail by 1, consume Fox Jewel, -2 COR, -20 LUST, +2 INT, Advance 1 hr and return to camp.
 					//Apply Nine-Tails perk if applicable.
 					player.tailVenom = 9;
-					player.createPerk("Enlightened Nine-tails", 0, 0, 0, 0);
+					player.createPerk(PerkLib.EnlightenedNinetails, 0, 0, 0, 0);
 					dynStats("int", 2, "lus", -20, "cor", -2);
 				}
-				consumeItem("FoxJewl", 1);
+				player.consumeItem(consumables.FOXJEWL);
 				doNext(13);
 			}
 			else {
@@ -2346,8 +2332,7 @@ package classes.Scenes.Areas.Forest
 			//+10 COR, add Gold Statue to inventory, Advance 1hr and return to camp
 			dynStats("lus", 10);
 			menuLoc = 2;
-			shortName = "GldStat";
-			takeItem();
+			inventory.takeItem(useables.GLDSTAT);
 			flags[kFLAGS.TOOK_KITSUNE_STATUE] = 1;
 		}
 
@@ -2358,21 +2343,16 @@ package classes.Scenes.Areas.Forest
 			outputText("Regretting your decision, you replace the statue on the pedestal, your guilty conscience winning out over greed today.");
 			//Advance 1hr and return to camp.
 			flags[kFLAGS.TOOK_KITSUNE_STATUE] = 0;
-			consumeItem("GldStat", 1);
+			player.consumeItem(useables.GLDSTAT);
 			doNext(13);
 		}
 
 //Use:
-		public function kitsuneStatue():void
+		public function kitsuneStatue(player:Player):void
 		{
 			clearOutput();
 			outputText("You pull out the gold statue and turn it around in your hands a few times, carefully examining the intricate filigree and inscriptions covering the masterfully crafted idol.  Whoever made this certainly put a lot of time and love into their craft." + ((player.cor < 50) ? "  Examining the painstaking detail that went into it, you feel a slight pang of guilt for having stolen it from its rightful place.  You push the thoughts away, reasoning that it won't be missed - after all, the owner was long gone before you arrived." : "") + "\n\n");
 			outputText("It's not much use to you other than decoration, but based on the craftsmanship alone you judge that you could get a fair price for it if you pawned it off.");
-			if (!debug) {
-				shortName = "GldStat";
-				takeItem();
-				itemSwapping = true;
-			}
 		}
 	}
 }

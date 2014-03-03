@@ -1,12 +1,8 @@
 package classes.Scenes.NPCs
 {
+	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
-	import classes.Monster;
 
-	/**
-	 * Holli (combat id 69)
-	 * @author ...
-	 */
 	public class Helspawn extends Monster
 	{
 
@@ -36,7 +32,7 @@ private function helspawnTwinStrikes():void {
 	//if Bowmander
 	if(flags[kFLAGS.HELSPAWN_WEAPON] == "bow") outputText(flags[kFLAGS.HELSPAWN_NAME] + " leaps back out of your reach and nocks a pair of blunted arrows, drawing them back together and loosing them at once!\n");
 	else outputText(flags[kFLAGS.HELSPAWN_NAME] + " lunges at you, scimitar cleaving through the air toward your throat!\n");
-	createStatusAffect("attacks",0,0,0,0);
+	createStatusAffect(StatusAffects.Attacks,0,0,0,0);
 	eAttack();
 }
 
@@ -50,10 +46,10 @@ private function calledShot():void {
 	else {
 		outputText("\nOne of her arrows smacks right into your [leg], nearly bowling you over.  God DAMN that hurt! You're going to be limping for a while!");
 		var affect:int = 20 + rand(5);
-		if(player.hasStatusAffect("Called Shot") >= 0) {
+		if(player.findStatusAffect(StatusAffects.CalledShot) >= 0) {
 			while(affect > 0 && player.spe >= 2) {
 				affect--;
-				player.addStatusValue("Called Shot",1,1);
+				player.addStatusValue(StatusAffects.CalledShot,1,1);
 				player.spe--;
 				showStatDown( 'spe' );
 				// speDown.visible = true;
@@ -61,10 +57,10 @@ private function calledShot():void {
 			}
 		}
 		else {
-			player.createStatusAffect("Called Shot",0,0,0,0);
+			player.createStatusAffect(StatusAffects.CalledShot,0,0,0,0);
 			while(affect > 0 && player.spe >= 2) {
 				affect--;
-				player.addStatusValue("Called Shot",1,1);
+				player.addStatusValue(StatusAffects.CalledShot,1,1);
 				player.spe--;
 				showStatDown( 'spe' );
 				// speDown.visible = true;
@@ -80,7 +76,7 @@ private function calledShot():void {
 		//Gives Helspawn the benefit of the Berzerk special ability
 		private function helSpawnBerserk():void {
 			outputText(flags[kFLAGS.HELSPAWN_NAME] + " lets out a savage warcry, throwing her head back in primal exaltation before charging back into the fray with utter bloodlust in her wild eyes!");
-			weaponAttack += 30;
+			this.weaponAttack = weaponAttack + 30;
 			armorDef = 0;
 		}
 
@@ -95,8 +91,8 @@ private function calledShot():void {
 			else {
 				outputText("\nHer shield catches you right in the face, sending you tumbling to the ground and leaving you open to attack!");
 				damage = player.takeDamage(damage);
-				if(rand(2) == 0 && player.hasStatusAffect("Stunned") < 0) {
-					player.createStatusAffect("Stunned",0,0,0,0);
+				if(rand(2) == 0 && player.findStatusAffect(StatusAffects.Stunned) < 0) {
+					player.createStatusAffect(StatusAffects.Stunned,0,0,0,0);
 					outputText(" <b>The hit stuns you.</b>");
 				}
 				outputText(" (" + damage + ")");
@@ -158,8 +154,10 @@ private function calledShot():void {
 		public function Helspawn()
 		{
 			var weapon:String = game.flags[kFLAGS.HELSPAWN_WEAPON];
-			init01Names("", game.flags[kFLAGS.HELSPAWN_NAME], "hollispawn",
-					game.flags[kFLAGS.HELSPAWN_NAME] + " is a young salamander, appearing in her later teens.  Clad in " +
+			this.a = "";
+			this.short = game.flags[kFLAGS.HELSPAWN_NAME];
+			this.imageName = "hollispawn";
+			this.long = game.flags[kFLAGS.HELSPAWN_NAME] + " is a young salamander, appearing in her later teens.  Clad in " +
 							(game.flags[kFLAGS.HELSPAWN_PERSONALITY] >= 50 ?
 									"a slutty scale bikini like her mother's, barely concealing anything" :
 									"a short skirt, thigh-high boots, and a sky-blue blouse, in stark contrast to her mother’s sluttier attire") +
@@ -169,21 +167,43 @@ private function calledShot():void {
 								'scimitar': "scimitar, just like her mom's, and holds it in the same berzerk stance Helia is wont to use",
 								'scimitar and shield': "scimitar and shield, giving her a balanced fighting style"
 							}[ weapon] +
-							".  Pacing around you, the well-built young warrior intently studies her mentor's defenses, readying for your next attack.");
-			init02Female(VAGINA_WETNESS_NORMAL, VAGINA_LOOSENESS_NORMAL, 85);
-			init03BreastRows("E+");
-			init04Ass(ANAL_LOOSENESS_VIRGIN,ANAL_WETNESS_DRY,85);
-			init05Body(90,HIP_RATING_CURVY+2,BUTT_RATING_LARGE+1);
-			init06Skin("dusky");
-			init07Hair("red",13);
-			init08Face(faceType,earType,tongueType,eyeType);
-			init09PrimaryStats(50,50,65,40,35,55,20);
-			init10Weapon(weapon,{'bow': "blunted arrow", 'scimitar': "slash", 'scimitar and shield': "slash"}[weapon],20);
-			init11Armor("",12,"",50);
-			init12Combat(175,30,.55,Monster.TEMPERMENT_RANDOM_GRAPPLES);
-			init13Level(12,10 + rand(5));
-			initX_Tail(TAIL_TYPE_LIZARD,0,0);
-			this.createStatusAffect("keen", 0, 0, 0, 0);
+							".  Pacing around you, the well-built young warrior intently studies her mentor's defenses, readying for your next attack.";
+			// this.plural = false;
+			this.createVagina(false, VAGINA_WETNESS_NORMAL, VAGINA_LOOSENESS_NORMAL);
+			this.createStatusAffect(StatusAffects.BonusVCapacity, 85, 0, 0, 0);
+			createBreastRow(Appearance.breastCupInverse("E+"));
+			this.ass.analLooseness = ANAL_LOOSENESS_VIRGIN;
+			this.ass.analWetness = ANAL_WETNESS_DRY;
+			this.createStatusAffect(StatusAffects.BonusACapacity,85,0,0,0);
+			this.tallness = 90;
+			this.hipRating = HIP_RATING_CURVY+2;
+			this.buttRating = BUTT_RATING_LARGE+1;
+			this.skinTone = "dusky";
+			this.hairColor = "red";
+			this.hairLength = 13;
+			initStrTouSpeInte(50, 50, 65, 40);
+			initLibSensCor(35, 55, 20);
+			this.weaponName = weapon;
+			this.weaponVerb = {
+				'bow': "blunted arrow",
+				'scimitar': "slash",
+				'scimitar and shield': "slash"}[weapon];
+			this.weaponAttack = 20;
+			this.armorName = "scales";
+			this.armorDef = 12;
+			this.armorPerk = "";
+			this.armorValue = 50;
+			this.bonusHP = 175;
+			this.lust = 30;
+			this.lustVuln = .55;
+			this.temperment = TEMPERMENT_RANDOM_GRAPPLES;
+			this.level = 12;
+			this.gems = 10 + rand(5);
+			this.tailType = TAIL_TYPE_LIZARD;
+			this.tailRecharge = 0;
+			this.createStatusAffect(StatusAffects.Keen, 0, 0, 0, 0);
+			this.drop = NO_DROP;
+			checkMonster();
 		}
 
 	}

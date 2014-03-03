@@ -1,16 +1,7 @@
 ﻿package classes.Scenes.Areas.Forest
 {
-	import classes.CoC;
-	import classes.Cock;
-	import classes.Creature;
-	import classes.Monster;
-	import classes.CockTypesEnum;
-	
-	/**
-	 * ...
-	 * @author Fake-Name
-	 */
-
+	import classes.*;
+	import classes.internals.*;
 
 	public class TentacleBeast extends Monster
 	{
@@ -32,9 +23,9 @@
 		private function tentacleEntwine():void {
 			outputText("The beast lunges its tentacles at you from all directions in an attempt to immobilize you.\n", false);
 			//Not Trapped yet
-			if(player.hasStatusAffect("TentacleBind") < 0) {
+			if(player.findStatusAffect(StatusAffects.TentacleBind) < 0) {
 				//Success
-				if(int(Math.random()*(((player.spe)/2))) > 15 || (player.hasPerk("Evade") >= 0 && int(Math.random()*(((player.spe)/2))) > 15)) {
+				if(int(Math.random()*(((player.spe)/2))) > 15 || (player.findPerk(PerkLib.Evade) >= 0 && int(Math.random()*(((player.spe)/2))) > 15)) {
 					outputText("In an impressive display of gymnastics, you dodge, duck, dip, dive, and roll away from the shower of grab-happy arms trying to hold you. Your instincts tell you that this was a GOOD thing.\n", false);
 				}
 				//Fail
@@ -47,7 +38,7 @@
 					//Genderless
 					else outputText("The creature quickly positions a long tentacle against your " + game.assholeDescript() + ". It circles your pucker with slow, delicate strokes that bring unexpected warmth to your body.\n", false);
 					game.dynStats("lus", (8+player.sens/20));
-					player.createStatusAffect("TentacleBind",0,0,0,0);
+					player.createStatusAffect(StatusAffects.TentacleBind,0,0,0,0);
 				}
 			}
 			combatRoundOver();
@@ -60,8 +51,8 @@
 			} else {
 				outputText("The tentacle beast's mass begins quivering and sighing, the tentacles wrapping around each other and feverishly caressing each other.  It seems the beast has given up on fighting.", false);
 			}
-			if (hasStatusAffect("PhyllaFight") >= 0) {
-				removeStatusAffect("PhyllaFight");
+			if (findStatusAffect(StatusAffects.PhyllaFight) >= 0) {
+				removeStatusAffect(StatusAffects.PhyllaFight);
 				game.desert.antsScene.phyllaTentacleDefeat();
 			}
 			else {
@@ -78,16 +69,16 @@
 		{
 			if (hpVictory) {
 				outputText("Overcome by your wounds, you turn to make a last desperate attempt to run...\n\n");
-				if (hasStatusAffect("PhyllaFight") >= 0) {
-					removeStatusAffect("PhyllaFight");
+				if (findStatusAffect(StatusAffects.PhyllaFight) >= 0) {
+					removeStatusAffect(StatusAffects.PhyllaFight);
 					outputText("...and make it into the nearby tunnel.  ");
 					game.desert.antsScene.phyllaTentaclePCLoss();
 				} else
 					game.forest.tentacleBeastScene.tentacleLossRape();
 			} else {
 				outputText("You give up on fighting, too aroused to resist any longer.  Shrugging, you walk into the writhing mass...\n\n");
-				if(hasStatusAffect("PhyllaFight") >= 0) {
-					removeStatusAffect("PhyllaFight");
+				if(findStatusAffect(StatusAffects.PhyllaFight) >= 0) {
+					removeStatusAffect(StatusAffects.PhyllaFight);
 					outputText("...but an insistent voice rouses you from your stupor.  You manage to run into a nearby tunnel.  ");
 					game.desert.antsScene.phyllaTentaclePCLoss();
 				} else
@@ -98,31 +89,59 @@
 		override protected function performCombatAction():void
 		{
 			//tentacle beasts have special AI
-			if (rand(2) == 0 || hasStatusAffect("TentacleCoolDown") >= 0) game.eventParser(special1);
+			if (rand(2) == 0 || findStatusAffect(StatusAffects.TentacleCoolDown) >= 0) game.eventParser(special1);
 			else game.eventParser(special2);
 		}
 
 		public function TentacleBeast()
 		{
 			trace("TentacleBeast Constructor!");
-			init01Names("the ", "tentacle beast", "tentaclebeast", "You see the massive, shambling form of the tentacle beast before you.  Appearing as a large shrub, it shifts its bulbous mass and reveals a collection of thorny tendrils and cephalopodic limbs.");
-			init02Male([new Cock(40,1.5),new Cock(60,1.5),new Cock(50,1.5),new Cock(20,1.5)],0,0,3);
-			init02Genderless();
-			init03BreastRows();
-			init04Ass(ANAL_LOOSENESS_TIGHT,ANAL_WETNESS_SLIME_DROOLING);
-			init05Body(rand(9) + 70,HIP_RATING_BOYISH,BUTT_RATING_BUTTLESS);
-			init06Skin("green",SKIN_TYPE_PLAIN,"bark");
-			init07Hair("green",1);
-			init08Face();
-			init09PrimaryStats(58,25,45,45,90,20,100);
-			init10Weapon("whip-tendril","thorny tendril",1);
-			init11Armor("rubbery skin",1);
-			init12Combat(350,10,0.8,Monster.TEMPERMENT_LOVE_GRAPPLES);
-			init13Level(6,rand(15)+5);
-			initX_Specials(tentaclePhysicalAttack,tentacleEntwine,tentaclePhysicalAttack);
-
-
-			initX_Tail(TAIL_TYPE_DEMONIC);
+			this.a = "the ";
+			this.short = "tentacle beast";
+			this.imageName = "tentaclebeast";
+			this.long = "You see the massive, shambling form of the tentacle beast before you.  Appearing as a large shrub, it shifts its bulbous mass and reveals a collection of thorny tendrils and cephalopodic limbs.";
+			// this.plural = false;
+			this.createCock(40,1.5);
+			this.createCock(60,1.5);
+			this.createCock(50,1.5);
+			this.createCock(20,1.5);
+			this.balls = 0;
+			this.ballSize = 0;
+			this.cumMultiplier = 3;
+			// this.hoursSinceCum = 0;
+			this.pronoun1 = "it";
+			this.pronoun2 = "it";
+			this.pronoun3 = "its";
+			this.createBreastRow(0,0);
+			this.ass.analLooseness = ANAL_LOOSENESS_TIGHT;
+			this.ass.analWetness = ANAL_WETNESS_SLIME_DROOLING;
+			this.tallness = rand(9) + 70;
+			this.hipRating = HIP_RATING_BOYISH;
+			this.buttRating = BUTT_RATING_BUTTLESS;
+			this.skinTone = "green";
+			this.skinType = SKIN_TYPE_PLAIN;
+			this.skinDesc = "bark";
+			this.hairColor = "green";
+			this.hairLength = 1;
+			initStrTouSpeInte(58, 25, 45, 45);
+			initLibSensCor(90, 20, 100);
+			this.weaponName = "whip-tendril";
+			this.weaponVerb="thorny tendril";
+			this.weaponAttack = 1;
+			this.armorName = "rubbery skin";
+			this.armorDef = 1;
+			this.bonusHP = 350;
+			this.lust = 10;
+			this.lustVuln = 0.8;
+			this.temperment = TEMPERMENT_LOVE_GRAPPLES;
+			this.level = 6;
+			this.gems = rand(15)+5;
+			this.drop = new WeightedDrop(null, 1);
+			this.special1 = tentaclePhysicalAttack;
+			this.special2 = tentacleEntwine;
+			this.special3 = tentaclePhysicalAttack;
+			this.tailType = TAIL_TYPE_DEMONIC;
+			checkMonster();
 		}
 
 	}

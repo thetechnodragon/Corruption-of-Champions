@@ -1,4 +1,6 @@
-﻿//const VALENTINES_EVENT_YEAR:int = 736;
+﻿import classes.internals.Utils;
+
+//const VALENTINES_EVENT_YEAR:int = 736;
 
 public function isValentine():Boolean {
 	if(date.date >= 13 && date.date <= 15 && date.month == 1) return true;
@@ -198,7 +200,7 @@ public function cuddleWithScyllaVDay():void {
 	outputText("\n\nLater, when you move through the desert around Tel'Adre towards your own camp, looking back at Scylla waving towards you, you're somehow glad things turned out that way, and feel more determined than ever to not only defeat the demons, but also spread the good will and positive feelings through any world you may call your own.");
 	
 	outputText("\n\n(<b>You have gained the Pure and Loving perk!</b>");
-	player.createPerk("Pure and Loving",0,0,0,0,"Q-q-quit peaking in my code, desu-chan!");
+	player.createPerk(PerkLib.PureAndLoving,0,0,0,0);
 	doNext(14);
 }
 
@@ -251,8 +253,13 @@ public function makeOutWithScyllaVDayII():void {
 	
 	outputText("\n\nAn hour or so later and quite a bit after sunset, you return to your camp, satisfied and pleased with how you celebrated this holiday...");
 	
-	outputText("\n\n(<b>You have gained the Sensual Lover perk!</b>)");
-	player.createPerk("Sensual Lover",0,0,0,0,"Q-q-quit peeking in my code, desu-chan!");
+	// Only add the perk if the player doesn't already have it.
+	if (player.findPerk(PerkLib.SensualLover) < 0)
+	{
+		outputText("\n\n(<b>You have gained the Sensual Lover perk!</b>)");
+		player.createPerk(PerkLib.SensualLover,0,0,0,0);
+	}
+	
 	doNext(14);
 }
 
@@ -264,7 +271,7 @@ public function feedScyllaVDay():void {
 	outputText("You feed Scylla what feels like a gallon of jizz!");
 	dynStats("lus=", 0);
 	outputText("\n\n(<b>You have gained the One Track Mind perk.</b>");
-	player.createPerk("One Track Mind",0,0,0,0,"Q-q-quit peeking in my code, desu-chan!");
+	player.createPerk(PerkLib.OneTrackMind,0,0,0,0);
 	doNext(14);
 }
 
@@ -343,8 +350,12 @@ public function fuckAbbyVDay():void {
 	
 	outputText("\n\nSated, you disentangle yourself from the clinging girl and lay her into her bed, with a kiss on her sweat-slick forehead.  She absently strokes between her legs, feeling the oozing jizz dribbling out of her stuffed snatch.  Maybe, for her, this is the meaning of the holiday: not just a casual fuck, but taking the time to really savor the body of someone who's important to you.  Even if it isn't love, in the strictest sense, being close to the people who impact your life is reason enough to find joy in your days.  You wish the little paladin a good night and, blowing out her candles, you take your leave.");
 	
-	outputText("\n\n(<b>You've received the Sensual Lover Perk!</b>)");
-	player.createPerk("Sensual Lover",0,0,0,0,"Q-q-quit peaking in my code, desu-chan!");
+	if (player.findPerk(PerkLib.SensualLover) < 0)
+	{
+		outputText("\n\n(<b>You've received the Sensual Lover Perk!</b>)");
+		player.createPerk(PerkLib.SensualLover,0,0,0,0);
+	}
+	
 	dynStats("sen", -3, "lus=", 0);
 	doNext(14);
 }
@@ -374,7 +385,7 @@ public function pleasureAbbyVDay():void {
 	outputText("\n\nAll in all, you're pleased that perhaps you've managed to show a goblin that real affection does exist... not to mention get somebody off twice on a new Mareth holiday!");
 	
 	outputText("\n\n(<b>You've received the Pure and Loving Perk!</b>)");
-	player.createPerk("Pure and Loving",0,0,0,0,"Q-q-quit peaking in my code, desu-chan!");
+	player.createPerk(PerkLib.PureAndLoving,0,0,0,0);
 	dynStats("lus", 80);
 	doNext(14);
 }
@@ -387,11 +398,11 @@ public function goVisitPastyVDay():void {
 	
 	//Check inventory for Goblin Ale, Black Cat Beer, Bimbo Champagne; failing this, check if PC has female genitalia.
 	//[BCBeer] [BimboCham][GoblinAle][vagina]
-	if(hasItem("BimboCh",1) || hasItem("BC Beer",1) || hasItem("Gob.Ale",1) || player.hasVagina()) {
+	if(player.hasItem(consumables.BIMBOCH) || player.hasItem(consumables.BC_BEER) || player.hasItem(consumables.GOB_ALE) || player.hasVagina()) {
 		menu();
-		if(hasItem("BimboCh",1)) addButton(0,"BimboCham",pastieValentineIntro,"BimboCh");
-		if(hasItem("BC Beer",1)) addButton(1,"B.Cat Beer ",pastieValentineIntro,"BC Beer");
-		if(hasItem("Gob.Ale",1)) addButton(2,"Gob.Ale",pastieValentineIntro,"Gob.Ale");
+		if(player.hasItem(consumables.BIMBOCH)) addButton(0,"BimboCham",pastieValentineIntro,consumables.BIMBOCH.id);
+		if(player.hasItem(consumables.BC_BEER)) addButton(1,"B.Cat Beer ",pastieValentineIntro,consumables.BC_BEER.id);
+		if(player.hasItem(consumables.GOB_ALE)) addButton(2,"Gob. Ale",pastieValentineIntro,consumables.GOB_ALE.id);
 		if(player.hasVagina()) addButton(3,"Pussy",pastieValentineIntro,"vag");
 	}
 	else {
@@ -411,16 +422,16 @@ public function pastieValentineIntro(choice:String = ""):void {
 	}
 	//({Any other drink}. 
 	else {
-		consumeItem(choice,1);
-		shortName = choice;
+		var itype:ItemType = ItemType.lookupItem(choice);
+		player.consumeItem(itype,1);
 		outputText("You present the drink to Pastie and she flashes you a grin as she flies up and away, leading you into an alley.  \"<i>Well, lemme at it!  A drink sure as hell sounds good right now and none of this seems like it'd be really bad.</i>\"");
 		menu();
-		addButton(0,"Next",valentineDrinkPastie);
+		addButton(0,"Next",Utils.curry(valentineDrinkPastie,itype));
 	}
 }
 
 //PASTIE EVENT
-public function valentineDrinkPastie():void {
+public function valentineDrinkPastie(itype:ItemType):void {
 	clearOutput();
 	outputText("One you're away from any prying eyes, Pastie turns to you and rubs her little fairy hands together, apparently barely able to hold her enthusiasm to finally get a bit drunk.  You're afraid it may not end at one drink, either, and for a moment, wonder about whether this is all right or not...");
 	//Corruption 0-20] 
@@ -434,19 +445,19 @@ public function valentineDrinkPastie():void {
 	
 	outputText("\n\nWith a burp, Pastie removes herself from the bottle's tip and rubs her belly.  \"<i>Tasteeeehhh!!!</i>\"");
 	
-	valentineDayGetPastieDrink();
+	valentineDayGetPastieDrink(itype);
 }
 
-public function valentineDayGetPastieDrink():void {
+public function valentineDayGetPastieDrink(itype:ItemType):void {
 	//{Black Cat Beer}
-	if(shortName == "BC Beer") {
+	if(itype == consumables.BC_BEER) {
 		outputText("\n\nPastie suddenly starts running her hands along her body, licking her lips as she does so. \"<i>Odd... Imma bit of a horny drunk, yah know, but thish ish... overkill...</i>\"  The little fairy-drunkard complains as she reaches between her legs and starts fingering herself, while rubbing a nipple.  \"<i>Daaaamnnnn, I'm sooo horny! I need more... to, uhhh, to driiink!</i>\"");
 		outputText("\n\nWell, that was an expected effect, to be honest.  You guess you could also comply with her request, and horny as she is, she'd probably degrade herself with whatever sex bits you want her to... although, too big of a member can definitely be a problem for her.");
 		//[RubDick][PussyDive]
 		//{Rub Dick option is present if a character has a member underneath 28 cock area. Pussy Dive is obviously present if a character has a pussy of any kind.}
 	}
 	//{Bimbo Champagne}
-	else if(shortName == "BimboCh") {
+	else if(itype == consumables.BIMBOCH) {
 		outputText("\n\nPastie giggles as her body starts to slowly show the effects of the liquid she just drank.  \"<i>Hihihi... I feel kinda funny,</i>\" she says, and you start to see the changes the champagne is starting to have on her body.  Her hair starts turning blonde, and her position in mid-air changes somewhat... almost as if she was imitating standing on \"<i>fuck-me</i>\" pumps, and, slowly, her little cupid dress stretches, as you become aware that her body is starting to become curvier, especially in the chest area.  \"<i>Hahaha... it's, like, I'm hitting three puberties at once!  Ummm... pu... puber, ah, nevermind.  Look, look!  It's gonna rip!</i>\" The seams in the little dress indeed pop, exposing a significant amount of the little girl's cleavage, now very significant.  True, compared to your body size her breasts are still nothing, but on her little body they're very prominent.  She even seems to have trouble flying from the added mass!  Her hips gained the slightest bit of curve, too, and Pastie's hair is now completely blonde.");
 		outputText("\n\n\"<i>Uhh, like... baby, you know, the usual drink gets me hot, and this one is as special as my new titties!  Would you mind helping me out?</i>\"");
 		
@@ -456,7 +467,7 @@ public function valentineDayGetPastieDrink():void {
 		//{Fuck is only present if a character has a cock under 8 cock area, Rub Dick option is present if a character has a member underneath 28 cock area. Pussy Dive is obviously present if a character has a pussy of any kind.}
 	}
 	//{Goblin Ale}
-	else if(shortName == "Gob.Ale") {
+	else if(itype == consumables.GOB_ALE) {
 		outputText("\n\n\"<i>Huuuh? Feels weird!</i>\" Pastie says, as she runs her hands over her body, and then slips a finger into her little pussy... four fingers... her hand, and then, reaches halfway up to her elbow before she cannot bend any more in her drunken state.  \"<i>Thissh... got me more horny than usual, and I feel so... stretchy, hehehe!</i>\"");
 		
 		outputText("\n\nHer body's still totally diminutive, but you guess someone with a small enough endowment might actually be able to take advantage of her now.  You doubt she'd refuse a little cum or pussy juice, either.");
@@ -502,7 +513,7 @@ public function fuckPastieForVDay():void {
 	outputText("\n\nYou grin and lick your lips as you return to camp.");
 	
 	outputText("\n\n(<b>You have gained the One Track Mind perk!</b>)");
-	player.createPerk("One Track Mind",0,0,0,0,"Q-q-quit peaking in my code, desu-chan!");
+	player.createPerk(PerkLib.OneTrackMind,0,0,0,0);
 	dynStats("sen", -2, "lus=", 0);
 	doNext(14);
 }
@@ -537,7 +548,7 @@ public function rubPastieOnYourWangDawg():void {
 	outputText("\n\nYou grin and whistle a spritely tune as you return to camp.");
 	// (You have gained the One Track Mind perk!)
 	outputText("\n\n(<b>You have gained the One Track Mind perk!</b>)");
-	player.createPerk("One Track Mind",0,0,0,0,"Q-q-quit peaking in my code, desu-chan!");
+	player.createPerk(PerkLib.OneTrackMind,0,0,0,0);
 	dynStats("sen", -2, "lus=", 0);
 	doNext(14);
 }
@@ -568,8 +579,12 @@ public function goForAPushayDivePasty():void {
 	
 	outputText("\n\nTrue, this might not have been the most romantic sex act, but it was certainly enjoyable for the two of you.");
 	
-	outputText("\n\n(<b>You have gained the Sensual Lover perk!</b>)");
-	player.createPerk("Sensual Lover",0,0,0,0,"Q-q-quit peaking in my code, desu-chan!");
+	if (player.findPerk(PerkLib.SensualLover) < 0)
+	{
+		outputText("\n\n(<b>You have gained the Sensual Lover perk!</b>)");
+		player.createPerk(PerkLib.SensualLover, 0, 0, 0, 0);
+	}
+	
 	dynStats("sen", -2, "lus=", 0);
 	doNext(14);
 }
@@ -584,7 +599,7 @@ B) One has to have a cock to play with Scylla or Abylon, but not neccessarily Pa
 C) The player meets Scylla's Addiction Group and they hang out as Scylla goes about establishing the holiday in Tel'Adre.
 D) Once this is over, player can choose to stay and spend more time with Patsie, Scylla, or Abylon, or leave.
 E) Staying with Patsie requires one of the alcoholic items. If the player has none, re-direct to Abylon, Scylla, or Leave.
-F) The encounter can grant one of three perks. Scylla allows all perks, Patsie allows the Tainted or Corrupted perk, and Abylon allows the Pure or Tainted perk.
+F) The encounter can grant one of three PerkLib. Scylla allows all perks, Patsie allows the Tainted or Corrupted perk, and Abylon allows the Pure or Tainted perk.
 G) Picking Scylla leads to walking around Tel'Adre before watching sunset on the walls. The PC and Scylla are allowed to do this due to their reputation.
 G1) The player staying with Scylla can choose to : 
 - Cuddle and watch, leads to next day or loss of a few hours. Gives the Pure and Loving perk, plus stat modifications (lowers Corruption and Libido, raises Lust)

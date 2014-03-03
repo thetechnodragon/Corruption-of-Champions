@@ -1,7 +1,8 @@
 ﻿package classes.Scenes.NPCs{
-import classes.GlobalFlags.kFLAGS;
-import classes.CockTypesEnum;
-public class HolliScene extends NPCAwareContent {
+	import classes.*;
+	import classes.GlobalFlags.kFLAGS;
+
+	public class HolliScene extends NPCAwareContent {
 
 	public function HolliScene()
 	{
@@ -80,7 +81,7 @@ public function treeMenu(output:Boolean = true):void {
 	}
 	else if(flags[kFLAGS.FUCK_FLOWER_LEVEL] == 3) {
 		if(output) outputText("The familiar plant has blossomed into a nicely sized tree, though you doubt it has finished growing just yet.  It sports an outstretched canopy with nice, green leaves.  Unfortunately, you can still trace the corrupted veins on their undersides from below.  The vaginal flower is still there and is in full bloom, now several feet across and practically dripping with moisture.  Just up the trunk, there's a pair of small, roughly b-cup breasts bulging out of the bark.  They're exquisitely smooth and soft, and they ooze sweet-smelling sap that your tongue would love to taste.  In the canopy above, tentacle vines idly writhe about, though they show no sizes of aggression.");
-		if(player.hasPerk("Dragonfire") >= 0 || player.hasPerk("Fire Lord") >= 0 || player.hasPerk("Hellfire") >= 0 || player.hasStatusAffect("Knows Whitefire") >= 0) {
+		if(player.findPerk(PerkLib.Dragonfire) >= 0 || player.findPerk(PerkLib.FireLord) >= 0 || player.findPerk(PerkLib.Hellfire) >= 0 || player.findStatusAffect(StatusAffects.KnowsWhitefire) >= 0) {
 			if(output) outputText("\n\nIt could be burned down with your supernatural fire, but it would definitely tire you.");
 			burnIt = torchP3Tree;
 		}
@@ -152,17 +153,17 @@ private function fertilizeHolli(cock:Boolean = true):void {
 	if(cock && player.hasCock()) {
 		odds += player.cumQ()/300;
 		if(odds > 40) odds = 40;
-		if(player.hasPerk("Marae's Gift - Stud") >= 0) odds += 10;
-		if(player.hasPerk("Fera's Boon - Alpha") >= 0) odds += 10;
-		if(player.hasPerk("Elven Bounty") >= 0) odds += 2;
+		if(player.findPerk(PerkLib.MaraesGiftStud) >= 0) odds += 10;
+		if(player.findPerk(PerkLib.FerasBoonAlpha) >= 0) odds += 10;
+		if(player.findPerk(PerkLib.ElvenBounty) >= 0) odds += 2;
 		if(odds > 80) odds = 80;
 	}
 	if(!cock && player.hasVagina()) {
 		odds += player.totalFertility()/5;
 		if(odds > 40) odds = 40;
-		if(player.hasPerk("Marae's Gift - Fertility") >= 0) odds += 10;
-		if(player.hasPerk("Fera's Boon - Breeding Bitch") >= 0) odds += 10;
-		if(player.hasPerk("Elven Bounty") >= 0) odds += 2;
+		if(player.findPerk(PerkLib.MaraesGiftFertility) >= 0) odds += 10;
+		if(player.findPerk(PerkLib.FerasBoonBreedingBitch) >= 0) odds += 10;
+		if(player.findPerk(PerkLib.ElvenBounty) >= 0) odds += 2;
 		if(odds > 80) odds = 80;
 	}
 	if(odds >= rand(101)) {
@@ -325,7 +326,7 @@ public function flowerGrowsToP3():void {
 	outputText("\n\nThe first thing you notice is that the vaginal tentacle flower remains, affixed at waist height to the side of the tree.  It looks bigger, the petals huge and glossy, undoubtedly far more capable of swallowing dick than ever before.  The tree isn't that thick, just yet.  Glancing further up the smooth, knotless trunk, you see the most surprising thing of all - a pair of almond-colored nipples, perched upon small, tit-like bulges in the wood.  The bark on these globular protrusion is smoother and fairer than the surrounding surface.  On one of them, a trickle of sap has formed into a heavy bead, and it smells sweet, like maple syrup.");
 	outputText("\n\nA dollop of something moist landing in your hair startles you from your visual inspection.  Gingerly, you touch your fingers to the wet spot and come away with a thick, viscous fluid that smells faintly musky... and salty...  It's cum!  You recoil, looking up in time to see a half dozen tentacles curling between the branches rubbing against each other in what can only be described as an orgy of frotting cock-lust.  Well now, your little pet plant is growing up.  There's no easy way to get rid of it now");
 	var burnIt:Function = null;
-	if(player.hasPerk("Dragonfire") >= 0 || player.hasPerk("Fire Lord") >= 0 || player.hasPerk("Hellfire") >= 0 || player.hasStatusAffect("Knows Whitefire") >= 0) {
+	if(player.findPerk(PerkLib.Dragonfire) >= 0 || player.findPerk(PerkLib.FireLord) >= 0 || player.findPerk(PerkLib.Hellfire) >= 0 || player.findStatusAffect(StatusAffects.KnowsWhitefire) >= 0) {
 		outputText(", though you suppose you could burn it down with magical fire if you set your mind to it");
 		burnIt = torchP3Tree;
 	}
@@ -417,7 +418,7 @@ private function rideTheWalrusP3():void {
 	outputText("\n\nThis time, the tendrils DO react, dropping down in a circle around you and lifting their purple, engorged tips to scent the air.  That's what it looks like anyhow, you aren't sure how a prehensile penis could possible smell you, but they nuzzle against your juice-slathered wrists like they're drunk on pussy-musk.  You grip one tenderly, admiring the smooth stalk and small, vein-like textures that decorate it.  It produces a dollop of clear pre-cum that slowly rolls down the underside to your palm in response.  Smiling wide, you bring it lower, to the joint of your female delta, and rub it across your own slickening lips.  The touch of your hot juices seems to invigorate the lethargic cock-snakes, and as one, they begin to loop around your extremities, homing in your loins and stained arm.");
 	outputText("\n\nWith a sweet sigh, you spread your arms and let the surprisingly talented feelers take you.  One wraps around your midsection on its way down to your claimed [vagina], cinching around you with gentle tightness.  A trio of verdant vines hooks under your armpits, two on the wet side, and one on your dry, unscented arm.  They really like the smell of cunt, even their own.  A mass of them gathers in and around your [legs], and as soon as they wrap you up tight, the whole group of them begins to lift you up.  A tremor of worry runs through your stomach, but a slow, gentle prodding in your [vagina] does much to assuage your worries.  Another, smaller cock circles around its lucky brother, pressing its tip insistently at your [clit] while the first slowly penetrates you.");
 	//cuntChange:15
-	cuntChange(15,true,true,false);
+	player.cuntChange(15,true,true,false);
 	outputText("\n\nYour [nipples] go hard; whether from the penetration, reek of sex, or body-caressing vines, you cannot say.  A few more loops of plant-cock surround you, to the point where you're beginning to wonder if this is what a snake's prey feels like, bound up with smooth coils that cling tightly to every curve of your body.  Pumping slowly, the tentacle you eased into your [vagina] begins to fuck you with meticulous slowness.  The surface of the slick shaft turns glossy with your lust and wriggles pleasantly inside you, twirling around in a ballet of unnatural motions that make you feel like you're atop a tornado of sexual pleasure.  Between that and the numerous coils gliding across your sensitive nipples, you throw back your head and moan with unrestrained delight.");
 	outputText("\n\nOne industrious tool rears back, then thrusts itself past your gaped lips, across your thrashing tongue, and deep into your throat.  This cuts off your vocalizations, turning them into a weak 'mphh' that cuts off entirely once the wiggly prick plunges deeper.  It loops its exposed bulk first around your head to block off your vision, and then lower, around your neck.  It cinches closed quickly, tightening up your violated throat into an even tighter cock-sleeve for itself to fuck.  Bulges of ropey plant cum work their way down the tunnel-like cock, distending it to such a degree that you can feel it on your tongue as it passes inside you.  You don't get to taste the stuff, since it's injecting itself directly into your gut, but you can feel it flowing through you, filling you with warm, goopy plant-sperm.");
 	outputText("\n\nMeanwhile, down south, your sodden snatch is squishing lewdly with the slow, methodical penetration.  The other tentacles are worming forward, and first one, then another find their way inside your loosened cunt.  You feel stretched to an almost unpleasant degree, but with three cocks sliding in and out to different tempos, twisting and sliding over your sensitive walls and each other, the pleasure drowns out the discomfort.  You squirm in your bindings as your [vagina] gives in to being relentlessly, unflinchingly taken, and you moan, voice muffled while your eyes roll back into your head.  Your hands idly begin to caress the closest cocks, and you soon give yourself completely over to their attentions.");
@@ -438,12 +439,12 @@ private function torchP3Tree():void {
 	//Requires fire-based attack and fatigue at or below 30.  Maxes fatigue and removes the tree.
 	outputText("This has gone on long enough!  This thing cannot continue to grow in your camp any longer, and you have just the means to remove it: fire.  ");
 	//[(nerdfire)
-	if(player.hasStatusAffect("Knows Whitefire") >= 0) outputText("Closing your eyes to focus, you gather your energies, and unleash your white, supernatural flames upon the thing.");
+	if(player.findStatusAffect(StatusAffects.KnowsWhitefire) >= 0) outputText("Closing your eyes to focus, you gather your energies, and unleash your white, supernatural flames upon the thing.");
 	//(bromancefire)
-	else if(player.hasPerk("Fire Lord") >= 0) outputText("Sucking in your breath, you inflate your chest and stir the embers of the jaguar demon's gift.  Dredging up an enormous pine-green fireball, you exhale and launch it at the tree.");
+	else if(player.findPerk(PerkLib.FireLord) >= 0) outputText("Sucking in your breath, you inflate your chest and stir the embers of the jaguar demon's gift.  Dredging up an enormous pine-green fireball, you exhale and launch it at the tree.");
 	else outputText("Sucking in your breath, you inflate your chest and stir the embers of your fiery gift.  Dredging up an enormous fireball, you exhale and launch it at the tree.");
 	outputText("  It goes up by the torch, though the fire starts to fade sooner than you would expect.  You huff, but repeat the action, layering a new blaze atop the previous one; you put all your concentration into this new conflagration, stoking the inferno with every ounce of your ");
-	if(player.hasStatusAffect("Knows Whitefire") >= 0) outputText("magical will");
+	if(player.findStatusAffect(StatusAffects.KnowsWhitefire) >= 0) outputText("magical will");
 	else outputText("breath");
 	outputText(".");
 	
@@ -508,7 +509,7 @@ public function JojoTransformAndRollOut():void {
 	outputText("(<b>Jojo is no longer a companion!</b>)");
 	//no mo' Jojo; ho made schmo go
 	//return Jojo to forest, get key item Small Talisman
-	player.removeStatusAffect("PureCampJojo");
+	player.removeStatusAffect(StatusAffects.PureCampJojo);
 	player.createKeyItem("Jojo's Talisman",0,0,0,0);
 	
 	doNext(1);
@@ -537,7 +538,7 @@ private function stayQuietWhileAmilyBitchesAboutFuckingArborday():void {
 	flags[kFLAGS.AMILY_FOLLOWER] = 0;
 	//Set - amily flipped her shit
 	flags[kFLAGS.AMILY_TREE_FLIPOUT] = 1;
-	flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00173] > 0;
+	flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00173] = 0;
 	//Enable village encounters
 	flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 0;
 	//Change to plain mouse birth!
@@ -673,7 +674,7 @@ private function level4RideHollisTentacruels():void {
 	outputText("\n\nA hot drop of fluid drips onto your [butt], followed a moment later by an even larger splattering of pre.  Twisting in your bindings, you struggle for a look but vertigo takes you, robbing you of any chance at success.  You woozily flop back against the wet blossom-twat, inadvertently breathing in more pollen from a protrusion located where a clit would be on a human.  It isn't really irritating anymore, in fact, it smells kind of nice.  Forgetting about the pre-cum raining onto your [butt], you nuzzle up to the clitty-shaped pollen dispenser and take another whiff.  It's kind of nice, though it's making your salivate like crazy - spittle is actually drooling out of your dopey maw in a river until you realize what you're doing and close your gob, swallowing like crazy.");
 	outputText("\n\nA burst of pleasure somewhat like a firework in strength and intensity goes off in your nether-lips, jarring you out of your drug-fueled stupor.  Aching fullness radiates from your [vagina] coupled with convulsing delight, brought on by twin tools, one wrapped around the other in a helix.  They fuck you like one giant dick, pushing in to your cervix with potent, forceful strokes that turn your [legs] to jelly.  A gush of femspunk splatters the wasteland soil beneath you, and as the paired pricks ravage you, greater and greater levels of lady-cum gush out.  You're so wet that it's like you're squirting with every thrust, and a puddle forms under you in no time, growing bigger with each piston-like reaming of your [vagina].");
 	//cuntChange, 60
-	cuntChange(60,true,true,false);
+	player.cuntChange(60,true,true,false);
 	outputText("\n\nThe vibrant purples, pinks, and reds of the flower grow brighter and more intense.  When did Holli gain bioluminescence?  You barely suppress a giggle, which comes out as a snort, and turn to face the bright red, pollen-soaked bulb.  It doesn't take any encouragement for you to open wide and swallow it into your maw, but you do manage to miss the first few times, earning a good smearing of the stuff on your cheeks for your troubles.  The pollen is delicious, and as you lick it off, you get to savor the sweeter nectar below.  Your saliva runs from the shaft and down the inner lips in a curtain, unimpeded by your facile lips.  Meanwhile, you're aware of ");
 	if(player.lactationQ() == 0) outputText("droplets of milk dripping from your nipples.  When did you start lactating?");
 	else outputText("steady streams of milk erupting from your nipples.  When did you start lactating this hard?");
@@ -921,7 +922,7 @@ private function vaginalDomHollisTentacruels():void {
 	outputText("\n\nA muffled moan slips from the arbor bitch's well-stuffed mouth, accompanied by a shuddering shake that sets her tits to wobbling.  You prance up next to her and whispers in her ear, \"<i>Get that one nice and wet for me, okay, babe?</i>\"");
 	outputText("\n\nHolli moans again, this time loud enough to be audible from more than a few feet away.  You pirouette away, flouncing through the forest of idle green cocks.  They seem a little bigger - perhaps more engorged - than before.  The arousal coursing through Holli's body must be spreading through all of her extremities, even ones as far removed as these.  Grabbing two more, you spin back to face the orally occupied god-spawn.  Her eyes are half-closed and unaware, though she can surely feel the heat of your palms warming her double dicks' undersides.");
 	outputText("\n\nA wicked idea comes to mind, and you act on it without pause, releasing one of your prizes to pry the saliva-soaked member from Holli's mouth.  She gasps in a quick pant, just in time to be plugged with a fresh cock, immediately releasing the fresh air in a whimpering groan that vibrates through this new cock.  You yank the well-lubed phallus down to your mons and press it up into your [vagina].  Though it is wide, the tip is well rounded, and it slides through you with almost buttery smoothness.  Behind the distended crown, the wiggling flesh tube begins to exert a gentle pressure, lashing around as it tries to penetrate you further.  You relax further and allow it to spear deeper, all the way to your unguarded cervix.");
-	cuntChange(25,true,true,false);
+	player.cuntChange(25,true,true,false);
 	outputText("\n\nIt takes considerable effort, but you manage to remain upright through it all.  An involuntary trembling washes through you as you caress the remaining cock.  You cough to clear your throat and tauntingly ask, \"<i>Enjoying the mouthful, dear?</i>\"  She nods, jiggling the dangling shaft this way and that with the motion.  \"<i>Good, keep on sucking, and don't let the tentacle between my legs be idle either.  You're going to bring me off to a nice, wet orgasm.</i>\"");
 	outputText("\n\nHolli nods again, more enthusiastically this time.  The tentacle lodged in your [vagina] retracts slightly, but only for a moment.  It returns to your twat with a vengeance, plunging up hard.  You gasp, \"<i>O-oh!  Go... go slower!</i>\"");
 	outputText("\n\nThe tentacle prick pumps faster, more and more of its surface coated with wetness as it works.  You growl in frustration, yank the dick out of Holli's mouth, and slap her across the face with it, broadside.  She gasps in pain and shock.  Between your legs, the overeager motions cease.  In your hand, the slick shaft tries to wiggle free.  You squeeze down on it, and it arrests its rebellious motions, lest it injures itself.");
@@ -969,7 +970,7 @@ private function threatenHolli():void {
 	else outputText("Marae is likely beyond your power yet, but... you feel like she might not pressure you too hard if you can make a suitably credible threat.");
 	outputText("\n\n\"<i>Now, I hope you rest well in the knowledge that I'm going to stay firmly in my tree, no matter what.  Watching the vermin of this land walk over your bedroll while you try to sleep will be suitable recompense for your rudeness.</i>\"");
 	//[(kid a, thorn canopy, or other non-jojo watch is on)
-	if((player.gender > 0 && player.hasStatusAffect("JojoNightWatch") >= 0 && player.hasStatusAffect("PureCampJojo") >= 0) || flags[kFLAGS.ANEMONE_WATCH] > 0) {
+	if((player.gender > 0 && player.findStatusAffect(StatusAffects.JojoNightWatch) >= 0 && player.findStatusAffect(StatusAffects.PureCampJojo) >= 0) || flags[kFLAGS.ANEMONE_WATCH] > 0) {
 		outputText("\n\nYeah, whatever.  She'll be waiting a while for that; you've got your back covered.  With a dismissive, pointed gesture, you leave the smug arboreal demon behind.");
 	}
 	//{No option to beg for night watch till PC has been imp raped}
@@ -1028,7 +1029,7 @@ private function callDatJojo():void {
 	//go to fight
 	flags[kFLAGS.FOUGHT_HOLLI] = 1;
 	startCombat(new Holli());
-	monster.createStatusAffect("Jojo Is Assisting",0,0,0,0);
+	monster.createStatusAffect(StatusAffects.JojoIsAssisting,0,0,0,0);
 }
 
 
@@ -1038,7 +1039,7 @@ internal function defeatHolli():void {
 	clearOutput();
 	flags[kFLAGS.FUCK_FLOWER_KILLED] = 1;
 	//Win without Jojo -Z
-	if(monster.hasStatusAffect("Jojo Is Assisting") < 0) {
+	if(monster.findStatusAffect(StatusAffects.JojoIsAssisting) < 0) {
 		outputText("Weary, the succubus godling folds into her tree, unwilling to allow you the sight of her defeat.  With her energy suppressed, you're free to ");
 		if(player.weaponName != "large axe") outputText("fetch an axe and ");
 		outputText("hack at her trunk, laboriously peeling bark and making wedge-shaped cuts in it as you try to fell the abomination.  It takes nearly eight hours, but eventually the gnarled tree topples.  No sooner does it fall than it shrivels and turns to ash.");
@@ -1087,7 +1088,7 @@ private function recruitJojoToCamp():void {
 	clearOutput();
 	outputText("Jojo nods eagerly at you when you invite him to share your camp.  \"<i>Excellent idea.  If you'll excuse me, I wish to attempt to purify the spot where the creature grew, and then I will fetch my things.</i>\"");
 	outputText("\n\nBowing neatly, he takes his leave.");
-	player.createStatusAffect("PureCampJojo",0,0,0,0);
+	player.createStatusAffect(StatusAffects.PureCampJojo,0,0,0,0);
 	outputText("\n\n(Key Item Gained: Holli's Ashes)");
 	player.createKeyItem("Holli's Ashes",0,0,0,0);
 	cleanupAfterCombat();
@@ -1106,7 +1107,7 @@ private function dontRecruitJojoToCamp():void {
 internal function enjoyYourBadEndBIYAAAATCH():void {
 	clearOutput();
 	outputText("Screeching in triumph, the demon holds your defeated form aloft and begins to shake you.  ");
-	if(monster.hasStatusAffect("Jojo Is Assisting") >= 0) {
+	if(monster.findStatusAffect(StatusAffects.JojoIsAssisting) >= 0) {
 		outputText("Jojo drops the firewood he's carrying and attempts to strike her, but she swats him aside brutally with a branch, leaving him clutching his stomach and retching as he stumbles away; she returns her attention to you, completely fixated.  Her oozing sap runs in streams as she heals the damage from the dwindling flames.  ");
 	}
 	outputText("\"<i>Oh, my little meat...</i>\" Holli coos dangerously.  \"<i>Was I not clear enough before?  You exist to worship me.  If you won't give your mind to me, I'll have your body, instead.</i>\"  A floral tendril descends from her upper branches, slipping into your mouth and beginning to drool a nectar down your throat.  Forced to drink or drown, you gulp unhappily, feeling increasingly light-headed with each swallow.");
@@ -1197,7 +1198,7 @@ internal function enjoyYourBadEndBIYAAAATCH():void {
 		else outputText("Despite your clenching, your loose hole proves no impediment to the demon's exploration.  \"<i>Ah, how roomy you are!  I think I'll move right in.</i>\"");
 		
 		outputText("\n\nHolli's eyes darken in concentration behind you, and you shudder and squirm as you feel her appendage swell and distort inside your ass.  The demon's fingertips pull apart, forcing your asshole wide open, and her hand begins to elongate, pushing the width of her palm deeper into your bud.");
-		buttChange(20,true,true,false);
+		player.buttChange(20,true,true,false);
 		outputText("  After an agonizing minute of intimate stimulation and expansion, Holli's face contorts to a grimace and veins begin to protrude on her arm.  A small bulge swells in her chest, briefly pushing her breasts into you before passing through her shoulder.  Down her arm it glides, pausing at her wrist as it meets the fear-inspired resistance of your [asshole], then disappearing into your backside with a painful push.  She sighs as the bulge slides the last few inches to the end of her hand, and your lower body is flooded with warmth.");
 		
 		outputText("\n\n\"<i>My gift to you,</i>\" the demon murmurs, pulling herself free.  As she extracts it, you can see over your shoulder that her hand is stretched to twice its former length and oozes a viscous fluid from a slit in the palm that matches the one drooling from your abused rectum.  The mangled hand slowly shifts back to a recognizable shape, but another bulge begins to form on Holli's mons.");

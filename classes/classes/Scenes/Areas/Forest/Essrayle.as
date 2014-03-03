@@ -1,8 +1,8 @@
 ﻿package classes.Scenes.Areas.Forest{
-import classes.BaseContent;
-import classes.GlobalFlags.kFLAGS;
-import classes.GlobalFlags.kGAMECLASS;
-public class Essrayle extends BaseContent{
+	import classes.*;
+	import classes.GlobalFlags.kFLAGS;
+
+	public class Essrayle extends BaseContent{
 
 	public function Essrayle()
 	{
@@ -176,7 +176,7 @@ private function plantsForMe2(BE:int = 0):void {
 	}
 	
 	outputText("\n\nAnother tentacle momentarily rubs over her breast, growing slimy with the sap before it moves around behind you and abruptly shoves into your [asshole].  Like a professional, she takes it slow to start, letting you adjust to the unique girth and contours of the tentacle as it plunges in deep.  It smoothly pulls nearly out only to pump in deeply once more.");
-	buttChange(10,true,true,false);
+	player.buttChange(10,true,true,false);
 		
 		
  	outputText("\n\nIt doesn't take long before you're screaming out in climax.  The pleasure swells and ebbs steadily, your planty friend making it sound like she's enjoying a four-course meal fit for a queen.  She continues to pump you on all fronts, not daring to stop until she's certain she's drained you for every drop she can get.");
@@ -218,9 +218,9 @@ private function plantsForMe2(BE:int = 0):void {
         outputText("\n\nYou sit there for the next hour or two, milking your bloated bosom and giving the flora a generous watering in the process.  When all is taken care of, you stumble back upright with a brief struggle and don your gear once more.  The smell of fresh-cut flowers seems to linger on your [armor] as you depart.");
 	}
 	if(player.biggestTitSize() >= 1) {
-		if(player.hasStatusAffect("Feeder") >= 0) {
-			player.addStatusValue("Feeder",1,1);
-			player.changeStatusValue("Feeder",2,0);
+		if(player.findStatusAffect(StatusAffects.Feeder) >= 0) {
+			player.addStatusValue(StatusAffects.Feeder,1,1);
+			player.changeStatusValue(StatusAffects.Feeder,2,0);
 		}
 		player.boostLactation(0.01);
 	}
@@ -411,8 +411,7 @@ private function yesGimmeGiantNipplesEssy():void {
 	
 	essyRewardEpilogueOUTTIES();
 	//[gain purple fruit] [Next]
-	shortName = "PrFruit";
-	takeItem();
+	inventory.takeItem(consumables.PRFRUIT);
 }
 
 //[No]

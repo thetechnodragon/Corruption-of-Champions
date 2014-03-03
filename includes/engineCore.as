@@ -1,4 +1,5 @@
-﻿// // import flash.events.MouseEvent;
+﻿import flash.text.TextFormat;
+// // import flash.events.MouseEvent;
 // 
 // //const DOUBLE_ATTACK_STYLE:int = 867;
 // //const SPELLS_CAST:int = 868;
@@ -65,7 +66,7 @@ public function HPChange(changeNum:Number, display:Boolean):void
 	if(changeNum == 0) return;
 	if(changeNum > 0) {
 		//Increase by 20%!
-		if(player.hasPerk("History: Healer") >= 0) changeNum *= 1.2;
+		if(player.findPerk(PerkLib.HistoryHealer) >= 0) changeNum *= 1.2;
 		if(player.HP + int(changeNum) > maxHP()) {
 			if(player.HP >= maxHP()) {
 				if(display) outputText("You're as healthy as you can be.\n", false);
@@ -178,393 +179,26 @@ public function outputText(output:String,
 
 public function flushOutputTextToGUI():void
 {
+	var fmt:TextFormat;
+	if (flags[kFLAGS.CUSTOM_FONT_SIZE] != 0)
+	{
+		fmt = mainView.mainText.getTextFormat();
+		fmt.size = flags[kFLAGS.CUSTOM_FONT_SIZE];
+	}
 	
 	mainView.setOutputText( currentText );
+	
+	if (flags[kFLAGS.CUSTOM_FONT_SIZE] != 0)
+	{
+		mainView.mainText.setTextFormat(fmt);
+	}
 }
 
-public function perkLongDescription(perkName:String = ""):String {
-	switch(perkName) {
-		case "Pretend Strength Perk":
-			return "Pretend I am telling you about how this works.";
-		case "Resistance":
-			return "You choose the 'Resistance' perk, reducing the rate at which your lust increases by 10%.";
-		case "Arousing Aura":
-			return "You choose the 'Arousing Aura' perk, causing you to radiate an aura of lust when your corruption is over 70.";
-		case "Sadist":
-			return "You choose the 'Sadist' perk, increasing damage by 20 percent but causing you to gain lust from dealing damage.";
-		case "Masochist":
-			return "You choose the 'Masochist' perk, reducing the damage you take but raising your lust each time!  This perk only functions while your libido is at or above 60!";
-		case "Well Adjusted":
-			return "You choose the 'Well Adjusted' perk, reducing the amount of lust you naturally gain over time while in this strange land!";
-		case "Medicine":
-			return "You choose the 'Medicine' perk, giving you a chance to remove debilitating poisons automatically!";
-		case "Channeling":
-			return "You choose the 'Channeling' perk, boosting the strength of your spellcasting!";
-		case "Agility":
-			return "You choose the 'Agility' perk, increasing the effectiveness of Light/Medium armors by a portion of your speed.";
-		case "Speedy Recovery":
-			return "You choose the 'Speedy Recovery' perk, boosting your fatigue recovery rate!";
-		case "Regeneration 2":
-			return "You choose the 'Regeneration 2' perk, giving an addition 2% of max HP per turn in combat and 4% of max HP per hour.";
-		case "Fera's Boon - Seeder":
-			return "Increases cum output by 1,000 mLs.";
-		case "Fera's Boon - Wide Open":
-			return "Keeps your pussy permanently gaped and increases pregnancy speed.";
-		case "Fera's Boon - Milking Twat":
-			return "Keeps your pussy from ever getting too loose and increases pregnancy speed.";
-		case "Tank 2":
-			return "You choose the 'Tank 2' perk, granting an extra maximum HP for each point of toughness.";
-		case "Weapon Mastery":
-			return "You choose the 'Weapon Mastery' perk, doubling the effectiveness of large weapons.";
-		case "Thunderous Strikes":
-			return "You choose the 'Thunderous Strikes' perk, increasing normal damage by 20% while your strength is over 80.";
-		case "Acclimation":
-			return "You choose the 'Acclimation' perk, making your body 15% more resistant to lust, up to a maximum of 75%.";
-		case "Double Attack":
-			return "You choose the 'Double Attack' perk.  This allows you to make two attacks so long as your strength is at 60 or below.  By default your effective strength will be reduced to 60 if it is too high when double attacking.  <b>You can enter the perks menu at any time to toggle options as to how you will use this perk.</b>";
-		case "Mage":
-			return "You choose the 'Mage' perk.  You are able to focus your magical abilities even more keenly, boosting your base spell effects by 50%.";
-		case "Spellpower":
-			return "You choose the 'Spellpower' perk.  Thanks to your sizeable intellect and willpower, you are able to more effectively use magic, boosting base spell effects by 50%.";
-		case "Nymphomania":
-			return "You've chosen the 'Nymphomania' perk.  Due to the incredible amount of corruption you've been exposed to, you've begun to live in a state of minor constant arousal.  Your minimum lust will be increased by as much as 30 (If you already have minimum lust, the increase is 10-15).";
-		case "Precision":
-			return "You've chosen the 'Precision' perk.  Thanks to your intelligence, you're now more adept at finding and striking an enemy's weak points, reducing their damage resistance from armor by 10.  If your intelligence ever drops below 25 you'll no longer be smart enough to benefit from this perk.";
-		case "Seduction":
-			return "You choose the 'Seduction' perk, upgrading the 'tease' attack with a more powerful damage and a higher chance of success.";
-		case "Corrupted Libido":
-			return "You choose the 'Corrupted Libido' perk.  As a result of your body's corruption, you've become a bit harder to turn on. (Lust gain reduced by 10%!)";
-		case "Hot Blooded":
-			return "You choose the 'Hot Blooded' perk.  As a result of your enhanced libido, your lust no longer drops below 20! (If you already have some minimum lust, it will be increased by 10)";
-		case "Fertility+":
-			return "You choose the 'Fertility+' perk, making it easier to get pregnant.  It also increases your cum volume by up to 50% (if appropriate)!";
-		case "Magical Fertility":
-			return "10% higher chance of pregnancy and increased pregnancy speed.";
-		case "Magical Virility":
-			return "200 mLs more cum per orgasm and enhanced virility.";
-		case "Runner":
-			return "You choose the 'Runner' perk, increasing your chances to escape from your foes when fleeing!";
-		case "Evade":
-			return "You choose the 'Evade' perk, allowing you to avoid enemy attacks more often!";
-		case "Regeneration":
-			return "You choose the 'Regeneration' perk, allowing you to heal 2% of max HP every hour and 1% of max HP every round of combat!";
-		case "Iron Man":
-			return "You choose the 'Iron Man' perk, reducing the fatigue cost of physical special attacks by 50%";
-		case "Brawler":
-			return "You choose the 'Brawler' perk, allowing you to make two unarmed attacks in a turn!";
-		case "Tank":
-			return "You choose the 'Tank' perk, giving you an additional 50 hp!";
-		case "Strong Back 2: Strong Harder":
-			return "You choose the 'Strong Back 2: Strong Harder' perk, enabling a fifth item slot.";
-		case "Strong Back":
-			return "You choose the 'Strong Back' perk, enabling a fourth item slot.";
-		case "Tactician":
-			return "You choose the 'Tactician' perk, increasing critical hit chance by up to 10% (Intelligence-based).";
-		case "Archmage":
-			return "You choose the 'Archmage' perk, increasing base spell strength by 50%.";
-		case "Lunging Attacks":
-			return "You choose the 'Lunging Attacks' perk, granting 50% armor penetration for standard attacks.";
-		case "Lightning Strikes":
-			return "You choose the 'Lightning Strikes' perk, increasing the attack damage for non-heavy weapons.</b>";
-		case "Immovable Object":
-			return "You choose the 'Immovable Object' perk, granting 20% physical damage reduction.</b>";
-		case "Resolute":
-			return "You choose the 'Resolute' perk, granting immunity to stuns and some statuses.</b>";
-		case "Berzerker":
-			return "You choose the 'Berzerker' perk, which unlocks the 'Berzerk' magical ability.  Berzerking increases attack and lust resistance but reduces physical defenses.";
-		case "Brutal Blows":
-			return "You choose the 'Brutal Blows' perk, which reduces enemy armor with each hit.";
-		default:
-			return "An error occurred when loading the long perk description.  Please post a bug report on the bug report forums at forum.fenoxo.com.";
-	}
-}
-public function perkDescription(perkName:String = ""):String {
-	switch(perkName) {
-		case "History: Whore":
-			return "Seductive experience causes your tease attacks to be 15% more effective.";
-		case "History: Slut":
-			return "Sexual experience has made you more able to handle large insertions and more resistant to stretching.";
-		case "Pure and Loving":
-			return "Your caring attitude towards love and romance makes you slightly more resistant to lust and corruption.";
-		case "Sensual Lover":
-			return "Your sensual attitude towards love and romance makes your tease ability slightly more effective.";
-		case "One Track Mind":
-			return "Your constant desire for sex causes your sexual organs to be able to take larger insertions and disgorge greater amounts of fluid.";
-		case "Brawler":
-			return "Brawling experience allows you to make two unarmed attacks in a turn.";
-		case "Corrupted Nine-tails":
-			return "The mystical energy of the nine-tails surges through you, filling you with phenomenal cosmic power!  Your boundless magic allows you to recover quickly after casting spells, but your method of attaining it has corrupted the transformation, preventing you from achieving true enlightenment.";
-		case "Enlightened Nine-tails":
-			return "The mystical energy of the nine-tails surges through you, filling you with phenomenal cosmic power!  Your boundless magic allows you to recover quickly after casting spells.";
-		case "History: Alchemist":
-			return "Alchemical experience makes items more reactive to your body.";
-		case "History: Fighter":
-			return "Past full of conflict increases physical damage dealt by 10%.";
-		case "History: Healer":
-			return "Healing experience increases HP gains by 20%.";
-		case "History: Religious":
-			return "Replaces masturbate with meditate when corruption less than or equal to 66.";
-		case "History: Scholar":
-			return "Time spent focusing your mind makes spellcasting 20% less fatiguing.";
-		case "History: Smith":
-			return "Knowledge of armor and fitting increases armor effectiveness by roughly 10%.";
-		case "History: Slacker":
-			return "Regenerate fatigue 20% faster.";
-		case "Slime Core":
-			return "Grants more control over your slimy body, allowing you to go twice as long without fluids.";
-		case "Flexibility":
-			return "Grants cat-like flexibility.  Useful for dodging and 'fun'.";
-		case "Thick Skin":
-			return "Toughens your dermis to provide 2 points of armor.";
-		case "Bunny Eggs":
-			return "Laying eggs has become a normal part of your bunny-body's routine.";
-		case "Basilisk Womb":
-			return "Enables your eggs to be properly fertilized into basilisks of both genders!";
-		case "Oviposition":
-			return "Causes you to regularly lay eggs when not otherwise pregnant.";
-		case "Dragonfire":
-			return "Allows access to a dragon breath attack.";
-		case "Futa Form":
-			return "Ensures that your body fits the Futa look (Tits DD+, Dick 8\"+, & Pussy).  Also keeps your lusts burning bright and improves the tease skill.";
-		case "Futa Faculties":
-			return "It's super hard to think about stuff that like, isn't working out or fucking!";
-		case "Bulge Armor":
-			return "Grants a 5 point damage bonus to dick-based tease attacks.";
-		case "Slutty Seduction":
-			return "Increases odds of successfully teasing and lust damage of successful teases by " + player.perkv1("Slutty Seduction") + " points.";
-		case "Blood Mage":
-			return "Spellcasting now consumes health instead of fatigue!";
-		case "Purity Blessing":
-			return "Reduces the rate at which your corruption, libido, and lust increase.";
-		case "Wizard's Endurance":
-			return "Reduces fatigue cost of spells by " + player.perkv1("Wizard's Endurance") + "%.";
-		case "Wizard's Focus":
-			return "Increases your spell effect modifier by " + player.perkv1("Wizard's Focus") * 100 + "%.";
-		case "Strong":
-			return "Gains strength 25% faster.";
-		case "Tough":
-			return "Gains toughness 25% faster.";
-		case "Fast":
-			return "Gains speed 25% faster.";
-		case "Smart":
-			return "Gains intelligence 25% faster.";
-		case "Lusty":
-			return "Gains lust 25% faster.";
-		case "Sensitive":
-			return "Gains sensitivity 25% faster.";
-		case "Big Cock":
-			return "Gains cock size 25% faster and with less limitations.";
-		case "Messy Orgasms":
-			return "Produces 50% more cum volume.";
-		case "Big Tits":
-			return "Makes your tits grow larger more easily.";
-		case "Big Clit":
-			return "Allows your clit to grow larger more easily and faster.";
-		case "Fertile":
-			return "Makes you 15% more likely to become pregnant.";
-		case "Wet Pussy":
-			return "Keeps your pussy wet and provides a bonus to capacity.";
-		case "Marble Resistant":
-			return "Provides resistance to the addictive effects of bottled LaBova milk.";
-		case "Marble's Milk":
-			return "Requires you to drink LaBova milk frequently or eventually die.  You cannot shake this addiction.";
-		case "Minotaur Cum Addict":
-			return "Causes you to crave minotaur cum frequently.  You cannot shake this addiction.";
-		case "Misdirection":
-			return "Grants additional evasion chances while wearing Raphael's red bodysuit.";
-		case "Omnibus' Gift":
-			return "Increases minimum lust but provides some lust resistance.";
-		case "Pierced: Crimstone":
-			return "Increases minimum lust by " + Math.round(player.perkv1("Pierced: Crimstone")) + ".";
-		case "Pent Up":
-			return "Increases minimum lust by " + Math.round(player.perkv1("Pent Up")) + " and makes you more vulnerable to seduction.";
-		case "Midas Cock":
-			return "Increases the gems awarded from victory in battle.";
-		case "Phallic Potential":
-			return "Increases the effects of penis-enlarging transformations.";
-		case "Phallic Restraint":
-			return "Reduces the effects of penis-enlarging transformations.";
-		case "Lusty Regeneration":
-			return "Regenerates 1% of HP per round in combat and 2% of HP per hour.";
-		case "Pierced: Fertite":
-			return "Increases cum production by " + Math.round(2*player.perkv1("Pierced: Fertite")) + "% and fertility by " + Math.round(player.perkv1("Pierced: Fertite")) + ".";
-		case "Pierced: Furrite":
-			return "Increases chances of encountering 'furry' foes.";
-		case "Pierced: Lethite":
-			return "Increases chances of encountering demonic foes.";
-		case "Harpy Womb":
-			return "Increases all laid eggs to large size so long as you have harpy legs and a harpy tail.";
-		case "Hellfire":
-			return "Grants a corrupted fire breath attack, like the hellhounds in the mountains.";
-		case "Incorporeality":
-			return "Allows you to fade into a ghost-like state and temporarily possess others.";
-		case "Luststick Adapted":
-			return "Grants immunity to the lust-increasing effects of lust-stick and allows its use.";
-		case "Pilgrim's Bounty":
-			return "Causes you to always cum as hard as if you had max lust.";
-		case "Cornucopia":
-			return "Vaginal and Anal capacities increased by 30.";
-		case "Spider Ovipositor":
-			return "Allows you to lay eggs through a special organ on your arachnid abdomen, though you need at least 10 eggs to lay.";
-		case "Bee Ovipositor":
-			return "Allows you to lay eggs through a special organ on your insect abdomen, though you need at least 10 eggs to lay.";
-		case "Fera's Boon - Alpha":
-			return "Increases the rate your cum builds up and cum production in general.";
-		case "Fera's Boon - Breeding Bitch":
-			return "Increases fertility and reduces the time it takes to birth young.";
-		case "Marae's Gift - Stud":
-			return "Increases your cum production and potency greatly.";
-		case "Marae's Gift - Fertility":
-			return "Greatly increases fertility and halves base pregnancy speed.";
-		case "Marae's Gift - Profractory":
-			return "Causes your cum to build up at 3x the normal rate.";
-		case "Marae's Gift - Buttslut":
-			return "Makes your anus provide lubrication when aroused.";
-		case "Feeder":
-			return "Lactation does not decrease and gives a compulsion to breastfeed others.";
-		case "Fire Lord":
-			return "Akbal's blessings grant the ability to breathe burning green flames.";
-		case "Whispered":
-			return "Akbal's blessings grant limited telepathy that can induce fear.";
-		case "Bro Brains":
-			return "Makes thou... thin... fuck, that shit's for nerds.";
-		case "Bro Body":
-			return "Grants an ubermasculine body that's sure to impress.";
-		case "Bimbo Body":
-			return "Gives the body of a bimbo.  Tits will never stay below a 'DD' cup, libido is raised, lust resistance is raised, and upgrades tease.";
-		case "Bimbo Brains":
-			return "Now that you've drank bimbo liquer, you'll never, like, have the attention span and intelligence you once did!  But it's okay, 'cause you get to be so horny an' stuff!";
-		case "Brood Mother":
-			return "Pregnancy moves twice as fast as a normal woman's.";
-		case "Diapause":
-			return "Pregnancy does not advance normally, but develops quickly after taking in fluids.";
-		case "Elven Bounty":
-			return "Increases fertility by " + player.perkv2("Elven Bounty") + "% and cum production by " + player.perkv1("Elven Bounty") + "mLs.";
-		case "Androgyny":
-			return "No gender limits on facial masculinity or femininity.";
-		case "Pretend Strength Perk":
-			return "Pretend I am telling you about how this works.";
-		case "Resistance":
-			return "Reduces lust gain by 10%.";
-		case "Arousing Aura":
-			return "Exude a lust-inducing aura (Req's corruption of 70 or more)";
-		case "Sadist":
-			return "Deal 20% more damage, but gain lust at the same time.";
-		case "Masochist":
-			return "Take 30% less physical damage but gain lust when damage.";
-		case "Well Adjusted":
-			return "You gain half as much lust as time passes in Mareth.";
-		case "Medicine":
-			return "Grants 15% chance per round of cleansing poisons/drugs from your body.";
-		case "Channeling":
-			return "Increases base spell strength by 50%.";
-		case "Agility":
-			return "Boosts armor points by a portion of your speed on light/medium armors.";
-		case "Speedy Recovery":
-			return "Regain fatigue 50% faster.";
-		case "Regeneration 2":
-			return "Gain 2% of max HP per round of combat and 4% of max HP per hour out of combat.";
-		case "Fera's Boon - Seeder":
-			return "Increases cum output by 1,000 mLs.";
-		case "Fera's Boon - Wide Open":
-			return "Keeps your pussy permanently gaped and increases pregnancy speed.";
-		case "Fera's Boon - Milking Twat":
-			return "Keeps your pussy from ever getting too loose and increases pregnancy speed.";
-		case "Spellcasting Affinity":
-			return "Reduces spell costs by " + player.perkv1("Spellcasting Affinity") + "%.";
-		case "Tank 2":
-			return "+1 extra HP per point of toughness.";
-		case "Weapon Mastery":
-			if(player.str > 60) return "Doubles damage bonus of weapons classified as 'Large'.";
-			else return "<b>You aren't strong enough to benefit from this anymore.</b>";
-		case "Thunderous Strikes":
-			return "+20% 'Attack' damage while strength is at or above 80.";
-		case "Acclimation":
-			return "Reduces lust gain by 15%.";
-		case "Double Attack":
-			if(player.spe < 50) return "<b>You're too slow to double attack!</b>";
-			else if(player.str < 61) return "Allows you to perform two melee attacks per round.";
-			else return "<b>You are stronger than double attack allows.  Too choose between reduced strength double-attacks and a single strong attack, access \"Dbl Options\" in the perks menu.</b>";
-		case "Mage":
-			return "Increases base spell strength by 50%.";
-		case "Spellpower":
-			return "Increases base spell strength by 50%.";
-		case "Nymphomania":
-			return "Raises minimum lust by up to 30.";
-		case "Precision":
-			return "Reduces enemy armor by 10. (Req's 25+ Intelligence)";
-		case "Seduction":
-			return "Upgrades your tease attack, making it more effective.";
-		case "Corrupted Libido":
-			return "Reduces lust gain by 10%.";
-		case "Hot Blooded":
-			return "Raises minimum lust by up to 20.";
-		case "Fertility+":
-			return "Increases fertility rating by 15 and cum volume by up to 50%.";
-		case "Magical Fertility":
-			return "10% higher chance of pregnancy and increased pregnancy speed.";
-		case "Magical Virility":
-			return "200 mLs more cum per orgasm and enhanced virility.";
-		case "Runner":
-			return "Increases chances of escaping combat.";
-		case "Evade":
-			return "Increases chances of evading enemy attacks.";
-		case "Regeneration":
-			return "Regenerates 2% of max HP/hour and 1% of max HP/round.";
-		case "Iron Man":
-			return "Reduces the fatigue cost of physical specials by 50%.";
-		case "Tank":
-			return "Raises max HP by 50.";
-		case "Strong Back 2: Strong Harder":
-			return "Enables fifth item slot.";
-		case "Strong Back":
-			return "Enables fourth item slot.";
-		case "Tactician":
-			if(player.inte >= 50) return "Increases critical hit chance by up to 10% (Intelligence-based).";
-			else return "<b>You are too dumb to gain benefit from this perk.</b>";
-		case "Archmage":
-			if(player.inte >= 75) return "Increases base spell strength by 50%.";
-			else return "<b>You are too dumb to gain benefit from this perk.</b>";
-		case "Lunging Attacks":
-			if(player.spe >= 75) return "Grants 50% armor penetration for standard attacks.";
-			else return "<b>You are too slow to benefit from this perk.</b>";
-		case "Lightning Strikes":
-			if(player.spe >= 60) return "Increases the attack damage for non-heavy weapons.</b>";
-			else return "<b>You are too slow to benefit from this perk.</b>";
-		case "Immovable Object":
-			if(player.tou >= 75) return "Grants 20% physical damage reduction.</b>";
-			else return "<b>You aren't tough enough to benefit from this anymore.</b>";
-		case "Resolute":
-			if(player.tou >= 75) return "Grants immunity to stuns and some statuses.</b>";
-			else return "<b>You aren't tough enough to benefit from this anymore.</b>";
-		case "Berzerker":
-			if(player.str >= 75) return "Grants 'Berzerk' ability.";
-			else return "<b>You aren't strong enough to benefit from this anymore.</b>";
-		case "Brutal Blows":
-			if(player.str >= 75) return "Reduces enemy armor with each hit.";
-			else return "<b>You aren't strong enough to benefit from this anymore.</b>";
-		default:
-			var checkChildren:String;
-			
-			checkChildren = telAdre.umasShop.listPerkDescription(perkName);
-			
-			if (checkChildren != "")
-			{
-				return checkChildren;
-			}
-			else
-			{			
-				return "<u><i>This Perk does not have a stored description.  Please post a bug report on the bug report forums at forum.fenoxo.com.</i></u>";
-			}
-			
-			break;
-	}
-}
 public function displayPerks(e:MouseEvent = null):void {
-	temp = 0;
+	var temp:int = 0;
 	outputText("", true);
 	while(temp < player.perks.length) {
-		outputText("<b>" + player.perks[temp].perkName + "</b> - " + perkDescription(player.perks[temp].perkName) + "\n", false);
+		outputText("<b>" + player.perk(temp).perkName + "</b> - " + player.perk(temp).perkDesc + "\n", false);
 		temp++;
 	}
 	menu();
@@ -574,7 +208,7 @@ public function displayPerks(e:MouseEvent = null):void {
 		outputText(" to spend.</b>", false);
 		addButton(1,"Perk Up",eventParser,116);
 	}
-	if(player.hasPerk("Double Attack") >= 0) {
+	if(player.findPerk(PerkLib.DoubleAttack) >= 0) {
 		outputText("\n<b>You can adjust your double attack settings.</b>");
 		addButton(2,"Dbl Options",doubleAttackOptions);
 	}
@@ -661,7 +295,7 @@ public function levelUpGo(e:MouseEvent = null):void {
 
 public function perkBuyMenu():void {
 	outputText("", true);
-	buildPerkList();
+	var perkList:Array = buildPerkList();
 	if(perkList.length == 0) {
 		outputText("<b>You do not qualify for any perks at present.  </b>In case you qualify for any in the future, you will keep your " + num2Text(player.perkPoints) + " perk point", false);
 		if(player.perkPoints > 1) outputText("s", false);
@@ -670,7 +304,7 @@ public function perkBuyMenu():void {
 		return;
 	}
 	if (testingBlockExiting){
-		tempPerk = perkList[rand(perkList.length)].label;
+		tempPerk = perkList[rand(perkList.length)].perk;
 		doNext(114);
 	} else {
 		outputText("Please select a perk from the drop-down list, then click 'Okay'.  You can press 'Skip' to save your perk point for later.\n\n", false);
@@ -681,312 +315,196 @@ public function perkBuyMenu():void {
 		simpleChoices("Okay",0,"Skip",115,"",0,"",0,"",0);
 	}
 }
-public function buildPerkList():void {
-	perkList = [];
+public function buildPerkList():Array {
+	var perkList:Array = [];
+	function _add(p:PerkClass):void{
+		perkList.push({label: p.perkName,perk:p});
+	}
 	//STRENGTH PERKS
 	if(player.str >= 25) {
-		perkList.push({label:"Strong Back"});
+		_add(new PerkClass(PerkLib.StrongBack));
 	}
-	if(player.hasPerk("Strong Back") >= 0 && player.str >= 50) {
-		perkList.push({label:"Strong Back 2: Strong Harder"});
+	if(player.findPerk(PerkLib.StrongBack) >= 0 && player.str >= 50) {
+		_add(new PerkClass(PerkLib.StrongBack2));
 	}
 	//Tier 1 Strength Perks
 	if(player.level >= 6) {
 		//Thunderous Strikes - +20% basic attack damage while str > 80.
 		if(player.str >= 80) {
-			perkList.push({label:"Thunderous Strikes"});
+			_add(new PerkClass(PerkLib.ThunderousStrikes));
 		}
 		//Weapon Mastery - Doubles weapon damage bonus of 'large' type weapons. (Minotaur Axe, M. Hammer, etc)
 		if(player.str > 60) {
-			perkList.push({label:"Weapon Mastery"});
+			_add(new PerkClass(PerkLib.WeaponMastery));
 		}
 		if(player.str >= 75)
-			perkList.push({label:"Brutal Blows"});
+			_add(new PerkClass(PerkLib.BrutalBlows));
 	}
 	//Tier 2 Strength Perks
 	if(player.level >= 12) {
 		if(player.str >= 75)
-			perkList.push({label:"Berzerker"});
+			_add(new PerkClass(PerkLib.Berzerker));
 	}
 	//slot 2 - toughness perk 1
-	if(player.hasPerk("Tank") < 0 && player.tou >= 25) {
-		perkList.push({label:"Tank"});
+	if(player.findPerk(PerkLib.Tank) < 0 && player.tou >= 25) {
+		_add(new PerkClass(PerkLib.Tank));
 	}
 	//slot 2 - regeneration perk
-	if(player.hasPerk("Tank") >= 0 && player.tou >= 50) {
-		perkList.push({label:"Regeneration"});
+	if(player.findPerk(PerkLib.Tank) >= 0 && player.tou >= 50) {
+		_add(new PerkClass(PerkLib.Regeneration));
 	}
 	//Tier 1 Toughness Perks
 		if(player.level >= 6) {
-		if(player.hasPerk("Tank") >= 0 && player.tou >= 60) {
-			perkList.push({label:"Tank 2"});
+		if(player.findPerk(PerkLib.Tank) >= 0 && player.tou >= 60) {
+			_add(new PerkClass(PerkLib.Tank2));
 		}
-		if(player.hasPerk("Regeneration") >= 0 && player.tou >= 70) {
-			perkList.push({label:"Regeneration 2"});
+		if(player.findPerk(PerkLib.Regeneration) >= 0 && player.tou >= 70) {
+			_add(new PerkClass(PerkLib.Regeneration2));
 		}
 		if(player.tou >= 75) {
-			perkList.push({label:"Immovable Object"});
+			_add(new PerkClass(PerkLib.ImmovableObject));
 		}
 	}
 	//Tier 2 Toughness Perks
 	if(player.level >= 12) {
 		if(player.tou >= 75) {
-			perkList.push({label:"Resolute"});
+			_add(new PerkClass(PerkLib.Resolute));
 		}
 		if(player.tou >= 60) {
-			perkList.push({label:"Iron Man"});
+			_add(new PerkClass(PerkLib.IronMan));
 		}
 	}
 	//slot 3 - speed perk
 	if(player.spe >= 25) {
-			perkList.push({label:"Evade"});
+			_add(new PerkClass(PerkLib.Evade));
 	}
 	//slot 3 - run perk
 	if(player.spe >= 25) {
-			perkList.push({label:"Runner"});
+			_add(new PerkClass(PerkLib.Runner));
 	}
 	//slot 3 - Double Attack perk
-	if(player.hasPerk("Evade") >= 0 && player.hasPerk("Runner") >= 0 && player.spe >= 50) {
-			perkList.push({label:"Double Attack"});
+	if(player.findPerk(PerkLib.Evade) >= 0 && player.findPerk(PerkLib.Runner) >= 0 && player.spe >= 50) {
+			_add(new PerkClass(PerkLib.DoubleAttack));
 	}
 	//Tier 1 Speed Perks
 	if(player.level >= 6) {
 		//Speedy Recovery - Regain Fatigue 50% faster speed.
-		if(player.hasPerk("Evade") >= 0 && player.spe >= 60) {
-			perkList.push({label:"Speedy Recovery"});
+		if(player.findPerk(PerkLib.Evade) >= 0 && player.spe >= 60) {
+			_add(new PerkClass(PerkLib.SpeedyRecovery));
 		}
 		//Agility - A small portion of your speed is applied to your defense rating when wearing light armors.
-		if(player.spe > 75 && player.hasPerk("Runner") >= 0 && (player.armorPerk == "Light" || player.armorPerk == "Medium")) {
-			perkList.push({label:"Agility"});
+		if(player.spe > 75 && player.findPerk(PerkLib.Runner) >= 0 && (player.armorPerk == "Light" || player.armorPerk == "Medium")) {
+			_add(new PerkClass(PerkLib.Agility));
 		}
 		if(player.spe >= 60) {
-			perkList.push({label:"Lightning Strikes"});
+			_add(new PerkClass(PerkLib.LightningStrikes));
 		}
 	}
 	//Tier 2 Speed Perks
 	if(player.level >= 12) {
 		if(player.spe >= 75) {
-			perkList.push({label:"Lunging Attacks"});
+			_add(new PerkClass(PerkLib.LungingAttacks));
 		}
 	}
 	//Slot 4 - precision - -10 enemy toughness for damage calc
 	if(player.inte >= 25) {
-			perkList.push({label:"Precision"});
+			_add(new PerkClass(PerkLib.Precision));
 	}
 	//Spellpower - boosts spell power
 	if(player.inte >= 50) {
-			perkList.push({label:"Spellpower"});
+			_add(new PerkClass(PerkLib.Spellpower));
 	}
-	if(player.hasPerk("Spellpower") >= 0 && player.inte >= 50) {
-			perkList.push({label:"Mage"});
+	if(player.findPerk(PerkLib.Spellpower) >= 0 && player.inte >= 50) {
+			_add(new PerkClass(PerkLib.Mage));
 	}
 	//Tier 1 Intelligence Perks
 	if(player.level >= 6) {
 		if(player.inte >= 50)
-			perkList.push({label:"Tactician"});
-		if(spellCount() > 0 && player.hasPerk("Spellpower") >= 0 && player.hasPerk("Mage") >= 0 && player.inte >= 60) {
-			perkList.push({label:"Channeling"});
+			_add(new PerkClass(PerkLib.Tactician));
+		if(spellCount() > 0 && player.findPerk(PerkLib.Spellpower) >= 0 && player.findPerk(PerkLib.Mage) >= 0 && player.inte >= 60) {
+			_add(new PerkClass(PerkLib.Channeling));
 		}
 		if(player.inte >= 60) {
-			perkList.push({label:"Medicine"});
+			_add(new PerkClass(PerkLib.Medicine));
 		}
 	}
 	//Tier 2 Intelligence perks
 	if(player.level >= 12) {
-		if(player.hasPerk("Mage") >= 0 && player.inte >= 75) {
-			perkList.push({label:"Archmage"});
+		if(player.findPerk(PerkLib.Mage) >= 0 && player.inte >= 75) {
+			_add(new PerkClass(PerkLib.Archmage));
 		}
 	}
 	//LIBIDO PERKZ
 	//slot 5 - libido perks
 	//Slot 5 - Fertile+ increases cum production and fertility (+15%)
 	if(player.lib >= 25) {
-			perkList.push({label:"Fertility+"});
+			_add(new PerkClass(PerkLib.FertilityPlus,15,1.75,0,0));
 	}
 	//Slot 5 - minimum libido
 	if(player.lib >= 50) {
-			perkList.push({label:"Hot Blooded"});
+			_add(new PerkClass(PerkLib.HotBlooded,20,0,0,0));
 	}
 	//Tier 1 Libido Perks
 	if(player.level >= 6) {
 		//Slot 5 - minimum libido
 		if(player.lib >= 60) {
-			perkList.push({label:"Well Adjusted"});
+			_add(new PerkClass(PerkLib.WellAdjusted));
 		}
 		//Slot 5 - minimum libido
 		if(player.lib >= 60 && player.cor >= 50) {
-			perkList.push({label:"Masochist"});
+			_add(new PerkClass(PerkLib.Masochist));
 		}
 	}
 	//Corruption Perks - slot 7
 	//Slot 7 - Corrupted Libido - lust raises 10% slower.
 	if(player.cor >= 25) {
-			perkList.push({label:"Corrupted Libido"});
+			_add(new PerkClass(PerkLib.CorruptedLibido,20,0,0,0));
 	}
 	//Slot 7 - Seduction (Must have seduced Jojo
-	if(player.hasPerk("Seduction") < 0 && player.cor >= 50 && monk >= 5) {
-			perkList.push({label:"Seduction"});
+	if(player.findPerk(PerkLib.Seduction) < 0 && player.cor >= 50 && monk >= 5) {
+			_add(new PerkClass(PerkLib.Seduction));
 	}
 	//Slot 7 - Nymphomania
-	else if(player.hasPerk("Corrupted Libido") >= 0 && player.cor >= 75) {
-			perkList.push({label:"Nymphomania"});
+	else if(player.findPerk(PerkLib.CorruptedLibido) >= 0 && player.cor >= 75) {
+			_add(new PerkClass(PerkLib.Nymphomania));
 	}
 	//Slot 7 - UNFINISHED :3
-	if(minLust() >= 20 && player.hasPerk("Corrupted Libido") >= 0 && player.cor >= 50) {
-			perkList.push({label:"Acclimation"});
+	if(minLust() >= 20 && player.findPerk(PerkLib.CorruptedLibido) >= 0 && player.cor >= 50) {
+			_add(new PerkClass(PerkLib.Acclimation));
 	}
 	//Tier 1 Corruption Perks - acclimation over-rides
 	else if(player.level >= 6)
 	{
-		if(player.cor >= 60 && player.hasPerk("Corrupted Libido") >= 0) {
-			perkList.push({label:"Sadist"});
+		if(player.cor >= 60 && player.findPerk(PerkLib.CorruptedLibido) >= 0) {
+			_add(new PerkClass(PerkLib.Sadist));
 		}
-		if(player.hasPerk("Corrupted Libido") >= 0 && player.cor >= 70) {
-			perkList.push({label:"Arousing Aura"});
+		if(player.findPerk(PerkLib.CorruptedLibido) >= 0 && player.cor >= 70) {
+			_add(new PerkClass(PerkLib.ArousingAura));
 		}
 	}
 	//Tier 1 Misc Perks
 	if(player.level >= 6) {
-		perkList.push({label:"Resistance"});
+		_add(new PerkClass(PerkLib.Resistance));
 	}
 	// FILTER PERKS
 	perkList = perkList.filter(
 			function(perk:*,idx:int,array:Array):Boolean{
-				return player.hasPerk(perk.label) < 0;
+				return player.findPerk(perk.perk.ptype) < 0;
 			});
-	mainView.aCb.dataProvider = new DataProvider(perkList); 
+	mainView.aCb.dataProvider = new DataProvider(perkList);
+	return perkList;
 }
 
-public function applyPerk(pName:String = ""):void {
+public function applyPerk(perk:PerkClass):void {
 	player.perkPoints--;
 	//Apply perk here.
-	outputText("<b>" + tempPerk + "</b> gained!", true);
-	switch(tempPerk) {
-		case "Strong Back 2: Strong Harder":
-			player.createPerk("Strong Back 2: Strong Harder",0,0,0,0, "Enables fifth item slot.");
-			itemSlot5.unlocked = true;
-			break;
-		case "Strong Back":
-			player.createPerk("Strong Back",0,0,0,0, "Enables fourth item slot.");
-			itemSlot4.unlocked = true;
-			break;
-		case "Tank":
-			player.createPerk("Tank",0,0,0,0,"Raises max HP by 50.");
-			break;
-		case "Regeneration":
-			player.createPerk("Regeneration",0,0,0,0,"Regenerates 2% of max HP/hour and 1% of max HP/round.");
-			break;
-		case "Iron Man":
-			player.createPerk("Iron Man",0,0,0,0,"Now now, don't cheat.");
-			break;
-		case "Evade":
-			player.createPerk("Evade",0,0,0,0,"Increases avoidance chances.");
-			break;
-		case "Runner":
-			player.createPerk("Runner",0,0,0,0,"Increases chances of escaping combat.");
-			break;
-		case "Fertility+":
-			player.createPerk("Fertility+",15,1.75,0,0,"Increases pregnancy chance by 15% and cum volume by up to 50%.");
-			break;
-		case "Hot Blooded":
-			player.createPerk("Hot Blooded",20,0,0,0, "Raises minimum lust by up to 20.");
-			break;
-		case "Corrupted Libido":
-			player.createPerk("Corrupted Libido",20,0,0,0, "Reduces lust gain by 10%.");
-			break;
-		case "Seduction":
-			player.createPerk("Seduction",0,0,0,0,"Upgrades your tease attack, making it more effective.");
-			break;
-		case "Precision":
-			player.createPerk("Precision",0,0,0,0,"Reduces enemy damage resistance by 10.");
-			break;
-		case "Nymphomania":
-			player.createPerk("Nymphomania",0,0,0,0,"Raises minimum lust by up to 30.");
-			break;
-		case "Spellpower":
-			player.createPerk("Spellpower",0,0,0,0,"Increases the effects of your spells by up to 50%.");
-			break;
-		case "Mage":
-			player.createPerk("Mage",0,0,0,0,"Increases the strength of your spells even more than 'Spellpower', up to 100%.");
-			break;
-		case "Double Attack":
-			player.createPerk("Double Attack",0,0,0,0,"Allows you to perform two melee attacks per round.");
-			break;
-		case "Acclimation":
-			player.createPerk("Acclimation",0,0,0,0,"Reduces the rate at which your lust increases.");
-			break;
-		case "Thunderous Strikes":
-			player.createPerk("Thunderous Strikes",0,0,0,0,"+20% 'Attack' damage while strength is at or above 80.");
-			break;
-		case "Weapon Mastery":
-			player.createPerk("Weapon Mastery",0,0,0,0,"After getting so good at carrying large objects, you find large weapons much easier to handle (Double 'Large' weapon bonuses when equipped).");
-			if(player.weaponPerk == "Large") player.weaponAttack *= 2;
-			break;
-		case "Tank 2":
-			player.createPerk("Tank 2",0,0,0,0,"Your maximum HP is raised by an extra 1 point per point of toughness!");
-			HPChange(player.tou, false);
-			statScreenRefresh();
-			break;
-		case "Regeneration 2":
-			player.createPerk("Regeneration 2",0,0,0,0,"You regenerate an additional 2% of max HP per round and heal faster out of combat (4% of max HP/hour)");
-			break;
-		case "Speedy Recovery":
-			player.createPerk("Speedy Recovery",0,0,0,0,"Thanks to your impressive metabolism you regain fatigue 50% faster.");
-			break;
-		case "Agility":
-			player.createPerk("Agility",0,0,0,0,"When wearing light or medium armor its effectiveness is increased by a portion of your speed.");
-			if(player.armorPerk == "Light") player.armorDef += Math.round(player.spe/10);
-			else if(player.armorPerk == "Medium") player.armorDef += Math.round(player.spe/15);
-			break;
-		case "Channeling":
-			player.createPerk("Channeling",0,0,0,0,"You've gotten even better at spellcasting, gaining up to 50% more effectiveness!");
-			break;
-		case "Medicine":
-			player.createPerk("Medicine",0,0,0,0,"You now have a 15% chance per round of cleansing poisons/drugs from your body.");
-			break;
-		case "Well Adjusted":
-			player.createPerk("Well Adjusted",0,0,0,0,"You gain half as much lust as time passes in Mareth.");
-			break;
-		case "Masochist":
-			player.createPerk("Masochist",0,0,0,0,"You have a masochism fetish and take 30 percent less damage, but your lust goes up when struck (Requires 60+ Libido).");
-			break;
-		case "Sadist":
-			player.createPerk("Sadist",0,0,0,0,"You have a sadism fetish and strike harder, but become aroused by the act of dealing damage.");
-			break;
-		case "Arousing Aura":
-			player.createPerk("Arousing Aura",0,0,0,0,"While your corruption is at or above 70, you exude an aura of lust.");
-			break;
-		case "Resistance":
-			player.createPerk("Resistance",0,0,0,0,"You've become resistant to the myriad ways your lust can be increased.");
-			break;
-		case "Tactician":
-			player.createPerk("Tactician",0,0,0,0,"");
-			break;
-		case "Archmage":
-			player.createPerk("Archmage",0,0,0,0,"");
-			break;
-		case "Lunging Attacks":
-			player.createPerk("Lunging Attacks",0,0,0,0,"");
-			break;
-		case "Lightning Strikes":
-			player.createPerk("Lightning Strikes",0,0,0,0,"");
-			break;
-		case "Immovable Object":
-			player.createPerk("Immovable Object",0,0,0,0,"");
-			break;
-		case "Resolute":
-			player.createPerk("Resolute",0,0,0,0,"");
-			break;
-		case "Berzerker":
-			player.createPerk("Berzerker",0,0,0,0,"");
-			break;
-		case "Brutal Blows":
-			player.createPerk("Brutal Blows",0,0,0,0,"");
-			break;
-		default:
-			outputText("\n\n<b>AN ERROR HAS OCCURRED: </b>Invalid tempPerk value!", false);
-			player.perkPoints++;
-			break;
+	outputText("<b>" + perk.perkName + "</b> gained!", true);
+	player.createPerk(perk.ptype,perk.value1,perk.value2,perk.value3,perk.value4);
+	if (perk.ptype == PerkLib.StrongBack2) player.itemSlot5.unlocked = true;
+	if (perk.ptype == PerkLib.StrongBack) player.itemSlot4.unlocked = true;
+	if (perk.ptype == PerkLib.Tank2) {
+		HPChange(player.tou, false);
+		statScreenRefresh();
 	}
 	doNext(1);
 }
@@ -1019,381 +537,23 @@ public function getButtonToolTipText( buttonText :String ) :String
 
 	buttonText = buttonText || '';
 
-	//Perkzzz
-	if(buttonText.indexOf("Strong Back") != -1) {
-		toolTipText = "The Strong Back perk unlocks an additional inventory space, allowing you to carry more.";
-	}
-	if(buttonText.indexOf("StrongBack2") != -1) {
-		toolTipText = "The Strong Back 2 perk unlocks a fifth inventory location, allowing you to carry as much as possible.";
-	}
-	if(buttonText.indexOf("T.Strikes") != -1) {
-		toolTipText = "You've gotten so good at putting your sizable strength behind your attacks that you deal 20% more damage with standard attacks while strength is 80 or higher.";
-	}
-	if(buttonText.indexOf("W.Mastery") != -1) {
-		toolTipText = "After getting so good at carrying large objects, you find large weapons much easier to handle (Double 'Large' weapon bonuses when equipped).";
-	}
-	if(buttonText.indexOf("Tank 2") != -1) {
-		toolTipText = "Tank 2 raises your maximum HP by an additional 1 HP per point of toughness.";
-	}
-	if(buttonText.indexOf("Tank") != -1) {
-		toolTipText = "The Tank perk adds an additional 50 HP to your maximum hitpoints, allowing you take more damage before losing a fight.";
-	}
-	if(buttonText.indexOf("Regenerate") != -1) {
-		toolTipText = "The Regeneration perk makes your hit points come back faster, both in and out of combat.  In combat you gain 1 HP a round, outside of combat you'll get 2 HP an hour.";
-	}
-	if(buttonText.indexOf("Regen 2") != -1) {
-		toolTipText = "The Regeneration 2 perk quadruples the effectiveness of your regeneration.";
-	}
-	if(buttonText.indexOf("Evade") != -1) {
-		toolTipText = "The Evade perk gives you an additional 10% chance to avoid enemy attacks beyond the normal dodge chance.";
-	}
-	if(buttonText.indexOf("Agility") != -1) {
-		toolTipText = "The agility perk allows you to increase your armor defense by a portion of your speed when wearing light or medium armor.";
-	}
-	if(buttonText.indexOf("S.Recovery") != -1) {
-		toolTipText = "The speedy recovery perk increases the rate at which you regain fatigue.";
-	}
-	if(buttonText.indexOf("D.Attack") != -1) {
-		toolTipText = "The Double Attack perk lets you take advantage of your incredible speed to attack twice in one round.  Requires high speed and strength at or below 60.";
-	}
-	if(buttonText.indexOf("Spellpower") != -1) {
-		toolTipText = "The Spellpower perk increases the effects of your spells by up to 50% (dependant on the spell).";
-	}
-	if(buttonText.indexOf("Mage") != -1) {
-		toolTipText = "The Mage perk increases the effects of your spells by up to 100% (dependant on the spell).";
-	}
-	if(buttonText.indexOf("Channeling") != -1) {
-		toolTipText = "The channeling perk increases the spell bonus by up to an additional 50%.";
-	}
-	if(buttonText.indexOf("Medicine") != -1) {
-		toolTipText = "The medicine perk gives you a 15% chance per round of removing all non-biological poisons in combat.";
-	}
-	if(buttonText.indexOf("Runner") != -1) {
-		toolTipText = "The Runner perk increases your chances of escaping combat significantly, and may help with out of combat escapes as well.";
-	}
-	if(buttonText.indexOf("Fertility+") != -1) {
-		toolTipText = "The Fertility+ perk increases your pregnancy chance by 15% and also increases any cum production by 50 percent!";
-	}
-	if(buttonText.indexOf("Hot Blooded") != -1) {
-		toolTipText = "The Hot Blooded perk takes advantage of your enhanced libido, allowing your lust to never drop below 20.";
-	}
-	if(buttonText.indexOf("W.Adjusted") != -1) {
-		toolTipText = "The Well Adjusted perk halves the lust you gain over time in Mareth.";
-	}
-	if(buttonText.indexOf("Masochist") != -1) {
-		toolTipText = "The Masochism perk reduces damage taken by 30 percent but raises your lust from each hit.";
-	}
-	if(buttonText.indexOf("CorruptLibido") != -1) {
-		toolTipText = "The Corrupted Libido perk lets you use your corruption to adapt to your heightened libido, making lust rise 10 percent slower.";
-	}
-	if(buttonText.indexOf("Seduction") != -1) {
-		toolTipText = "The Seduction perk enhances your ability to tease and seduce, upgrading your tease attack significantly.";
-	}
-	if(buttonText.indexOf("Acclimation") != -1) {
-		toolTipText = "The Acclimation perk allows your highly corrupted form to adapt to the constant lust it's subjected to, slowing additional lust gain.";
-	}
-	if(buttonText.indexOf("A. Aura") != -1) {
-		toolTipText = "The Arousing Aura perk causes you to exude a lust-inducing aura whenever your corruption is 70 or above.";
-	}
-	if(buttonText.indexOf("Sadist") != -1) {
-		toolTipText = "The Sadist perk increases the damage you do with some physical attacks by 20% but causes you to gain lust from it.";
-	}
-	if(buttonText.indexOf("Resistance") != -1) {
-		toolTipText = "The Resistance perk gives you an additional reduction to lust gains.";
-	}
-	if(buttonText.indexOf("Precision") != -1) {
-		toolTipText = "The Precision perk allows you to strike an enemy's weak points, reducing damage resistance by 10.  Requires you to keep intelligence above 25, or you'll lose the benefits of this perk.";
-	}
-	if(buttonText.indexOf("Nymphomania") != -1) {
-		toolTipText = "The Nymphomania perk allows your corruption to have it's way with your lust, keeping you constantly aroused.  Your lust will never drop below 30 with this perk.";
-	}
 	//Items
-	if(buttonText.indexOf("MinoBlo") != -1) {
-		toolTipText = "You've got a scratched up looking vial full of bright red minotaur blood.  Any time you move it around it seems to froth up, as if eager to escape.";
-	}
-	if(buttonText.indexOf("GroPlus") != -1) {
-		toolTipText = "This is a small needle with a resevoir full of blue liquid.  A faded label marks it as 'GroPlus'.  Its purpose seems obvious.";
-	}
-	if(buttonText.indexOf("ImpFood") != -1) {
-		toolTipText = "This is a small parcel of reddish-brown bread stuffed with some kind of meat.  It smells delicious.";
-	}
-	if(buttonText.indexOf("Shark.T") != -1) {
-		toolTipText = "A glinting white tooth, very sharp and intimidating.";
-	}
-	if(buttonText.indexOf("ExtSerm") != -1) {
-		toolTipText = "This is a bottle of foamy pink liquid, purported by the label to increase the speed at which the user's hair grows.";
-	}
-	if(buttonText.indexOf("ProBova") != -1) {
-		toolTipText = "This cloudy potion has been enhanced by the alchemist Lumi to imbue its drinker with cow-like attributes.";
-	}
-	if(buttonText.indexOf("MinoCum") != -1) {
-		toolTipText = "This bottle of minotaur cum looks thick and viscous.  You know it has narcotic properties, but aside from that its effects are relatively unknown.";
-	}
-	if(buttonText.indexOf("PurPeac") != -1) {
-		toolTipText = "This is a peach from Minerva's spring, yellowy-orange with red stripes all over it.";
-	}
-	if(buttonText.indexOf("MouseCo") != -1) {
-		toolTipText = "A handful of rare aromatic beans with sharp creases in the middle, making them look like small mouse ears.  Allegedly very popular and plentiful before the mice-folk were wiped out.";
-	}
-	if(buttonText.indexOf("RingFig") != -1) {
-		toolTipText = "A dried fig with two lobes and thin dark rings just below its stem.  The skin is wrinkly and it looks vaguely like a bulging scrotum.";
-	}
-	if(buttonText.indexOf("Equinum") != -1) {
-		toolTipText = "This is a long flared vial with a small label that reads, \"<i>Equinum</i>\".  It is likely this potion is tied to horses in some way.";
-	}
-	if(buttonText.indexOf("PrFruit") != -1) {
-		toolTipText = "This sweet-smelling produce looks like an eggplant, but feels almost squishy, and rubbery to the touch. Holding it to your ear, you think you can hear some fluid sloshing around inside.";
-	}
-	if(buttonText.indexOf("TrapOil") != -1) {
-		toolTipText = "A round, opaque glass vial filled with a clear, viscous fluid.  It has a symbol inscribed on it, a circle with a cross and arrow pointing out of it in opposite directions.  It looks and smells entirely innocuous.";
-	}
-	if(buttonText.indexOf("FishFil") != -1) {
-		toolTipText = "A perfectly cooked piece of fish.  You're not sure what type of fish is, since you're fairly certain \"delicious\" is not a valid species.";
-	}
-	if(buttonText.indexOf("Debimbo") != -1) {
-		if(player.hasPerk("Bimbo Brains") >= 0 || player.hasPerk("Futa Faculties") >= 0)
-			toolTipText = "This should totally like, fix your brain and stuff.  You don't really think anything is wrong with your head - it feels all pink and giggly all the time.";
-		else
-			toolTipText = "This draft is concocted from five scholar's teas and who knows what else.  Supposedly it will correct the stupifying effects of Bimbo Liqueur.";
-	}
-	if(buttonText.indexOf("FoxJewl") != -1) {
-		toolTipText = "A shining teardrop-shaped jewel.  An eerie blue flame dances beneath the surface.";
-	}
-	if(buttonText.indexOf("MystJwl") != -1) {
-		toolTipText = "The flames within this jewel glow brighter than before, and have taken on a sinister purple hue.  It has been enhanced to increase its potency, allowing it to transform you more easily, but may have odd side-effects...";
-	}
-	if(buttonText.indexOf("KitGift") != -1) {
-		toolTipText = "A small square package given to you by a forest kitsune.  It is wrapped up in plain white paper and tied with a string.  Who knows what's inside?";
-	}
-	if(buttonText.indexOf("GldStat") != -1) {
-		toolTipText = "An intricate golden idol of an androgynous humanoid figure with nine long tails.  It probably had some spiritual significance to its owner.";
-	}
-	if(buttonText.indexOf("DrgnEgg") != -1) {
-		toolTipText = "A large, solid egg, easily the size of your clenched fist.  Its shell color is reddish-white, with blue splotches.";
-	}
-	if(buttonText.indexOf("DrgnShl") != -1) {
-		toolTipText = "A durable shield that has been forged from the remains of the dragon egg you found in the swamp. Absorbs any fluid attacks you can catch, rendering them useless.";
-	}
-	if(buttonText.indexOf("SheepMk") != -1) {
-		toolTipText = "This bottle of sheep milk is said to have corruption-fighting properties.  It may be useful.";
-	}
-	if(buttonText.indexOf("E.Staff") != -1) {
-		toolTipText = "This eldritch staff once belonged to the Harpy Queen, who was killed after her defeat at your hands.  It fairly sizzles with magical power.";
-	}
-	if(buttonText.indexOf("FoxBery") != -1) {
-		toolTipText = "This large orange berry is heavy in your hands.  It may have gotten its name from its bright orange coloration.  You're certain it is no mere fruit.";
-	}
-	if(buttonText.indexOf("FoxBery") != -1) {
-		toolTipText = "This large orange berry is heavy in your hands.  It may have gotten its name from its bright orange coloration.  You're certain it is no mere fruit.";
-	}
-	if(buttonText.indexOf("VixVigr") != -1) {
-		toolTipText = "This small medicine bottle contains something called \"Vixen's Vigor\", supposedly distilled from common fox-berries.  It is supposed to be a great deal more potent, and a small warning label warns of \"extra boobs\", whatever that means.";
-	}
-	if(buttonText.indexOf("BC Beer") != -1) {
-		toolTipText = "A capped mug containing an alcoholic drink secreted from the breasts of Niamh.  It smells tasty.";
-	}
-	if(buttonText.indexOf("I.Robes") != -1) {
-		toolTipText = "These foreboding red and gold robes are embroidered with the symbols of a lost kingdom.  Wearing them will cause spells to tax your health instead of exhausting you.";
-	}
-	if(buttonText.indexOf("I.Corst") != -1) {
-		toolTipText = "This sexualized and feminine red and gold ensemble carries with it the hopes of a shamed sorcerer.  Wearing it will cause spells to tax your health instead of exhausting you.";
-	}
-	if(buttonText.indexOf("S.Blade") != -1) {
-		toolTipText = "Forged not by a swordsmith but a sorceress, this arcane-infused blade amplifies your magic.  Unlike the wizard staves it is based on, this weapon also has a sharp edge, a technological innovation which has proven historically useful in battle.";
-	}
-	if(buttonText.indexOf("DryTent") != -1) {
-		toolTipText = "A dried tentacle from one of the lake anemones.  It's probably edible, but the stingers are still a little active.";
-	}
-	if(buttonText.indexOf("IzyMilk") != -1) {
-		toolTipText = "This is a bottle of Isabella's milk.  Isabella seems fairly certain it will invigorate you.";
-	}
-	if(buttonText.indexOf("EctoPls") != -1) {
-		toolTipText = "The green-tinted, hardly corporeal substance flows like a liquid inside its container. It makes you feel... uncomfortable, as you observe it.";
-	}
-	if(buttonText.indexOf("T.SSilk") != -1) {
-		toolTipText = "This bundle of fibrous silk is incredibly tough and strong, though somehow not sticky in the slightest.  You have no idea how to work these tough little strands into anything usable.  Perhaps one of this land's natives might have an idea?";
-	}
-	if(buttonText.indexOf("SS.Robe") != -1) {
-		toolTipText = "This robe looks incredibly comfortable.  It's made from alchemically enhanced spider-silk, and embroidered with what looks like magical glyphs around the sleeves and hood.";
-	}
-	if(buttonText.indexOf("SSArmor") != -1) {
-		toolTipText = "This armor is as white as the driven snow.  It's crafted out of thousands of strands of spider-silk into an impenetrable protective suit.  The surface is slightly spongy, but so tough you wager most blows would bounce right off.";
-	}
-	if(buttonText.indexOf("S.Gossr") != -1) {
-		toolTipText = "These strands of gooey pink gossamer seem quite unlike the normal silk that spider-morphs produce.  It smells sweet and is clearly edible, but who knows what it might do to you?";
-	}
-	if(buttonText.indexOf("B.Gossr") != -1) {
-		toolTipText = "These strands of gooey black gossamer seem quite unlike the normal silk that driders produce.  It smells sweet and is clearly edible, but who knows what it might do to you?";
-	}
-	if(buttonText.indexOf("TSTooth") != -1) {
-		toolTipText = "This looks like a normal shark tooth, though with an odd purple glow.";
+	//if (/^....... x\d+$/.test(buttonText)){
+	//	buttonText = buttonText.substring(0,7);
+	//}
+	
+	// Fuck your regex
+	if (buttonText.indexOf(" x") != -1)
+	{
+		buttonText = buttonText.split(" x")[0];
 	}
 	
-
-	if(buttonText.indexOf("KangaFt") != -1) {
-		toolTipText = "A yellow, fibrous, tubular pod.  A split in the end reveals many lumpy, small seeds inside.  The smell of mild fermentation wafts from them.";
-	}
-	if(buttonText.indexOf("MghtyVg") != -1) {
-		toolTipText = "A yellow, fibrous, tubular pod.  A split in the end reveals many lumpy, small seeds inside.  The smell of mild fermentation wafts from them.  It glows slightly from Lumi's enhancements.";
-	}
-	if(buttonText.indexOf("GldSeed") != -1) {
-		toolTipText = "This seed looks and smells absolutely delicious.  Though it has an unusual color, the harpies prize these nuts as delicious treats.  Eating one might induce some physical transformations.";
-	}
-	if(buttonText.indexOf("MagSeed") != -1) {
-		toolTipText = "This seed glows with power.  It's been enhanced by Lumi to unlock its full potential, allowing it to transform you more easily.";
-	}
-	if(buttonText.indexOf("R.BdySt") != -1) {
-		toolTipText = "A high society bodysuit. It is as easy to mistake it for ballroom apparel as it is for boudoir lingerie. The thin transparent fabric is so light and airy that it makes avoiding blows a second nature.";
-	}
-	if(buttonText.indexOf("BroBrew") != -1) {
-		toolTipText = "This aluminum can is labelled as 'Bro Brew'.  It even has a picture of a muscly, bare-chested man flexing on it.  A small label in the corner displays: \"Demon General's Warning: Bro Brew's effects are as potent (and irreversible) as they are refreshing.\"";
-	}
-	if(buttonText.indexOf("BimboLq") != -1) {
-		toolTipText = "This small bottle of liqueur is labelled 'Bimbo Liqueur'.  There's a HUGE warning label about the effects being strong and usually permanent, so you should handle this with care.";
-	}        
-	if(buttonText.indexOf("H.Gaunt") != -1) {
-		toolTipText = "These metal gauntlets are covered in nasty looking hooks that are sure to tear at your foes flesh and cause them harm.";
-	}
-	if(buttonText.indexOf("SensDrf") != -1) {
-		toolTipText = "This carefully labelled potion is a 'Sensitivity Draft', and if the diagrams are any indication, it will make your body more sensitive.";
-	}
-	if(buttonText.indexOf("NumbRox") != -1) {
-		toolTipText = "This packet of innocuous looking 'candy' guarantees to reduce troublesome sensations and taste delicious.";
-	}
-	if(buttonText.indexOf("BonStrp") != -1) {
-		toolTipText = "These leather straps and well-placed hooks are actually designed in such a way as to be worn as clothing.  While they technically would cover your naughty bits, virtually every other inch of your body would be exposed.";
-	}
-	if(buttonText.indexOf("NurseCl") != -1) {
-		toolTipText = "This borderline obscene nurse's outfit would barely cover your hips and crotch.  The midriff is totally exposed, and the white top leaves plenty of room for cleavage.  A tiny white hat tops off the whole ensemble.";
-	}
-	if(buttonText.indexOf("GooArmr") != -1) {
-		toolTipText = "This shining suit of platemail is more than just platemail - it houses the goo-girl, Valeria!  Together, they provide one tough defense, but you had better be okay with having goo handling your junk while you fight if you wear this!";
-	}
-	if(buttonText.indexOf("LMArmor") != -1) {
-		toolTipText = "This skimpy chain bikini barely qualifies as armor.  Indeed, the chain is made from links much finer and lighter than normal, so fine that it feels almost silken under your fingertips.  A simple seal in the g-string-like undergarment states, \"Virgins only.\"";
-	}
-	if(buttonText.indexOf("JRapier") != -1) {
-		toolTipText = "This jeweled rapier is ancient but untarnished.  The hilt is wonderfully made, and fits your hand like a tailored glove.  The blade is shiny and perfectly designed for stabbing.";
-	}
-	if(buttonText.indexOf("RRapier") != -1) {
-		toolTipText = "He's bound it with his red sash around the length like a ribbon, as though he has now gifted it to you.  Perhaps it is his way of congratulating you.";
-	}
-	if(buttonText.indexOf("SucWhip") != -1 || buttonText.indexOf("Demon Whip") != -1) {
-		toolTipText = "This coiled length of midnight-black leather practically exudes lust.  Though it looks like it could do a lot of damage, the feel of that slick leather impacting flesh is sure to inspire lust.";
-	}
-	if(buttonText.indexOf("Reptlum") != -1) {
-		toolTipText = "This is a rounded bottle with a small label that reads, \"<i>Reptilum</i>\".  It is likely this potion is tied to reptiles in some way.";
-	}
-	if(buttonText.indexOf("W.Fruit") != -1) {
-		toolTipText = "This small, peach-sized fruit has tiny whisker-like protrusions growing from the sides.";
-	}
-	
-	if(buttonText.indexOf("Gob.Ale") != -1 || buttonText == "GoblinAle") {
-		toolTipText = "This sealed flagon of 'Goblin Ale' sloshes noisily with alcoholic brew.  Judging by the markings on the flagon, it's a VERY strong drink, and not to be trifled with.";
-	}
-	//"Hummus "
-	if(buttonText.indexOf("Hummus ") != -1) {
-		toolTipText = "This pile of hummus doesn't look that clean, and you really don't remember where you got it from.  It looks bland.  So bland that you feel blander just by looking at it.";
-	}
-	
-	if(buttonText.indexOf("LthrRob") != -1) {
-		toolTipText = "This is a suit of flexible leather armor with a voluminous set of concealing black robes.";
-	}
-	if(buttonText.indexOf("ScaleMl") != -1) {
-		toolTipText = "This suit of scale-mail covers the entire body with layered steel scales, providing flexibility and protection.";
-	}
-	if(buttonText.indexOf("FullPlt") != -1) {
-		toolTipText = "A highly protective suit of steel platemail.  It would be hard to find better physical protection than this.";
-	}
-	if(buttonText.indexOf("BimboSk") != -1) {
-		toolTipText = "A tight, cleavage-inducing halter top and an extremely short miniskirt.  The sexual allure of this item is undoubtable.";
-	}
-	if(buttonText.indexOf("SeductA") != -1) {
-		toolTipText = "A complete suit of scalemail shaped to hug tightly against every curve, it has a solid steel chest-plate with obscenely large nipples molded into it.  The armor does nothing to cover the backside, exposing the wearer's cheeks to the world.";
-	}
-	if(buttonText.indexOf("IndecSt") != -1) {
-		toolTipText = "This suit of steel 'armor' has two round disks that barely cover the nipples, a tight chainmail bikini, and circular butt-plates.";
-	}
-	if(buttonText.indexOf("W.Robes") != -1) {
-		toolTipText = "These robes appear to have once belonged to a female wizard.  They're long with a slit up the side and full billowing sleeves.  The top is surprisingly low cut.  Somehow you know wearing it would aid your spellcasting.";
-	}
-	if(buttonText.indexOf("W.Staff") != -1) {
-		toolTipText = "This staff is made of very old wood and seems to tingle to the touch.  The top has an odd zig-zag shape to it, and the wood is worn smooth from lots of use.  It probably belonged to a wizard at some point and would aid magic use. (ATK: 3)";
-	}
-	if(buttonText.indexOf("W. Staff") != -1) {
-		toolTipText = "An oddly bent piece of solid wood favored by spell-casters.  It is said to be made of from one of Marae's roots and allow for easier magic use. (ATK: 3) (Cost: 350)";
-	}
-	
-	if(buttonText.indexOf("W.Stick") != -1 || buttonText.indexOf("Wingstick") != -1) {
-		toolTipText = "A tri-bladed throwing weapon.  Though good for only a single use, it's guaranteed to do high damage if it hits.  (Cost: 16) (DMG: 40-100)";
-	}
-	if(buttonText.indexOf("Claymor") != -1 || buttonText.indexOf("L.Claymore") != -1) {
-		toolTipText = "A massive sword that a very strong warrior might use. Requires 40 strength to use.  (ATK: 15) (Cost: 1000)";
-	}
-	if(buttonText.indexOf("Warhamr") != -1 || buttonText.indexOf("Warhammer") != -1) {
-		toolTipText = "A huge war-hammer made almost entirely of steel that only the strongest warriors could use.  Requires 80 strength to use.  Getting hit with this might stun the victim.  (ATK: 15) (Cost: 1600)";
-	}
-	if(buttonText.indexOf("Katana ") != -1 || buttonText.indexOf("Katana") != -1) {
-		toolTipText = "A curved bladed weapon that cuts through flesh with the greatest of ease. (ATK: 10) (Cost: 500)";
-	}
-	if(buttonText.indexOf("Spear  ") != -1 || buttonText.indexOf("Spear") != -1) {
-		toolTipText = "A staff with a sharp blade at the tip designed to pierce through the toughest armor.  This would ignore most armors.  (ATK: 8) (Cost: 450)";
-	}
-	if(buttonText.indexOf("Whip   ") != -1 || buttonText.indexOf("Whip") != -1) {
-		toolTipText = "A coiled length of leather designed to lash your foes into submission.  There's a chance the bondage inclined might enjoy it! (ATK: 5) (Cost: 500)";
-	}
+	var itype:ItemType = ItemType.lookupItem(buttonText);
+	if (itype != null) toolTipText = itype.description;
+	itype = ItemType.lookupItemByShort(buttonText);
+	if (itype != null) toolTipText = itype.description;
 	if(buttonText.indexOf("Tail Whip") != -1) {
 		toolTipText = "Whip your foe with your tail to enrage them and lower their defense!";
-	}
-	if(buttonText.indexOf("S.Gaunt") != -1 || buttonText.indexOf("S.Gauntlet") != -1) {
-		toolTipText = "This single metal gauntlet has the knuckles tipped with metal spikes.  Though it lacks the damaging potential of other weapons, the sheer pain of its wounds has a chance of stunning your opponent. (ATK: 5) (Cost: 400)";
-	}
-	
-	if(buttonText.indexOf("FullChn") != -1) {
-		toolTipText = "This full suit of chainmail armor covers its wearer from head to toe in protective steel rings.";
-	}
-	if(buttonText.indexOf("ChBikni") != -1) {
-		toolTipText = "A revealing chainmail bikini that barely covers anything.  The bottom half is little more than a triangle of metal and a leather thong.";
-	}
-	
-	if(buttonText.indexOf("SnakOil") != -1) {
-		toolTipText = "A vial the size of your fist made of dark brown glass. It contains what appears to be an oily, yellowish liquid. The odor is abominable.";
-	}
-	if(buttonText.indexOf("L.Daggr") != -1) {
-		toolTipText = "A dagger with a short blade in a wavy pattern.  Its edge seems to have been enchanted to always be covered in a light aphrodisiac to arouse anything cut with it.";
-	}
-	if(buttonText.indexOf("KnottyP") != -1) {
-		toolTipText = "This knotted pepper is very swollen, with a massive, distended knot near the base.";
-	}
-	if(buttonText.indexOf("BulbyPp") != -1) {
-		toolTipText = "This bulbous pepper has a slightly different shape than the other canine peppers, with two large orb-like protrusions at the base.";
-	}
-	if(buttonText.indexOf("BlackPp") != -1) {
-		toolTipText = "This solid black canine pepper is smooth and shiny, but something about it doesn't seem quite right...";
-	}
-	if(buttonText.indexOf("DblPepp") != -1) {
-		toolTipText = "This canine pepper is actually two that have grown together due to some freak coincidence.";
-	}
-	if(buttonText.indexOf("LargePp") != -1) {
-		toolTipText = "This large canine pepper is much bigger than any normal peppers you've seen.";
-	}
-	if(buttonText.indexOf("WetClth") != -1) {
-		toolTipText = "Dripping with a viscous slime, you've no doubt rubbing this cloth on your body would have some kind of strange effect.";
-	}
-	if(buttonText.indexOf("B.Chitn") != -1) {
-		toolTipText = "A perfect piece of black chitin from a bee-girl.  It still has some fuzz on it.";
-	}
-	if(buttonText.indexOf("BeeArmr") != -1) {
-		toolTipText = "A suit of armor cleverly fashioned from giant bee chitin.";
-	}
-	if(buttonText.indexOf("Vital T") != -1 || buttonText.indexOf("Vitality T.") != -1) {
-		toolTipText = "This potent tea is supposedly good for the strengthening the body.";
-	}
-	if(buttonText.indexOf("Smart T") != -1 || buttonText.indexOf("Scholars T.") != -1) {
-		toolTipText = "This powerful brew supposedly has mind-strengthening effects.";
-	}
-	if(buttonText.indexOf("L.Hammr") != -1) {
-		toolTipText = "This two-handed warhammer looks pretty devastating.  You took it from Marble after she refused your advances.";
 	}
 	if(buttonText.indexOf("Dual Belt") != -1) {
 		toolTipText = "This is a strange masturbation device, meant to work every available avenue of stimulation.";
@@ -1404,184 +564,10 @@ public function getButtonToolTipText( buttonText :String ) :String
 	if(buttonText.indexOf("Fake Mare") != -1) {
 		toolTipText = "This fake mare is made of metal and wood, but the anatomically correct vagina looks as soft and wet as any female centaur's.";
 	}
-	if(buttonText.indexOf("P.LBova") != -1) {
-		toolTipText = "A bottle containing a misty fluid with a grainy texture; it has a long neck and a ball-like base.  The label has a stylized picture of a well-endowed cow-girl nursing two guys while they jerk themselves off. It has been purified by Rathazul.";
-	}
-	if(buttonText.indexOf("L.Draft") != -1 || buttonText == "LustDraft") {
-		toolTipText = "This vial of bright pink fluid bubbles constantly inside the glass, as if eager to escape.  It smells very sweet, and has \"Lust\" inscribed on the side of the vial.";
-	}
-	if(buttonText.indexOf("F.Draft") != -1) {
-		toolTipText = "This vial of red fluid bubbles constantly inside the glass, as if eager to escape.  It smells very strongly, though its odor is difficult to identify.  The word \"Fuck\" is inscribed on the side of the vial.";
-	}
-	if(buttonText.indexOf("Pipe") != -1) {
-		toolTipText = "This is a simple rusted pipe of unknown origins.  It's hefty and could probably be used as an effective bludgeoning tool. (ATK: +5) (Cost: 25)";
-	}
-	if(buttonText.indexOf("Lactaid") != -1) {
-		toolTipText = "Judging by the name printed on this bottle, 'Lactaid' probably has an effect on the ability to lactate, and you doubt that effect is a reduction.";
-	}
-	if(buttonText.indexOf("W. Book") != -1) {
-		toolTipText = "This white book is totally unmarked, and the cover is devoid of any lettering or title.  A shiny brass clasp keeps the covers closed until you are ready to read it.";
-	}
-	if(buttonText.indexOf("B. Book") != -1) {
-		toolTipText = "This solid black book is totally unmarked, saved for a blood red clasp that holds the covers closed until you are ready to read it.  The pages are edged with gold, like some of the fancy books in the monastary back home.";
-	}
-	if(buttonText.indexOf("LeathrA") != -1) {
-		toolTipText = "This is a suit of well-made leather armor.  It looks fairly rugged. (+5 Defense)";
-	}
-	if(buttonText.indexOf("LaBova ") != -1) {
-		toolTipText = "A bottle containing a misty fluid with a grainy texture, it has a long neck and a ball-like base.  The label has a stylized picture of a well endowed cowgirl nursing two guys while they jerk themselves off.";
-	}
-	
-	if(buttonText.indexOf("SDelite") != -1) {
-		toolTipText = "This precious fluid is often given to men a succubus intends to play with for a long time.";
-	}
-	if(buttonText.indexOf("S.Dream") != -1) {
-		toolTipText = "This precious fluid is often given to men a succubus intends to play with for a long time, though this batch has been enhanced by Lumi to have even greater potency.";
-	}
-	if(buttonText.indexOf("GreenGl") != -1) {
-		toolTipText = "This tough substance has no obvious use that you can discern.";
-	}
-	if(buttonText.indexOf("PSDelit") != -1) {
-		toolTipText = "This precious fluid is often given to men a succubus intends to play with for a long time.  It has been partially purified by Rathazul to prevent corruption.";
-	}
-	if(buttonText.indexOf("Reducto") != -1) {
-		toolTipText = "This container full of paste can be used to shrink a body part down by a significant amount.";
-	}
-	if(buttonText.indexOf("OviElix") != -1 || buttonText == "OviElixir") {
-		toolTipText = "This hexagonal crystal bottle is filled with a strange green fluid.  A tag with a picture of an egg is tied to the neck of the bottle, indicating it is somehow connected to egg-laying.";
-	}
-	if(buttonText.indexOf("PurHony") != -1) {
-		toolTipText = "This fine crystal vial is filled with a thick amber liquid that glitters in the light.  You can smell a sweet scent, even though it is tightly corked.";
-	}
-	if(buttonText.indexOf("BeeHony") != -1) {
-		toolTipText = "This fine crystal vial is filled with a thick amber liquid that glitters dully in the light.  You can smell a sweet scent, even though it is tightly corked.";
-	}
-	if(buttonText.indexOf("CanineP") != -1) {
-		toolTipText = "The pepper is shiny and red, bulbous at the base but long and narrow at the tip.  It smells spicy.";
-	}
-	if(buttonText.indexOf("SucMilk") != -1) {                        
-		toolTipText = "This milk-bottle is filled to the brim with a creamy white milk of dubious origin.  A pink label proudly labels it as \"<i>Succubi Milk</i>\".  In small text at the bottom of the label it reads: \"<i>To bring out the succubus in YOU!</i>\"";
-	}
-	if(buttonText.indexOf("P.S.Mlk") != -1) {                        
-		toolTipText = "This milk-bottle is filled to the brim with a creamy white milk of dubious origin.  A pink label proudly labels it as \"<i>Succubi Milk</i>\".  In small text at the bottom of the label it reads: \"<i>To bring out the succubus in YOU!</i>\"  Purified by Rathazul to prevent corruption.";
-	}
-	if(buttonText.indexOf("Cerul P") != -1 || buttonText.indexOf("Cerulean P.") != -1) {                        
-		toolTipText = "This is a mysterious bottle filled with a sky-blue liquid that sloshes gently inside.  Supposedly it will make you irresistible, though to what or who you cannot say.";
-	}
-	if(buttonText.indexOf("PeppWht") != -1) {                        
-		toolTipText = "This tightly corked glass bottle gives of a pepperminty smell and reminds you of the winter holidays.  How odd.";
-	}
-	if(buttonText.indexOf("IncubiD") != -1) {                        
-		toolTipText = "The cork-topped flask swishes with a slimy looking off-white fluid, purported to give incubi-like powers.  A stylized picture of a humanoid with a huge penis is etched into the glass.";
-	}
-	//"M. Milk"
-	if(buttonText.indexOf("M. Milk") != -1) {                        
-		toolTipText = "A clear bottle of milk from Marble's breasts. It smells delicious.";
-	}
-	if(buttonText.indexOf("P.Draft") != -1) {                        
-		toolTipText = "The cork-topped flask swishes with a slimy looking off-white fluid, purported to give incubi-like powers.  A stylized picture of a humanoid with a huge penis is etched into the glass. Rathazul has purified this to prevent corruption upon use.";
-	}
-	if(buttonText.indexOf("TScroll") != -1) {                        
-		toolTipText = "This tattered scroll is written in strange symbols, yet you have the feeling that if you tried to, you could decipher it.";
-	}
-	if(buttonText.indexOf("BrownEg") != -1) {                        
-		toolTipText = "This is an oblong egg, not much different from a chicken egg in appearance (save for the color).  Something tells you it's more than just food.";
-	}
-	if(buttonText.indexOf("L.BrnEg") != -1) {                        
-		toolTipText = "This is an oblong egg, not much different from an ostrich egg in appearance (save for the color).  Something tells you it's more than just food.";
-	}
-	if(buttonText.indexOf("PurplEg") != -1) {                        
-		toolTipText = "This is an oblong egg, not much different from a chicken egg in appearance (save for the color).  Something tells you it's more than just food.";
-	}
-	if(buttonText.indexOf("L.PrpEg") != -1) {                        
-		toolTipText = "This is an oblong egg, not much different from an ostrich egg in appearance (save for the color).  Something tells you it's more than just food.";
-	}
-	if(buttonText.indexOf("BlueEgg") != -1) {                        
-		toolTipText = "This is an oblong egg, not much different from a chicken egg in appearance (save for the color).  Something tells you it's more than just food.";
-	}
-	if(buttonText.indexOf("L.BluEg") != -1) {                        
-		toolTipText = "This is an oblong egg, not much different from an ostrich egg in appearance (save for the color).  Something tells you it's more than just food.";
-	}
-	if(buttonText.indexOf("PinkEgg") != -1) {                        
-		toolTipText = "This is an oblong egg, not much different from a chicken egg in appearance (save for the color).  Something tells you it's more than just food.";
-	}
-	if(buttonText.indexOf("NPnkEgg") != -1) {                        
-		toolTipText = "This is an oblong egg with an unnatural neon pink coloration.  It tingles in your hand with odd energies that make you feel as if you could jump straight into the sky.";
-	}
-	if(buttonText.indexOf("L.PnkEg") != -1) {                        
-		toolTipText = "This is an oblong egg, not much different from an ostrich egg in appearance (save for the color).  Something tells you it's more than just food.";
-	}
-	if(buttonText.indexOf("WhiteEg") != -1) {                        
-		toolTipText = "This is an oblong egg, not much different from a chicken egg in appearance.  Something tells you it's more than just food.";
-	}
-	if(buttonText.indexOf("L.WhtEg") != -1) {                        
-		toolTipText = "This is an oblong egg, not much different from an ostrich egg in appearance.  Something tells you it's more than just food.";
-	}
-	if(buttonText.indexOf("BlackEg") != -1) {                        
-		toolTipText = "This is an oblong egg, not much different from a chicken egg in appearance (save for the color).  Something tells you it's more than just food.";
-	}
-	if(buttonText.indexOf("L.BlkEg") != -1) {                        
-		toolTipText = "This is an oblong egg, not much different from an ostrich egg in appearance (save for the color).  Something tells you it's more than just food.  For all you know, it could turn you into rubber!";
-	}
-	if(buttonText.indexOf("RidingC") != -1) {                        
-		toolTipText = "This riding crop appears to be made of black leather, and could be quite a painful (or exciting) weapon.  (ATK: +5) (Cost: 50)";
-	}
-	if(buttonText.indexOf("L. Axe ") != -1) {                        
-		toolTipText = "This massive axe once belonged to a minotaur.  It'd be hard for anyone smaller than a giant to wield effectively.  The axe is double-bladed and deadly-looking.  (ATK: +15) (Cost: 100)";
-	}
-	if(buttonText.indexOf("GelArmr") != -1) {                        
-		toolTipText = "This suit of interlocking plates is made from a strange green material.  It feels spongy to the touch but is amazingly resiliant.  (DEF: +10) (Cost: 150)";
-	}
-	if(buttonText.indexOf("B.Sword") != -1) {                        
-		toolTipText = "This beautiful sword shines brilliantly in the light, showing the flawless craftsmanship of its blade.  The pommel and guard are heavily decorated in gold and brass.  Some craftsman clearly poured his heart and soul into this blade.  (ATK: +Varies) (Cost: 400)";
-	}
-	if(buttonText.indexOf("C.Cloth") != -1) {                        
-		toolTipText = "These loose fitting and comfortable clothes allow you to move freely while protecting you from the elements.  (DEF: +0) (Cost: 0)";
-	}
-	if(buttonText.indexOf("ClssyCl") != -1) {                        
-		toolTipText = "A set of classy suitclothes.";
-	}
-	if(buttonText.indexOf("RbbrClt") != -1) {                        
-		toolTipText = "A revealing set of fetish-wear.  Upgrades tease attack to seduce.";
-	}
-	if(buttonText.indexOf("FurLoin") != -1) {                        
-		toolTipText = "A pair of loincloths to cover your crotch and " + buttDescript() + ".  Typically worn by people named 'Conan'.";
-	}
-	if(buttonText.indexOf("AdvClth") != -1) {                        
-		toolTipText = "A set of comfortable green adventurer's clothes.  It even comes complete with a pointy hat!";
-	}
-	if(buttonText.indexOf("TubeTop") != -1) {                        
-		toolTipText = "A clingy tube top and VERY short shorts.";
-	}
-	if(buttonText.indexOf("Overall") != -1) {                        
-		toolTipText = "A simple white shirt and overalls.";
-	}
-
-	if(buttonText.indexOf("B.Dress") != -1) {                        
-		toolTipText = "A long ballroom dress patterned with sequins.  Perfect for important occassions.";
-	}
-	if(buttonText.indexOf("T.BSuit") != -1) {                        
-		toolTipText = "A semi-transparent bodysuit.";
-	}
-	if(buttonText.indexOf("M.Robes") != -1) {                        
-		toolTipText = "A set of modest robes, not dissimilar from what the monks back home would wear.";
-	}
-	if(buttonText.indexOf("LthrPnt") != -1) {                        
-		toolTipText = "A flowing silk shirt and tight black leather pants.  Suave!";
-	}
-	if(buttonText.indexOf("S.Swmwr") != -1) {
-		toolTipText = "An impossibly skimpy black bikini. You feel dirty just looking at it… and a little aroused, actually.";
-	}
-	if(buttonText.indexOf("Red Dye") != -1 || buttonText.indexOf("Blond D") != -1 || 
-	buttonText.indexOf("Black D") != -1 || buttonText.indexOf("Brown D") != -1 || 
-		buttonText.indexOf("AuburnD") != -1 || buttonText.indexOf("GrayDye") != -1 ||
-		buttonText.indexOf("PinkDye") != -1 || buttonText.indexOf("BlueDye") != -1 ||
-		buttonText.indexOf("OrangDy") != -1 || buttonText.indexOf("PurpDye") != -1) {                        
-		toolTipText = "This bottle of dye will allow you to change the color of your hair.  Of course if you don't have hair, using this would be a waste.";
-	}
 	//Combat
 	//COMBAT
 	//combat
+	//wombat
 	if (buttonText == "Attack") {
 		if (gameState != 1) toolTipText = "";
 		else toolTipText = "Attempt to attack the enemy with your " + player.weaponName + ".  Damage done is determined by your strength and weapon.";
@@ -1589,10 +575,7 @@ public function getButtonToolTipText( buttonText :String ) :String
 	if(buttonText == "Kiss") {                        
 		toolTipText = "Attempt to kiss your foe on the lips with drugged lipstick.  It has no effect on those without a penis.";
 	}
-	if(buttonText.indexOf("LustStk") != -1) {                        
-		toolTipText = "This tube of golden lipstick is used by harpies to keep males aroused.  It has aphrodisiac properties on anyone with male genitalia and is most effective when applied to the lips or groin.";
-	}
-	if(buttonText == "Tease") {                        
+	if(buttonText == "Tease") {
 		if (gameState != 1) toolTipText = "";
 		else toolTipText = "Attempt to make an enemy more aroused by striking a seductive pose and exposing parts of your body.";
 	}
@@ -1852,16 +835,17 @@ private function logFunctionInfo(func:Function, arg:* = null):void
 	trace(logStr)
 }
 
+
 // returns a function that takes no arguments, and executes function `func` with argument `arg`
 public function createCallBackFunction(func:Function, arg:*):Function
 {
-	if (func == null && CoC_Settings.haltOnErrors){
-		throw new Error("createCallBackFunction(null,"+arg+")");
+	if (func == null) {
+		CoC_Settings.error("createCallBackFunction(null," + arg + ")");
 	}
 	if( arg == -9000 || arg == null )
 	{
-		if (func == eventParser && CoC_Settings.haltOnErrors){
-			throw new Error("createCallBackFunction(eventParser,"+arg+")");
+		if (func == eventParser){
+			CoC_Settings.error("createCallBackFunction(eventParser,"+arg+")");
 		}
 		return function ():*
 		{ 
@@ -1882,8 +866,8 @@ public function createCallBackFunction(func:Function, arg:*):Function
 }
 public function createCallBackFunction2(func:Function,...args):Function
 {
-	if (func == null && CoC_Settings.haltOnErrors){
-		throw new Error("createCallBackFunction(null,"+args+")");
+	if (func == null){
+		CoC_Settings.error("createCallBackFunction(null,"+args+")");
 	}
 	return function():*
 	{
@@ -1908,7 +892,8 @@ public function addButton(pos:int, text:String = "", func1:Function = null, arg1
 
 	toolTipText = getButtonToolTipText( text );
 	mainView.showBottomButton( pos, text, callback, toolTipText );
-	mainView.setOutputText( currentText );
+	//mainView.setOutputText( currentText );
+	flushOutputTextToGUI();
 }
 
 public function hasButton(arg:*):Boolean {
@@ -1993,7 +978,8 @@ public function menu(text1:String = "", func1:Function = null, arg1:Number = -90
 	_conditionallyShowButton( 8, text9, func9, arg9 );
 	_conditionallyShowButton( 9, text0, func0, arg0 );
 
-	mainView.setOutputText( currentText );
+	//mainView.setOutputText( currentText );
+	flushOutputTextToGUI();
 }
 
 
@@ -2064,7 +1050,8 @@ public function choices(text1:String, butt1:*,
 
 	// funcs = new Array();
 	// args = new Array();
-	mainView.setOutputText( currentText );
+	//mainView.setOutputText( currentText );
+	flushOutputTextToGUI();
 }
 
 /****
@@ -2286,7 +1273,7 @@ public function hideUpDown():void {
 
 public function physicalCost(mod:Number):Number {
 	var costPercent:Number = 100;
-	if(player.hasPerk("Iron Man") >= 0) costPercent -= 50;
+	if(player.findPerk(PerkLib.IronMan) >= 0) costPercent -= 50;
 	mod *= costPercent/100;
 	return mod;
 }
@@ -2294,18 +1281,18 @@ public function physicalCost(mod:Number):Number {
 public function spellCost(mod:Number):Number {
 	//Addiditive mods
 	var costPercent:Number = 100;
-	if(player.hasPerk("Spellcasting Affinity") >= 0) costPercent -= player.perkv1("Spellcasting Affinity");
-	if(player.hasPerk("Wizard's Endurance") >= 0) costPercent -= player.perkv1("Wizard's Endurance");
+	if(player.findPerk(PerkLib.SpellcastingAffinity) >= 0) costPercent -= player.perkv1(PerkLib.SpellcastingAffinity);
+	if(player.findPerk(PerkLib.WizardsEndurance) >= 0) costPercent -= player.perkv1(PerkLib.WizardsEndurance);
 	
 	//Limiting it and multiplicative mods
-	if(player.hasPerk("Blood Mage") >= 0 && costPercent < 50) costPercent = 50;
+	if(player.findPerk(PerkLib.BloodMage) >= 0 && costPercent < 50) costPercent = 50;
 	
 	mod *= costPercent/100;
 	
-	if(player.hasPerk("History: Scholar") >= 0) {
+	if(player.findPerk(PerkLib.HistoryScholar) >= 0) {
 		if(mod > 2) mod *= .8;
 	}
-	if(player.hasPerk("Blood Mage") >= 0 && mod < 5) mod = 5;
+	if(player.findPerk(PerkLib.BloodMage) >= 0 && mod < 5) mod = 5;
 	else if(mod < 2) mod = 2;
 	
 	mod = Math.round(mod * 100)/100;
@@ -2322,7 +1309,7 @@ public function fatigue(mod:Number,type:Number  = 0):void {
 		mod = spellCost(mod);
 		
 		//Blood mages use HP for spells
-		if(player.hasPerk("Blood Mage") >= 0) {
+		if(player.findPerk(PerkLib.BloodMage) >= 0) {
 			takeDamage(mod);
 			statScreenRefresh();
 			return;
@@ -2335,8 +1322,13 @@ public function fatigue(mod:Number,type:Number  = 0):void {
 	if(player.fatigue >= 100 && mod > 0) return;
 	if(player.fatigue <= 0 && mod < 0) return;
 	//Fatigue restoration buffs!
-	if(mod < 0) {
-		if(player.hasPerk("History: Slacker") >= 0) mod *= 1.2;
+	if (mod < 0) {
+		var multi:Number = 1;
+		
+		if (player.findPerk(PerkLib.HistorySlacker) >= 0) multi += 0.2;
+		if (player.findPerk(PerkLib.ControlledBreath) >= 0 && player.cor < 30) multi += 0.1;
+		
+		mod *= multi;
 	}
 	player.fatigue += mod;
 	if(mod > 0) {
@@ -2366,7 +1358,7 @@ public function displayStats(e:MouseEvent = null):void
 	spriteSelect(-1);
 	outputText("", true);
 	outputText("<b><u>Combat Stats</u></b>\n", false);
-	if(player.hasKeyItem("Bow") >= 0) outputText("<b>Bow Skill: </b>" + Math.round(player.statusAffectv1("Kelt")) + "\n", false);
+	if(player.hasKeyItem("Bow") >= 0) outputText("<b>Bow Skill: </b>" + Math.round(player.statusAffectv1(StatusAffects.Kelt)) + "\n", false);
 	outputText("<b>Lust Resistance: </b>" + (100-Math.round(lustPercent())) + "% (Higher is better.)\n", false);
 	outputText("<b>Spell Effect Multiplier: </b>" + (100 * spellMod()) + "%\n");
 	outputText("<b>Spell Cost: </b>" + spellCost(100) + "%\n");
@@ -2378,43 +1370,43 @@ public function displayStats(e:MouseEvent = null):void
 	
 	outputText("<b>Fertility (Base) Rating: </b>" + Math.round(player.fertility) + "\n", false);
 	outputText("<b>Fertility (With Bonuses) Rating: </b>" + Math.round(player.totalFertility()) + "\n", false);
-	if(player.hasStatusAffect("Feeder") >= 0) {
-		outputText("<b>Hours Since Last Time Breastfed Someone: </b> " + player.statusAffectv2("Feeder"), false);
-		if(player.statusAffectv2("Feeder") >= 72) outputText(" (Too long! Sensitivity Increasing!)", false);
+	if(player.findStatusAffect(StatusAffects.Feeder) >= 0) {
+		outputText("<b>Hours Since Last Time Breastfed Someone: </b> " + player.statusAffectv2(StatusAffects.Feeder), false);
+		if(player.statusAffectv2(StatusAffects.Feeder) >= 72) outputText(" (Too long! Sensitivity Increasing!)", false);
 		outputText("\n", false);
 	}
 	
 	outputText("<b>Cum Production:</b> " + Math.round(player.cumQ()) + "mL\n", false);
 	outputText("<b>Milk Production:</b> " + Math.round(player.lactationQ()) + "mL\n", false);
 	//MARBLE
-	if(player.statusAffectv3("Marble") > 0) {
+	if(player.statusAffectv3(StatusAffects.Marble) > 0) {
 		outputText("<b>Marble Milk Addiction: </b>", false);
-		if(player.hasPerk("Marble Resistant") < 0 && player.hasPerk("Marble's Milk") < 0) outputText(Math.round(player.statusAffectv2("Marble")) + "%\n", false);
-		else if(player.hasPerk("Marble Resistant") >= 0) outputText("0%\n", false);
+		if(player.findPerk(PerkLib.MarbleResistant) < 0 && player.findPerk(PerkLib.MarblesMilk) < 0) outputText(Math.round(player.statusAffectv2(StatusAffects.Marble)) + "%\n", false);
+		else if(player.findPerk(PerkLib.MarbleResistant) >= 0) outputText("0%\n", false);
 		else outputText("100%\n", false);
 	}
 	//MINO!
-	if(flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00340] > 0 || flags[kFLAGS.MINOTAUR_CUM_ADDICTION_TRACKER] > 0 || player.hasPerk("Minotaur Cum Addict") >= 0) {
-		if(player.hasPerk("Minotaur Cum Addict") < 0) outputText("<b>Minotaur Cum Addiction:</b> " + Math.round(flags[kFLAGS.MINOTAUR_CUM_ADDICTION_TRACKER] * 10)/10 + "%\n", false);
+	if(flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00340] > 0 || flags[kFLAGS.MINOTAUR_CUM_ADDICTION_TRACKER] > 0 || player.findPerk(PerkLib.MinotaurCumAddict) >= 0) {
+		if(player.findPerk(PerkLib.MinotaurCumAddict) < 0) outputText("<b>Minotaur Cum Addiction:</b> " + Math.round(flags[kFLAGS.MINOTAUR_CUM_ADDICTION_TRACKER] * 10)/10 + "%\n", false);
 		else outputText("<b>Minotaur Cum Addiction:</b> 100+%\n", false);
 	}
-	if(player.hasPerk("Spider Ovipositor") >= 0 || player.hasPerk("Bee Ovipositor") >= 0) outputText("<b>Ovipositor Total Egg Count: " + player.eggs() + "\nOvipositor Fertilized Egg Count: " + player.fertilizedEggs() + "</b>\n");
+	if(player.findPerk(PerkLib.SpiderOvipositor) >= 0 || player.findPerk(PerkLib.BeeOvipositor) >= 0) outputText("<b>Ovipositor Total Egg Count: " + player.eggs() + "\nOvipositor Fertilized Egg Count: " + player.fertilizedEggs() + "</b>\n");
 	outputText("<b>Pregnancy Speed Multiplier:</b> ", false);
 	var preg:Number = 1;
-	if(player.hasPerk("Diapause") >= 0) outputText("? (Variable due to Diapause)\n", false);
+	if(player.findPerk(PerkLib.Diapause) >= 0) outputText("? (Variable due to Diapause)\n", false);
 	else {
-		if(player.hasPerk("Marae's Gift - Fertility") >= 0) preg++;
-		if(player.hasPerk("Brood Mother") >= 0) preg++;
-		if(player.hasPerk("Fera's Boon - Breeding Bitch") >= 0) preg++;
-		if(player.hasPerk("Magical Fertility") >= 0) preg++;
-		if(player.hasPerk("Fera's Boon - Wide Open") >= 0 || player.hasPerk("Fera's Boon - Milking Twat") >= 0) preg++;
+		if(player.findPerk(PerkLib.MaraesGiftFertility) >= 0) preg++;
+		if(player.findPerk(PerkLib.BroodMother) >= 0) preg++;
+		if(player.findPerk(PerkLib.FerasBoonBreedingBitch) >= 0) preg++;
+		if(player.findPerk(PerkLib.MagicalFertility) >= 0) preg++;
+		if(player.findPerk(PerkLib.FerasBoonWideOpen) >= 0 || player.findPerk(PerkLib.FerasBoonMilkingTwat) >= 0) preg++;
 		outputText(preg + "\n", false);
 	}        
-	if(player.hasStatusAffect("Slime Craving") >= 0) {
-		if(player.statusAffectv1("Slime Craving") >= 18) outputText("<b>Slime Craving:  </b>Active! You are currently losing strength and speed.  You should find fluids.\n", false);
+	if(player.findStatusAffect(StatusAffects.SlimeCraving) >= 0) {
+		if(player.statusAffectv1(StatusAffects.SlimeCraving) >= 18) outputText("<b>Slime Craving:  </b>Active! You are currently losing strength and speed.  You should find fluids.\n", false);
 		else {
-			if(player.hasPerk("Slime Core") >= 0) outputText("<b>Slime Stored:  </b>" + ((17 - player.statusAffectv1("Slime Craving")) * 2) + " hours until you start losing strength.\n", false);
-			else outputText("<b>Slime Stored:  </b>" + (17 - player.statusAffectv1("Slime Craving")) + " hours until you start losing strength.\n", false);
+			if(player.findPerk(PerkLib.SlimeCore) >= 0) outputText("<b>Slime Stored:  </b>" + ((17 - player.statusAffectv1(StatusAffects.SlimeCraving)) * 2) + " hours until you start losing strength.\n", false);
+			else outputText("<b>Slime Stored:  </b>" + (17 - player.statusAffectv1(StatusAffects.SlimeCraving)) + " hours until you start losing strength.\n", false);
 		}
 	}
 	outputText("<b>Spells Cast: </b>" + flags[kFLAGS.SPELLS_CAST] + "\n");
@@ -2446,7 +1438,7 @@ public function displayStats(e:MouseEvent = null):void
 		if(flags[kFLAGS.SOPHIE_CAMP_EGG_COUNTDOWN] > 0) sophie++;
 		outputText(sophie + "\n");
 	}
-	if(player.statusAffectv2("Tamani") > 0) outputText("<b>Children With Tamani: </b>" + player.statusAffectv2("Tamani") + " (after all forms of natural selection)\n", false);
+	if(player.statusAffectv2(StatusAffects.Tamani) > 0) outputText("<b>Children With Tamani: </b>" + player.statusAffectv2(StatusAffects.Tamani) + " (after all forms of natural selection)\n", false);
 	if(urtaPregs.urtaKids() > 0) outputText("<b>Children With Urta: </b>" + urtaPregs.urtaKids() + "\n");
 	if(flags[kFLAGS.SOPHIE_EGGS_LAID] > 0) outputText("<b>Eggs Fertilized For Sophie: </b>" + (flags[kFLAGS.SOPHIE_EGGS_LAID] + sophie) + "\n", false);
 	if(emberScene.emberAffection() > 0) outputText("<b>Ember Affection:</b> " + Math.round(emberScene.emberAffection()) + "%\n");
@@ -2470,7 +1462,7 @@ public function displayStats(e:MouseEvent = null):void
 		if(kihaFollower.followerKiha()) outputText("<b>Kiha Affection:</b> " + 100 + "%\n", false);
 		else outputText("<b>Kiha Affection:</b> " + Math.round(flags[kFLAGS.KIHA_AFFECTION]) + "%\n", false);
 	}
-	if(flags[kFLAGS.AMILY_MET] > 0) outputText("<b>Litters With Amily: </b>" + (flags[kFLAGS.AMILY_BIRTH_TOTAL]+ flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS]) + "\n", false);
+	if(flags[kFLAGS.AMILY_MET] > 0) outputText("<b>Litters With Amily: </b>" + (flags[kFLAGS.AMILY_BIRTH_TOTAL] + flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS]) + "\n", false);
 	//Lottie stuff
 	if(flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00281] > 0) {
 		outputText("<b>Lottie's Encouragement: </b>" + telAdre.lottie.lottieMorale() + " (higher is better)\n", false);
@@ -2490,9 +1482,9 @@ public function displayStats(e:MouseEvent = null):void
 		if(sheilaScene.sheilaCorruption() > 100) outputText(" (Yes, it can go above 100)");
 		outputText("\n");
 	}
-	if(player.hasStatusAffect("Kelt") >= 0 && flags[kFLAGS.KELT_BREAK_LEVEL] == 0) {
-		if(player.statusAffectv2("Kelt") >= 130) outputText("<b>Submissiveness To Kelt:</b> " + 100 + "%\n", false);
-		else outputText("<b>Submissiveness To Kelt:</b> " + Math.round(player.statusAffectv2("Kelt")/130*100) + "%\n", false);
+	if(player.findStatusAffect(StatusAffects.Kelt) >= 0 && flags[kFLAGS.KELT_BREAK_LEVEL] == 0) {
+		if(player.statusAffectv2(StatusAffects.Kelt) >= 130) outputText("<b>Submissiveness To Kelt:</b> " + 100 + "%\n", false);
+		else outputText("<b>Submissiveness To Kelt:</b> " + Math.round(player.statusAffectv2(StatusAffects.Kelt)/130*100) + "%\n", false);
 	}
 	if(telAdre.rubi.rubiAffection() > 0) outputText("<b>Rubi's Affection:</b> " + Math.round(telAdre.rubi.rubiAffection()) + "%\n");
 	if(telAdre.rubi.rubiAffection() > 0) outputText("<b>Rubi's Orifice Capacity:</b> " + Math.round(telAdre.rubi.rubiCapacity()) + "%\n");
@@ -2505,10 +1497,10 @@ public function displayStats(e:MouseEvent = null):void
 	}
 	
 	outputText("\n<b><u>Ongoing Status Effects</u></b>\n", false);
-	if(player.hasStatusAffect("heat") >= 0) outputText("Heat - " + Math.round(player.statusAffectv3("heat")) + " hours remaining.\n", false);
-	if(player.hasStatusAffect("rut") >= 0) outputText("Rut - " + Math.round(player.statusAffectv3("rut")) + " hours remaining.\n", false);
-	if(player.statusAffectv1("Luststick") > 0) outputText("Luststick - " + Math.round(player.statusAffectv1("Luststick")) + " hours remaining.\n", false);
-	if(player.statusAffectv1("Black Cat Beer") > 0) outputText("Black Cat Beer - " + player.statusAffectv1("Black Cat Beer") + " hours remaining.  Lust resistance 20% lower, physical resistance 25% higher.\n");
+	if(player.findStatusAffect(StatusAffects.Heat) >= 0) outputText("Heat - " + Math.round(player.statusAffectv3(StatusAffects.Heat)) + " hours remaining.\n", false);
+	if(player.findStatusAffect(StatusAffects.Rut) >= 0) outputText("Rut - " + Math.round(player.statusAffectv3(StatusAffects.Rut)) + " hours remaining.\n", false);
+	if(player.statusAffectv1(StatusAffects.Luststick) > 0) outputText("Luststick - " + Math.round(player.statusAffectv1(StatusAffects.Luststick)) + " hours remaining.\n", false);
+	if(player.statusAffectv1(StatusAffects.BlackCatBeer) > 0) outputText("Black Cat Beer - " + player.statusAffectv1(StatusAffects.BlackCatBeer) + " hours remaining.  Lust resistance 20% lower, physical resistance 25% higher.\n");
 	outputText("\n<b><u>Miscellaneous Stats</u></b>\n");
 	outputText("<b>Eggs Traded For: </b>" + flags[kFLAGS.EGGS_BOUGHT] + "\n");
 	doNext(1);
@@ -2526,45 +1518,45 @@ public function lustPercent():Number {
 	//TOTAL IS LIMITED TO 75%!
 	//++++++++++++++++++++++++++++++++++++++++++++++++++
 	//Corrupted Libido reduces lust gain by 10%!
-	if(player.hasPerk("Corrupted Libido") >= 0) lust -= 10;
+	if(player.findPerk(PerkLib.CorruptedLibido) >= 0) lust -= 10;
 	//Acclimation reduces by 15%
-	if(player.hasPerk("Acclimation") >= 0) lust -= 15;
+	if(player.findPerk(PerkLib.Acclimation) >= 0) lust -= 15;
 	//Purity blessing reduces lust gain
-	if(player.hasPerk("Purity Blessing") >= 0) lust -= 5;
+	if(player.findPerk(PerkLib.PurityBlessing) >= 0) lust -= 5;
 	//Resistance = 10%
-	if(player.hasPerk("Resistance") >= 0) lust -= 10;
-	if (player.hasPerk(UmasShop.NEEDLEWORK_LUST_PERK_NAME) >= 0) lust -= UmasShop.NEEDLEWORK_LUST_LUST_RESIST;
+	if(player.findPerk(PerkLib.Resistance) >= 0) lust -= 10;
+	if (player.findPerk(PerkLib.ChiReflowLust) >= 0) lust -= UmasShop.NEEDLEWORK_LUST_LUST_RESIST;
 	
 	if(lust < 25) lust = 25;
-	if(player.statusAffectv1("Black Cat Beer") > 0) {
+	if(player.statusAffectv1(StatusAffects.BlackCatBeer) > 0) {
 		if(lust >= 80) lust = 100;
 		else lust += 20;
 	}
-	lust += Math.round(player.perkv1("Pent Up")/2);
+	lust += Math.round(player.perkv1(PerkLib.PentUp)/2);
 	//++++++++++++++++++++++++++++++++++++++++++++++++++
 	//MULTIPLICATIVE REDUCTIONS
 	//THESE PERKS ALSO RAISE MINIMUM LUST OR HAVE OTHER
 	//DRAWBACKS TO JUSTIFY IT.
 	//++++++++++++++++++++++++++++++++++++++++++++++++++
 	//Bimbo body slows lust gains!
-	if((player.hasStatusAffect("Bimbo Champagne") >= 0 || player.hasPerk("Bimbo Body") >= 0) && lust > 0) lust *= .75;
-	if(player.hasPerk("Bro Body") >= 0 && lust > 0) lust *= .75;
-	if(player.hasPerk("Futa Form") >= 0 && lust > 0) lust *= .75;
+	if((player.findStatusAffect(StatusAffects.BimboChampagne) >= 0 || player.findPerk(PerkLib.BimboBody) >= 0) && lust > 0) lust *= .75;
+	if(player.findPerk(PerkLib.BroBody) >= 0 && lust > 0) lust *= .75;
+	if(player.findPerk(PerkLib.FutaForm) >= 0 && lust > 0) lust *= .75;
 	//Omnibus' Gift reduces lust gain by 15%
-	if(player.hasPerk("Omnibus' Gift") >= 0) lust *= .85;
+	if(player.findPerk(PerkLib.OmnibusGift) >= 0) lust *= .85;
 	//Luststick reduces lust gain by 10% to match increased min lust
-	if(player.hasPerk("Luststick Adapted") >= 0) lust *= 0.9;
-	if(player.hasStatusAffect("Berzerking") >= 0) lust *= .6;
-	if (player.hasPerk("Pure and Loving") >= 0) lust *= 0.95;
+	if(player.findPerk(PerkLib.LuststickAdapted) >= 0) lust *= 0.9;
+	if(player.findStatusAffect(StatusAffects.Berzerking) >= 0) lust *= .6;
+	if (player.findPerk(PerkLib.PureAndLoving) >= 0) lust *= 0.95;
 	
 	// Lust mods from Uma's content -- Given the short duration and the gem cost, I think them being multiplicative is justified.
 	// Changing them to an additive bonus should be pretty simple (check the static values in UmasShop.as)
-	var statIndex:int = player.hasStatusAffect(UmasShop.MASSAGE_BONUS_NAME);
+	var statIndex:int = player.findStatusAffect(StatusAffects.UmasMassage);
 	if (statIndex >= 0)
 	{
-		if (player.statusAffects[statIndex].value1 == UmasShop.MASSAGE_RELIEF || player.statusAffects[statIndex].value1 == UmasShop.MASSAGE_LUST)
+		if (player.statusAffect(statIndex).value1 == UmasShop.MASSAGE_RELIEF || player.statusAffect(statIndex).value1 == UmasShop.MASSAGE_LUST)
 		{
-			lust *= player.statusAffects[statIndex].value2;
+			lust *= player.statusAffect(statIndex).value2;
 		}
 	}
 	
@@ -2629,7 +1621,9 @@ public function dynStats(... args):void
 			
 			// Figure out which array to search
 			var argsi:String = (args[i] as String);
-			if (argsi.length <= 4 && argsi != "lust") // Short
+			if (argsi == "lust") argsi = "lus";
+			if (argsi == "sens") argsi = "sen";
+			if (argsi.length <= 4) // Short
 			{
 				argIndex = argNamesShort.indexOf(argsi.slice(0, 3));
 				if (argsi.length == 4 && argIndex != -1) argOps[argIndex] = argsi.charAt(3);
@@ -2707,60 +1701,63 @@ public function stats(stre:Number, toug:Number, spee:Number, intel:Number, libi:
 	//Bimbos learn slower
 	if(!noBimbo)
 	{
-		if(player.hasPerk("Futa Faculties") >= 0 || player.hasPerk("Bimbo Brains") >= 0  || player.hasPerk("Bro Brains") >= 0) {
+		if(player.findPerk(PerkLib.FutaFaculties) >= 0 || player.findPerk(PerkLib.BimboBrains) >= 0  || player.findPerk(PerkLib.BroBrains) >= 0) {
 			if(intel > 0) intel /= 2;
 			if(intel < 0) intel *= 2;
 		}
-		if(player.hasPerk("Futa Form") >= 0 || player.hasPerk("Bimbo Body") >= 0  || player.hasPerk("Bro Body") >= 0) {
+		if(player.findPerk(PerkLib.FutaForm) >= 0 || player.findPerk(PerkLib.BimboBody) >= 0  || player.findPerk(PerkLib.BroBody) >= 0) {
 			if(libi > 0) libi *= 2;
 			if(libi < 0) libi /= 2;
 		}
 	}
 	
 	// Uma's Perkshit
-	if (player.hasPerk(UmasShop.NEEDLEWORK_SPEED_PERK_NAME)>=0 && spee < 0) spee *= UmasShop.NEEDLEWORK_SPEED_SPEED_MULTI;
-	if (player.hasPerk(UmasShop.NEEDLEWORK_LUST_PERK_NAME)>=0 && libi > 0) libi *= UmasShop.NEEDLEWORK_LUST_LIBSENSE_MULTI;
-	if (player.hasPerk(UmasShop.NEEDLEWORK_LUST_PERK_NAME)>=0 && sens > 0) sens *= UmasShop.NEEDLEWORK_LUST_LIBSENSE_MULTI;
+	if (player.findPerk(PerkLib.ChiReflowSpeed)>=0 && spee < 0) spee *= UmasShop.NEEDLEWORK_SPEED_SPEED_MULTI;
+	if (player.findPerk(PerkLib.ChiReflowLust)>=0 && libi > 0) libi *= UmasShop.NEEDLEWORK_LUST_LIBSENSE_MULTI;
+	if (player.findPerk(PerkLib.ChiReflowLust)>=0 && sens > 0) sens *= UmasShop.NEEDLEWORK_LUST_LIBSENSE_MULTI;
 	
 	//If orgasm, set hours since cum to 0.
-	if(lust2 <= -100) player.hoursSinceCum = 0;
+	if(lust2 < 0) player.resetDickEjaculateTimer();
 	//lust resistance
 	if(lust2 > 0 && resisted) lust2 *= lustPercent()/100;
-	if(libi > 0 && player.hasPerk("Purity Blessing") >= 0) libi *= 0.75;
-	if(corr > 0 && player.hasPerk("Purity Blessing") >= 0) corr *= 0.5;
-	if(corr > 0 && player.hasPerk("Pure and Loving") >= 0) corr *= 0.75;
+	if(libi > 0 && player.findPerk(PerkLib.PurityBlessing) >= 0) libi *= 0.75;
+	if(corr > 0 && player.findPerk(PerkLib.PurityBlessing) >= 0) corr *= 0.5;
+	if(corr > 0 && player.findPerk(PerkLib.PureAndLoving) >= 0) corr *= 0.75;
 	//Change original stats
 	player.str+=stre;
 	player.tou+=toug;
 	player.spe+=spee;
 	player.inte+=intel;
-	player.lib+=libi;
+	player.lib += libi;
+	
 	if(player.sens > 50 && sens > 0) sens/=2;
 	if(player.sens > 75 && sens > 0) sens/=2;
 	if(player.sens > 90 && sens > 0) sens/=2;
 	if(player.sens > 50 && sens < 0) sens*=2;
 	if(player.sens > 75 && sens < 0) sens*=2;
 	if(player.sens > 90 && sens < 0) sens*=2;
+	
 	player.sens+=sens;
 	player.lust+=lust2;
-	player.cor+=corr;
+	player.cor += corr;
+	
 	//Bonus gain for perks!
-	if(player.hasPerk("Strong") >= 0 && stre >= 0) player.str+=stre*player.perks[player.hasPerk("Strong")].value1;
-	if(player.hasPerk("Tough") >= 0 && toug >= 0) player.tou+=toug*player.perks[player.hasPerk("Tough")].value1;
-	if(player.hasPerk("Fast") >= 0 && spee >= 0) player.spe+=spee*player.perks[player.hasPerk("Fast")].value1;
-	if(player.hasPerk("Smart") >= 0 && intel >= 0) player.inte+=intel*player.perks[player.hasPerk("Smart")].value1;
-	if(player.hasPerk("Lusty") >= 0 && libi >= 0) player.lib+=libi*player.perks[player.hasPerk("Lusty")].value1;
-	if (player.hasPerk("Sensitive") >= 0 && sens >= 0) player.sens += sens * player.perks[player.hasPerk("Sensitive")].value1;
+	if(player.findPerk(PerkLib.Strong) >= 0 && stre >= 0) player.str+=stre*player.perk(player.findPerk(PerkLib.Strong)).value1;
+	if(player.findPerk(PerkLib.Tough) >= 0 && toug >= 0) player.tou+=toug*player.perk(player.findPerk(PerkLib.Tough)).value1;
+	if(player.findPerk(PerkLib.Fast) >= 0 && spee >= 0) player.spe+=spee*player.perk(player.findPerk(PerkLib.Fast)).value1;
+	if(player.findPerk(PerkLib.Smart) >= 0 && intel >= 0) player.inte+=intel*player.perk(player.findPerk(PerkLib.Smart)).value1;
+	if(player.findPerk(PerkLib.Lusty) >= 0 && libi >= 0) player.lib+=libi*player.perk(player.findPerk(PerkLib.Lusty)).value1;
+	if (player.findPerk(PerkLib.Sensitive) >= 0 && sens >= 0) player.sens += sens * player.perk(player.findPerk(PerkLib.Sensitive)).value1;
 
 	// Uma's Str Cap from Perks
-	if (player.hasPerk(UmasShop.NEEDLEWORK_SPEED_PERK_NAME) >= 0)
+	if (player.findPerk(PerkLib.ChiReflowSpeed) >= 0)
 	{
 		if (player.str > UmasShop.NEEDLEWORK_SPEED_STRENGTH_CAP)
 		{
 			player.str = UmasShop.NEEDLEWORK_SPEED_STRENGTH_CAP;
 		}
 	}
-	if (player.hasPerk(UmasShop.NEEDLEWORK_DEFENSE_PERK_NAME) >= 0)
+	if (player.findPerk(PerkLib.ChiReflowDefense) >= 0)
 	{
 		if (player.spe > UmasShop.NEEDLEWORK_DEFENSE_SPEED_CAP)
 		{
@@ -2803,7 +1800,7 @@ public function stats(stre:Number, toug:Number, spee:Number, intel:Number, libi:
 	//Update to minimum lust if lust falls below it.
 	if(player.lust < minLust()) player.lust = minLust();
 	//worms raise min lust!
-	if(player.hasStatusAffect("infested") >= 0) {
+	if(player.findStatusAffect(StatusAffects.Infested) >= 0) {
 		if(player.lust < 50) player.lust = 50;
 	}
 	if(player.lust > 100) player.lust = 100;
@@ -2812,10 +1809,6 @@ public function stats(stre:Number, toug:Number, spee:Number, intel:Number, libi:
 	//Refresh the stat pane with updated values
 	mainView.statsView.showUpDown();
 	statScreenRefresh();
-}
-public function rand(max:Number):Number
-{
-	return int(Math.random()*max);
 }
 public function range(min:Number, max:Number, round:Boolean = false):Number 
 {

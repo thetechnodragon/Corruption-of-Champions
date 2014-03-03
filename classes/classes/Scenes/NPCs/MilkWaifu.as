@@ -1,6 +1,6 @@
 ﻿package classes.Scenes.NPCs {
-import classes.GlobalFlags.kFLAGS;
-	import classes.GlobalFlags.kGAMECLASS;
+	import classes.*;
+	import classes.GlobalFlags.kFLAGS;
 	import classes.GlobalFlags.kGAMECLASS;
 
 	public class MilkWaifu extends NPCAwareContent{
@@ -72,7 +72,7 @@ private function nameZeMilkBath():void
 		outputText("\n\n\"<i>" + flags[kFLAGS.MILK_NAME] + "</i>\" she hesitantly repeats.  Looks like she gets it!  \"<i>" + flags[kFLAGS.MILK_NAME] + "!</i>\" she says, more confidently as you encourage her.");
 	}
 	//Arrival: Part 2 (PC has Rath in camp)
-	if(player.hasStatusAffect("Camp Rathazul") >= 0 && player.statusAffectv2("metRathazul") >= 4) {
+	if(player.findStatusAffect(StatusAffects.CampRathazul) >= 0 && player.statusAffectv2(StatusAffects.MetRathazul) >= 4) {
 		outputText("\n\nAs you finish deciding on what to call " + flags[kFLAGS.MILK_NAME] + ", you hear footsteps shuffling over to the two of you.  Looking up, you see the old rat alchemist Rathazul approaching, nose buried in an ancient-looking tome.  \"<i>Good news, [name]!</i>\" he calls, just before tripping over the prone milkmaid, going sprawling across the ground.");
 		
 		outputText("\n\n\"<i>Gah!  Help, I can't get up!</i>\" he shouts, flailing around until you rush over and pull him to his feet.");
@@ -194,10 +194,10 @@ private function superReductoUsage():void {
 		outputText("\n\n" + flags[kFLAGS.MILK_NAME] + "'s got cowgirl-sized tits right now");
 		if(isabellaFollowerScene.isabellaFollower()) {
 			outputText(", enough to give Isabella");
-			if(player.hasStatusAffect("Camp Marble") >= 0) outputText(" and Marble");
+			if(player.findStatusAffect(StatusAffects.CampMarble) >= 0) outputText(" and Marble");
 			outputText(" pause");
 		}
-		else if(player.hasStatusAffect("Camp Marble") >= 0) outputText(", enough to give Marble pause");
+		else if(player.findStatusAffect(StatusAffects.CampMarble) >= 0) outputText(", enough to give Marble pause");
 		outputText(".  She seems much happier now, and is still able to produce enough milk to drown you; it's a happy balance.  Still, she still has to support them everywhere, and you can't find any clothes that fit her particular shape, thanks to her human stature.  That said, you've got enough Reducto left to bring her down to a pair of nice, firm DDs.  She'll still be nice and milky, though perhaps not enough to bathe in, and with a more reasonable bust size, you might actually be able to find a bra somewhere that will fit her.");
 		//Down to DD Cups
 		outputText("\n\nYou shift " + flags[kFLAGS.MILK_NAME] + " around in your lap, giving yourself the best angle on her giant tits.  That done, you lather up with Reducto, covering your hands with the stuff before reaching around and grabbing your friend's tits, smearing the first dollops around her leaky nipples.  She winces, shivering as the cool substance smears onto her teats, but almost immediately you can see it going to work: her breasts shudder, flesh quivering as they begin to shrink like balloons.");
@@ -262,7 +262,7 @@ private function milkBathTime():void {
 	if(player.gender > 0 && player.lust >= 33) addButton(0,"DrinkNFap",drinkAndFapturbate);
 	var count:int = 0;
 	if(sophieFollowerScene.sophieFollower()) count++;
-	if(player.hasStatusAffect("PureCampJojo") >= 0) count++;
+	if(player.findStatusAffect(StatusAffects.PureCampJojo) >= 0) count++;
 	if(latexGirl.latexGooFollower()) count++;
 	if(flags[kFLAGS.VALARIA_AT_CAMP] == 1) count++;
 	if(amilyScene.amilyFollower() && !amilyScene.amilyCorrupt()) count++;
@@ -302,7 +302,7 @@ private function communalBath():void {
 	if(sophieFollowerScene.sophieFollower()) outputText("\n\n\"<i>Oh, fresh milk!</i>\" Sophie exclaims cheerily.  She drops down by the edge of the pool and scoops up a handful, bringing the thick, creamy milk up to her lips.  Her wings flutter happily as she laps it up, rubbing more into her fair skin between clumps of downy feathers.");
 	
 	//If PC has Pure!Jojo:
-	if(player.hasStatusAffect("PureCampJojo") >= 0) outputText("\n\nThe white-furred monk Jojo approaches the pool with some hesitation, eyeing the tub full of cream.  \"<i>How...  lewd.  Though it would be a shame for such a bounty to go to waste.</i>\"  Slowly, the monk disrobes down to his undergarments, and lowers himself into the pool nearby.");
+	if(player.findStatusAffect(StatusAffects.PureCampJojo) >= 0) outputText("\n\nThe white-furred monk Jojo approaches the pool with some hesitation, eyeing the tub full of cream.  \"<i>How...  lewd.  Though it would be a shame for such a bounty to go to waste.</i>\"  Slowly, the monk disrobes down to his undergarments, and lowers himself into the pool nearby.");
 	
 	//{If PC has Latexy:
 	if(latexGirl.latexGooFollower()) outputText("\n\nYou wave over your ebony-skinned latex goo, telling her to drink up.  \"<i>M-[master]?</i>\" she says, pausing at the poolside.  You repeat your command, patting the surface of the milky waves.  It looks like her primal hunger takes over a moment later as she slips into the vast sea of lactation, soaking it up.");
@@ -345,7 +345,7 @@ private function pullInZeMilkGirl():void {
 	outputText("\n\nYou flash her a mischievous grin before grabbing her waist and pulling, yanking her into the tub with you.  The milk-maid lets out a sharp cry of surprise as she tumbles in, a huge splash of cream spraying over the rim of the tub, painting the campground white.  Gasping, her head pops back over the surface of her own milk, long ebony hair dripping onto the tops of her seemingly-buoyant teats, which bob over the milky waves with a strangely serene, regal grace.   \"<i>[name]?</i>\" " + flags[kFLAGS.MILK_NAME] + " yelps as she wades through her own lactation, slowly retreating to the edge of the tub.  Chuckling, you reach out and stroke her cheek, telling her that you thought she might like a bath, too.  She starts to reply, but you cut her off with a playful stroke of her massive mounds, urging her over toward you.  She trusts you implicitly and does as you ask, sliding up under your arm and onto your lap.  Once seated, she looks up to you with saucer-like brown eyes until you cup her cheek and give her a short, tender kiss, pressing your lips to her dusky mounds.  To your delight, she seems to melt at your touch, relaxing in an instant as you hold her as close as you can, seperated only by her prodigious chest");
 	if(player.biggestTitSize() >= 7) outputText(", pressing deep into your own huge rack, your nipples flicking across her own leaky tits");
 	outputText(".");
-	outputText("\n\n\"<i>O-oh,</i>\" she moans, just on the edge of hearing, her cheeks flushing hotly in your hand.  The cute little milkmaid turns aside, moving her udders out of the way so that she can rest her head on your chest, obviously enjoying the simple pleasure of your arm around her shoulders and the odd gentle touch.  You let her enjoy it for a few long, quiet minutes, content in the silent company of the milky girl.  From time to time you gently stroke her cow-like teats, or reach down to rub her thick, rich milk into your loins, enjoying the incredibly texture of it on your ");
+	outputText("\n\n\"<i>O-oh,</i>\" she moans, just on the edge of hearing, her cheeks flushing hotly in your hand.  The cute little milkmaid turns aside, moving her udders out of the way so that she can rest her head on your chest, obviously enjoying the simple pleasure of your arm around her shoulders and the odd gentle touch.  You let her enjoy it for a few long, quiet minutes, content in the silent company of the milky girl.  From time to time you gently stroke her cow-like teats, or reach down to rub her thick, rich milk into your loins, enjoying the incredible texture of it on your ");
 	if(player.gender == 1) outputText(multiCockDescriptLight());
 	else if(player.gender == 2) outputText("[vagina]");
 	else if(player.gender == 3) outputText(multiCockDescriptLight() + " and [vagina]");

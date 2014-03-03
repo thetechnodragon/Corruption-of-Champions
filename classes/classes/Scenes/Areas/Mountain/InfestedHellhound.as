@@ -1,8 +1,7 @@
 ﻿package classes.Scenes.Areas.Mountain
 {
-	import classes.CoC_Settings;
-	import classes.Cock;
-	import classes.Monster;
+	import classes.*;
+	import classes.internals.*;
 
 	/**
 	 * ...
@@ -21,7 +20,7 @@
 				//Get hit – 10+ lust
 				game.dynStats("lus", 5 + player.lib / 20);
 				outputText("Taken off-guard by the unexpected sexual display, you fail to move out of the way, and the wormy jism splatters you from the chest down.", false);
-				if (player.hasStatusAffect("infested") >= 0 && player.totalCocks() > 0) {
+				if (player.findStatusAffect(StatusAffects.Infested) >= 0 && player.totalCocks() > 0) {
 					outputText("  The worms inside you begin moving and squirming. A few of your cum-soaked parasites crawl out from your shivering " + multiCockDescriptLight() + " as if attempting to meet the new arrivals.  You desperately want to brush them away, but the pleasure in your crotch is too good to fight, and you find yourself staying your hand as each and every one of the new worms makes it way into your " + multiCockDescriptLight() + ".", false);
 					if (player.balls > 0) outputText("  Your " + ballsDescriptLight() + " grow weightier as the worms settle into their new home, arousing you beyond measure.", false);
 					else outputText("  You can feel them shifting around inside you as they adjust to their new home, arousing you beyond measure.", false);
@@ -37,7 +36,7 @@
 			else {
 				outputText("You sidestep the gush of wormy fluid, letting it splatter against the rocks behind you.", false);
 				//(If infested +10 lust:  
-				if (player.hasStatusAffect("infested") >= 0  && player.hasCock()) {
+				if (player.findStatusAffect(StatusAffects.Infested) >= 0  && player.hasCock()) {
 					if (player.hasCock()) {
 						outputText("  Despite avoiding the torrent of infected seed, your own wormy ", false);
 						if (player.balls > 0) outputText(ballsDescriptLight(), false);
@@ -47,13 +46,13 @@
 						outputText(" hotly, expelling a few of your own worms in response along with a dribble of thick pre-cum.   You wonder what it would feel like to let his worms crawl inside you…", false);
 						game.dynStats("lus", 10);
 					} else {
-						if (CoC_Settings.haltOnErrors) throw Error("Infested but no cock!");
+						CoC_Settings.error("Infested but no cock!");
 						game.dynStats("lus", 5);
 						outputText("  The idea of being covered in the beast's infested seed arouses you slightly, but you shake your head violently and clear away the unwelcome thought.", false);
 					}
 				}
 				//if aroused by worms +5 lust:
-				else if (player.hasStatusAffect("wormsOn") >= 0 && player.hasStatusAffect("wormsHalf") < 0) {
+				else if (player.findStatusAffect(StatusAffects.WormsOn) >= 0 && player.findStatusAffect(StatusAffects.WormsHalf) < 0) {
 					game.dynStats("lus", 5);
 					outputText("  The idea of being covered in the beast's infested seed arouses you slightly, but you shake your head violently and clear away the unwelcome thought.", false);
 				}
@@ -97,21 +96,51 @@
 		{
 			super(true);
 			trace("InfestedHellhound Constructor!");
-			init01Names("the ", "infested hellhound", "infestedhellhound", "It looks like a large four-legged demon with two heads placed side-by-side. Its eyes and mouth are filled with flames, and covering each of its paws are large and menacing claws. A thick layer of dark fur covers his entire body like armor.  Both heads are looking at you hungrily as the hellhound circles around you.  A pair of black, slightly pointed cocks hang exposed, dripping with cum and worms.  You get the feeling reasoning with this beast will be impossible.");
-			init02Male([new Cock(9, 2), new Cock(9, 2)], 2, 5, 8);
-			init03BreastRows([0], [0], [0]);
-			init04Ass(ANAL_LOOSENESS_NORMAL, ANAL_WETNESS_NORMAL);
-			init05Body(47, HIP_RATING_AVERAGE, BUTT_RATING_AVERAGE + 1);
-			init06Skin("black", SKIN_TYPE_FUR);
-			init07Hair("red", 3);
-			init08Face();
-			init09PrimaryStats(65, 60, 50, 1, 95, 20, 100);
-			init10Weapon("claws", "claw", 5);
-			init11Armor("thick fur");
-			init12Combat(0, 50, 0.87, Monster.TEMPERMENT_LOVE_GRAPPLES);
-			init13Level(5, 10 + rand(10));
-			initX_Specials(hellhoundFire, hellhoundScent, hellHoundWormCannon);
-			initX_Tail(TAIL_TYPE_DOG);
+			this.a = "the ";
+			this.short = "infested hellhound";
+			this.imageName = "infestedhellhound";
+			this.long = "It looks like a large four-legged demon with two heads placed side-by-side. Its eyes and mouth are filled with flames, and covering each of its paws are large and menacing claws. A thick layer of dark fur covers his entire body like armor.  Both heads are looking at you hungrily as the hellhound circles around you.  A pair of black, slightly pointed cocks hang exposed, dripping with cum and worms.  You get the feeling reasoning with this beast will be impossible.";
+			// this.plural = false;
+			this.createCock(9, 2);
+			this.createCock(9, 2);
+			this.balls = 2;
+			this.ballSize = 5;
+			this.cumMultiplier = 8;
+			this.createBreastRow();
+			this.createBreastRow();
+			this.createBreastRow();
+			this.ass.analLooseness = ANAL_LOOSENESS_NORMAL;
+			this.ass.analWetness = ANAL_WETNESS_NORMAL;
+			this.tallness = 47;
+			this.hipRating = HIP_RATING_AVERAGE;
+			this.buttRating = BUTT_RATING_AVERAGE + 1;
+			this.skinTone = "black";
+			this.skinType = SKIN_TYPE_FUR;
+			//this.skinDesc = Appearance.Appearance.DEFAULT_SKIN_DESCS[SKIN_TYPE_FUR];
+			this.hairColor = "red";
+			this.hairLength = 3;
+			initStrTouSpeInte(65, 60, 50, 1);
+			initLibSensCor(95, 20, 100);
+			this.weaponName = "claws";
+			this.weaponVerb="claw";
+			this.weaponAttack = 5;
+			this.armorName = "thick fur";
+			this.lust = 50;
+			this.lustVuln = 0.87;
+			this.temperment = TEMPERMENT_LOVE_GRAPPLES;
+			this.level = 5;
+			this.gems = 10 + rand(10);
+            this.drop = new WeightedDrop().add(consumables.CANINEP, 3)
+            					.addMany(1, consumables.BULBYPP,
+            							consumables.KNOTTYP,
+            							consumables.BLACKPP,
+            							consumables.DBLPEPP,
+            							consumables.LARGEPP);
+			this.special1 = hellhoundFire;
+			this.special2 = hellhoundScent;
+			this.special3 = hellHoundWormCannon;
+			this.tailType = TAIL_TYPE_DOG;
+			checkMonster();
 		}
 
 	}

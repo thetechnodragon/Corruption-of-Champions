@@ -1,7 +1,6 @@
 ﻿package classes.Scenes.Places{
-import classes.BaseContent;
-import classes.GlobalFlags.kFLAGS;
-	import classes.GlobalFlags.kGAMECLASS;
+	import classes.*;
+	import classes.GlobalFlags.kFLAGS;
 	import classes.Scenes.Places.Bazaar.*;
 
 	public class Bazaar extends BaseContent {
@@ -66,7 +65,7 @@ public function enterTheBazaarAndMenu(demons:Boolean = true):void {
 	var roxanne2:Function = roxanne.RoxanneAppearance();
 	var roxanneT:String = "Lizans";
 	var demon:Function = null;
-	var tent:Function = null;
+	var tent:Function;
 	var benoit2:Function = null;
 	var benoitT:String = "MarketStall";
 	if(model.time.hours >= 9 && model.time.hours <= 17) {
@@ -148,7 +147,7 @@ private function theSlipperySqueeze():void {
 		//No scenes for Sara yet!
 		outputText("\"<i>I told you I'm not working until you give me a raise!  Do the damned massages yourself!</i>\"\n\nJoey blushes and apologies.  \"<i>I guess I'm the only one available for now.</i>\"\n\n", false);
 		outputText("The price list indicate it's 10 gems for a massage, though the gleefully illustrated 'oil' reminds you just what they plan to use on you.\n\n", false);
-		if(player.hasPerk("Androgyny") < 0) {
+		if(player.findPerk(PerkLib.Androgyny) < 0) {
 			outputText("There also appears to be an option for a special 'Androgyny Treatment' that costs 500 gems.  Joey catches you looking at it and mutters, \"<i>That treatment isn't fun like our massages.  It would unlock the full potential of your visage, allowing it to be as masculine or feminine as possible.</i>\"\n\n", false);
 			androgyny = joeyAndrogyny;
 		}
@@ -225,7 +224,7 @@ private function joeyAndrogyny():void {
 	outputText("You ask for a mirror, but Joey just titters with a knowing smile on his succulent lips as he replies, \"<i>Oh, you haven't changed at all " + player.mf("handsome","dear") + ".  This will let you change it to whatever extreme you like, but those kinds of facials aren't a service we currently offer.  I do hear that there's a goblin salon in the mountains that might be able to help you finish up your look though!</i>\"\n\n", false);
 	
 	outputText("Thanking the cute bunny-boy for his help, you hand over the payment and head back to check on camp.", false);
-	player.createPerk("Androgyny",0,0,0,0,"Your face is able to be as masculine or feminine as possible, regardless of gender.");
+	player.createPerk(PerkLib.Androgyny,0,0,0,0);
 	dynStats("lus", 5);
 	doNext(13);
 }
@@ -562,8 +561,7 @@ private function buyGretasBikini():void {
 	outputText("\n\n\"<i>Thanks, sugar!  Have fun and be safe, and if you don't want to be safe, come visit me sometime!</i>\"");
 	outputText("\n\nYou'll have to keep that in mind...  ");
 	menuLoc = 2;
-	shortName = "LMArmor";
-	takeItem();
+	inventory.takeItem(armors.LMARMOR);
 }
 
 //Cock-socks Available - First Time
@@ -704,25 +702,25 @@ private function yesPutDatSockOnMe(target:int):void {
 	clearOutput();
 	if(flags[kFLAGS.SOCK_HOLDING] == "amaranthine") player.gems -= 1000;
 	if(flags[kFLAGS.SOCK_HOLDING] == "gilded") {
-		if(player.hasPerk("Midas Cock") < 0) player.createPerk("Midas Cock",0,0,0,0);
+		if(player.findPerk(PerkLib.MidasCock) < 0) player.createPerk(PerkLib.MidasCock,0,0,0,0);
 		player.gems -= 3000;
 	}
 	if(flags[kFLAGS.SOCK_HOLDING] == "cobalt") {
 		player.gems -= 250;
-		if(player.hasPerk("Phallic Restraint") < 0) player.createPerk("Phallic Restraint",0,0,0,0);
+		if(player.findPerk(PerkLib.PhallicRestraint) < 0) player.createPerk(PerkLib.PhallicRestraint,0,0,0,0);
 	}
 	if(flags[kFLAGS.SOCK_HOLDING] == "scarlet") {
-		if(player.hasPerk("Phallic Potential") < 0) player.createPerk("Phallic Potential",0,0,0,0);
+		if(player.findPerk(PerkLib.PhallicPotential) < 0) player.createPerk(PerkLib.PhallicPotential,0,0,0,0);
 		player.gems -= 250;
 	}
 	if(flags[kFLAGS.SOCK_HOLDING] == "viridian") {
-		if(player.hasPerk("Lusty Regeneration") < 0) player.createPerk("Lusty Regeneration",0,0,0,0);
+		if(player.findPerk(PerkLib.LustyRegeneration) < 0) player.createPerk(PerkLib.LustyRegeneration,0,0,0,0);
 		player.gems -= 1000;
 	}
 	if(flags[kFLAGS.SOCK_HOLDING] == "cockring") {
 		player.gems -= 100;
-		if(player.hasPerk("Pent Up") < 0) player.createPerk("Pent Up",10,0,0,0);
-		else player.addPerkValue("Pent Up",1,5);
+		if(player.findPerk(PerkLib.PentUp) < 0) player.createPerk(PerkLib.PentUp,10,0,0,0);
+		else player.addPerkValue(PerkLib.PentUp,1,5);
 	}
 	if(flags[kFLAGS.SOCK_HOLDING] == "alabaster") player.gems -= 25;
 	if(flags[kFLAGS.SOCK_HOLDING] == "wool") player.gems -= 10;
@@ -785,24 +783,24 @@ private function removeTargettedSock(index:int):void {
 		}
 	}
 	if(extra && storage == "cockring") {
-		if(player.perkv1("Pent Up") >= 10) player.addPerkValue("Pent Up",1,-5);
-		else player.changePerkValue("Pent Up",1,10);
+		if(player.perkv1(PerkLib.PentUp) >= 10) player.addPerkValue(PerkLib.PentUp,1,-5);
+		else player.setPerkValue(PerkLib.PentUp,1,10);
 	}
 	else {
 		if(storage == "gilded") {
-			if(player.hasPerk("Midas Cock") >= 0) player.removePerk("Midas Cock");
+			player.removePerk(PerkLib.MidasCock);
 		}
 		if(storage == "cobalt") {
-			if(player.hasPerk("Phallic Restraint") >= 0) player.removePerk("Phallic Restraint");
+			player.removePerk(PerkLib.PhallicRestraint);
 		}
 		if(storage == "scarlet") {
-			if(player.hasPerk("Phallic Potential") >= 0) player.removePerk("Phallic Potential");
+			player.removePerk(PerkLib.PhallicPotential);
 		}
 		if(storage == "viridian") {
-			if(player.hasPerk("Lusty Regeneration") >= 0) player.removePerk("Lusty Regeneration");
+			player.removePerk(PerkLib.LustyRegeneration);
 		}
 		if(storage == "cockring") {
-			if(player.hasPerk("Pent Up") >= 0) player.removePerk("Pent Up");
+			player.removePerk(PerkLib.PentUp);
 		}
 	}	
 	outputText("\n\n\"<i>If you need another one, we've got plenty more for sale.</i>\"");
@@ -1153,8 +1151,7 @@ private function finalGayFinallee(road:int = 0):void {
 		//Lust sated
 		//Gained 1 lust draft, lost a few gems(9 or so?)
 		menuLoc = 2;
-		shortName = "L.Draft";
-		takeItem();
+		inventory.takeItem(consumables.L_DRAFT);
 		//Time set to morning
 		statScreenRefresh();
 	}
@@ -1186,8 +1183,7 @@ private function finalGayFinallee(road:int = 0):void {
 		//Lust sated
 		//Gained 1 lust draft, lost a few gems(9 or so?)
 		menuLoc = 2;
-		shortName = "L.Draft";
-		takeItem();
+		inventory.takeItem(consumables.L_DRAFT);
 		//Time set to morning
 		statScreenRefresh();
 	}
@@ -1219,8 +1215,7 @@ private function finalGayFinallee(road:int = 0):void {
 		//Lust sated
 		//Gained 1 lust draft, lost a few gems(9 or so?)
 		menuLoc = 2;
-		shortName = "BimboLq";
-		takeItem();
+		inventory.takeItem(consumables.BIMBOLQ);
 		statScreenRefresh();
 		//Time set to morning
 	}

@@ -1,10 +1,8 @@
 ﻿package classes.Scenes.Areas.Mountain{
-import classes.GlobalFlags.kFLAGS;
-import classes.GlobalFlags.kGAMECLASS;
-import classes.BaseContent;
-import classes.Appearance;
-import classes.CockTypesEnum;
-public class Salon extends BaseContent{
+	import classes.*;
+	import classes.GlobalFlags.kFLAGS;
+
+	public class Salon extends BaseContent{
 
 	public function Salon()
 	{
@@ -16,13 +14,13 @@ public function hairDresser():void {
 	doYesNo(salonGreeting,13);
 }
 public function salonGreeting():void{
-	if (player.hasStatusAffect("hairdresser meeting") >= 0)
+	if (player.findStatusAffect(StatusAffects.HairdresserMeeting) >= 0)
 	{
 		hairDresserRepeatGreeting();
 	}
 	else
 	{
-		player.createStatusAffect("hairdresser meeting", 0, 0, 0, 0);
+		player.createStatusAffect(StatusAffects.HairdresserMeeting, 0, 0, 0, 0);
 		hairDresserGreeting();
 	}
 }
@@ -79,8 +77,7 @@ private function salonPaymentMenu():void {
 				player.gems -= 60;
 				outputText("You happily give Lynnette 60 gems and pick up the bottle full of glistening, heavenly cum.  ", true);
 				statScreenRefresh();
-				shortName = "MinoCum";
-				takeItem();
+				inventory.takeItem(consumables.MINOCUM);
 			}
 		}
 public function salonPurchaseMenu():void {
@@ -101,11 +98,11 @@ public function salonPurchaseMenu():void {
 	if(player.femininity < 100 && player.gender == 2) mudFacial2 = mudFacial;
 	else if(player.femininity < 85 && (player.gender == 0 || player.gender == 3)) mudFacial2 = mudFacial;
 	else if(player.femininity < 70 && player.gender == 1) mudFacial2 = mudFacial;
-	else if(player.femininity < 100 && player.hasPerk("Androgyny") >= 0) mudFacial2 = mudFacial;
+	else if(player.femininity < 100 && player.findPerk(PerkLib.Androgyny) >= 0) mudFacial2 = mudFacial;
 	if(player.femininity > 0 && player.gender == 1) sandFacial2 = sandFacial;
 	else if(player.femininity > 30 && player.gender == 2) sandFacial2 = sandFacial;
 	else if(player.femininity > 20 && (player.gender == 0 || player.gender == 3))  sandFacial2 = sandFacial;
-	else if(player.femininity > 0 && player.hasPerk("Androgyny") >= 0) sandFacial2 = sandFacial;
+	else if(player.femininity > 0 && player.findPerk(PerkLib.Androgyny) >= 0) sandFacial2 = sandFacial;
 	
 	menu();
 	addButton(0,"Cut Short",cutShort2);
@@ -139,7 +136,7 @@ private function hairDresserRepeatGreeting():void {
 	spriteSelect(38);
 	var minoCum:Number = 0;
 	//Chance for mino craziness here
-	if(rand(5) == 0 && (player.hasPerk("Minotaur Cum Addict") >= 0 || flags[kFLAGS.MINOTAUR_CUM_ADDICTION_STATE] > 0)) {
+	if(rand(5) == 0 && (player.findPerk(PerkLib.MinotaurCumAddict) >= 0 || flags[kFLAGS.MINOTAUR_CUM_ADDICTION_STATE] > 0)) {
 		minotaurCumBukkakeInSalon();	
 		return;
 	}
@@ -381,26 +378,21 @@ private function hairGrow():void {
 	outputText(num2Text(temp) + " more inches of " + player.hairColor + " hair.", false);
 	doNext(13);
 }
-		private function buyDye(itemShortName:String):void{
+		private function buyDye(itype:ItemType):void{
 			outputText("", true);
-			shortName = itemShortName;
-			takeItem();
+			inventory.takeItem(itype);
 		}
 private function dyeMenu():void {
 	spriteSelect(38);
 	outputText("", true);
 	outputText("Lynnette pulls open a cabinet in the corner, displaying a wide array of exotic hair-dyes.  Which kind do you want?", false);
 	menuLoc = 2;
-	choices("Blue",createCallBackFunction(buyDye,"BlueDye"),
-			"Orange",createCallBackFunction(buyDye,"OrangDy"),
-			"Pink",createCallBackFunction(buyDye,"PinkDye"),
-			"Purple",createCallBackFunction(buyDye,"PurpDye"),
+	choices("Blue",createCallBackFunction(buyDye,consumables.BLUEDYE),
+			"Orange",createCallBackFunction(buyDye,consumables.ORANGDY),
+			"Pink",createCallBackFunction(buyDye,consumables.PINKDYE),
+			"Purple",createCallBackFunction(buyDye,consumables.PURPDYE),
 			"Back",hairDressingMainMenu,
-			"Ext.Serum",createCallBackFunction(buyDye,"ExtSerm"),"",0,"",0,"",0,"",0);
-  	/*if(shortName1 == "PinkDye") return "a vial of bright pink hair dye";
-	if(shortName1 == "PurpDye") return "a vial of purple hair dye";
-	if(shortName1 == "BlueDye") return "a vial of blue hair dye";
-	if(shortName1 == "OrangDy") return "a vial of brilliant orange hair dye";*/
+			"Ext.Serum",createCallBackFunction(buyDye,consumables.EXTSERM),"",0,"",0,"",0,"",0);
 }
 
 
@@ -476,7 +468,7 @@ private function minotaurCumBukkakeInSalon():void {
 	else if(player.analCapacity() < 140) outputText("delighting in the feeling of perfect fullness.", false);
 	else outputText("delighting in realizing that you could take far larger than even this virile specimen!", false);
 	//(buttchange here: 90)
-	buttChange(90,true,false);
+	player.buttChange(90,true,false);
 																																																																		  
 	outputText("\n\nYou slide down the twitching bull-shaft until your " + buttDescript() + " slaps the wall, and you draw slowly away, but you push back harder, turned into a lewd, wanting whore by the massive quantity of minotaur seed in your belly, on your skin, and fogging up the air.  The beast pulls out and you whine plaintively, feeling empty and useless until he plunges back inside and reminds you of your purpose.  He starts to fuck you hard, not caring for your pleasure at all, slamming his horse-cock deep and fast.  Each of his three rings of prepuce ", false);
 	if(!player.hasCock()) outputText("drags through your body, touching sensitive nerves you didn't even know you had until you cum, shuddering and shaking like a wanton whore.", false);

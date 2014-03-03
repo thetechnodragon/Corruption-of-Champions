@@ -3,8 +3,8 @@
  */
 package classes.Scenes.Areas.Swamp
 {
+	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
-	import classes.Monster;
 
 	public class AbstractSpiderMorph extends Monster
 	{
@@ -17,10 +17,10 @@ package classes.Scenes.Areas.Swamp
 			if(player.spe >= 2 && rand(2) == 0) {
 				spiderMorphWebAttack();
 			}
-			else if(player.hasStatusAffect("Web-Silence") < 0 && rand(3) == 0) {
+			else if(player.findStatusAffect(StatusAffects.WebSilence) < 0 && rand(3) == 0) {
 				spiderSilence();
 			}
-			else if(player.hasStatusAffect("Disarmed") < 0 && player.weaponName != "fists" && rand(3) == 0) {
+			else if(player.findStatusAffect(StatusAffects.Disarmed) < 0 && player.weaponName != "fists" && rand(3) == 0) {
 				spiderDisarm();
 			}
 			else if(rand(2) == 0 || player.spe < 2) getBitten();
@@ -34,7 +34,7 @@ package classes.Scenes.Areas.Swamp
 		{
 			outputText("Turning to the side, " + a + short + " raises " + mf("his", "her") + " abdomen and unleashes a spray of webbing in your direction!  ", false);
 			//Blind dodge change
-			if (hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+			if (findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 				outputText(capitalA + short + " misses completely due to the blindness.", false);
 			}
 			//Determine if dodged!
@@ -42,24 +42,24 @@ package classes.Scenes.Areas.Swamp
 				outputText("You dodge away, avoiding the sticky strands!", false);
 			}
 			//Determine if evaded
-			else if (player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			else if (player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("You evade, avoiding the sticky strands!", false);
 			}
 			//("Misdirection"
-			else if (player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+			else if (player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 				outputText("Your misleading movements allow you to easily sidestep the sticky strands!", false);
 			}
 			//Determine if cat'ed
-			else if (player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
+			else if (player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
 				outputText("You throw yourself out of the way with cat-like agility at the last moment, avoiding " + mf("his", "her") + " attack.\n", false);
 			}
 			//Got hit
 			else {
-				if (player.hasStatusAffect("Web") < 0) {
+				if (player.findStatusAffect(StatusAffects.Web) < 0) {
 					outputText("The silky strands hit you, webbing around you and making it hard to move with any degree of speed.", false);
 					if (player.canFly()) outputText("  Your wings struggle uselessly in the bindings, no longer able to flap fast enough to aid you.", false);
 					outputText("\n", false);
-					player.createStatusAffect("Web", 0, 0, 0, 0);
+					player.createStatusAffect(StatusAffects.Web, 0, 0, 0, 0);
 				}
 				else {
 					outputText("The silky strands hit you, weighing you down and restricting your movement even further.\n", false);
@@ -74,7 +74,7 @@ package classes.Scenes.Areas.Swamp
 				showStatDown('spe');
 				// speUp.visible = false;
 				// speDown.visible = true;
-				player.addStatusValue("Web", 1, amount);
+				player.addStatusValue(StatusAffects.Web, 1, amount);
 
 			}
 			combatRoundOver();
@@ -84,7 +84,7 @@ package classes.Scenes.Areas.Swamp
 		public function getBitten():void
 		{
 			//-Languid Bite - Inflicted on PC's who have been reduced to 1 speed by webbing, raises arousal by 60.
-			if (player.spe < 2 && player.hasStatusAffect("Web") >= 0) {
+			if (player.spe < 2 && player.findStatusAffect(StatusAffects.Web) >= 0) {
 				outputText("The arachnid aggressor slowly saunters forward while you struggle under the heaps of webbing, gently placing " + mf("his", "her") + " arms around your back in a tender hug.  " + mf("His", "Her") + " fangs slide into your neck with agonizing slowness, immediately setting off a burning heat inside you that makes you dizzy and weak.  ", false);
 				if (player.hasCock()) {
 					outputText(player.SMultiCockDesc() + " turns rock hard and squirts weakly, suddenly so aroused that it starts soaking your " + player.armorName, false);
@@ -104,7 +104,7 @@ package classes.Scenes.Areas.Swamp
 			}
 			outputText("The spider-" + mf("boy", "girl") + " lunges forward with " + mf("his", "her") + " mouth open, " + mf("his", "her") + " two needle-like fangs closing rapidly.  ", false);
 			//Blind dodge change
-			if (hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+			if (findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 				outputText(capitalA + short + " misses completely due to the blindness.", false);
 			}
 			//Determine if dodged!
@@ -112,15 +112,15 @@ package classes.Scenes.Areas.Swamp
 				outputText("You dodge away, avoiding " + mf("his", "her") + " bite!", false);
 			}
 			//Determine if evaded
-			else if (player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			else if (player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("You evade, avoiding the bite!", false);
 			}
 			//("Misdirection"
-			else if (player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+			else if (player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 				outputText("Your misleading movements allow you to easily sidestep the spider bite!", false);
 			}
 			//Determine if cat'ed
-			else if (player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
+			else if (player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
 				outputText("You throw yourself out of the way with cat-like agility at the last moment, avoiding " + mf("his", "her") + " attack.\n", false);
 			}
 			else {
@@ -144,7 +144,7 @@ package classes.Scenes.Areas.Swamp
 		{
 			outputText(capitalA + short + " shifts and sprays webbing, aiming a tight strand of it at your " + player.weaponName + ".  ", false);
 			//Blind dodge change
-			if (hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+			if (findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 				outputText("The blind web-shot goes horribly wide, missing you entirely.", false);
 			}
 			//Determine if dodged!
@@ -152,15 +152,15 @@ package classes.Scenes.Areas.Swamp
 				outputText("You pull your weapon back and the webbing goes wide, missing entirely.", false);
 			}
 			//Determine if evaded
-			else if (player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			else if (player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("You pull your weapon back evasively and the webbing goes wide, missing entirely!", false);
 			}
 			//("Misdirection"
-			else if (player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+			else if (player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 				outputText("Your misleading movements allow you to easily sidestep the webbing!", false);
 			}
 			//Determine if cat'ed
-			else if (player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
+			else if (player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
 				outputText("You throw yourself out of the way with cat-like agility at the last moment, avoiding " + mf("his", "her") + " attack.\n", false);
 			}
 			else if (player.weaponName == "spiked gauntlet" || player.weaponName == "hooked gauntlets") {
@@ -170,11 +170,10 @@ package classes.Scenes.Areas.Swamp
 			}
 			else {
 				outputText("You don't react fast enough and the sticky webbing pulls your " + player.weaponName + " out of your grip, gluing it to a nearby tree.  There's no way to get it back right now, you'll have to fight bare-handed!", false);
-				flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00268] = player.weaponName;
-				flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00269] = player.weaponAttack;
-				player.weaponName = "fists";
-				player.weaponAttack = 0;
-				player.createStatusAffect("Disarmed", 0, 0, 0, 0);
+				flags[kFLAGS.PLAYER_DISARMED_WEAPON_ID] = player.weapon.id;
+				flags[kFLAGS.PLAYER_DISARMED_WEAPON_ATTACK] = player.weaponAttack;
+				player.weapon.unequip(player,false,true);
+				player.createStatusAffect(StatusAffects.Disarmed, 0, 0, 0, 0);
 			}
 			combatRoundOver();
 		}
@@ -184,7 +183,7 @@ package classes.Scenes.Areas.Swamp
 		{
 			outputText(capitalA + short + " squirts a concentrated spray of " + mf("his", "her") + " webs directly at your face!  ", false);
 			//Blind dodge change
-			if (hasStatusAffect("Blind") >= 0 && rand(3) < 2) {
+			if (findStatusAffect(StatusAffects.Blind) >= 0 && rand(3) < 2) {
 				outputText("The blind web-shot goes horribly wide, missing you entirely.", false);
 			}
 			//Determine if dodged!
@@ -192,20 +191,20 @@ package classes.Scenes.Areas.Swamp
 				outputText("You lean back and let them pass harmlessly overhead, avoiding the attack.", false);
 			}
 			//Determine if evaded
-			else if (player.hasPerk("Evade") >= 0 && rand(100) < 10) {
+			else if (player.findPerk(PerkLib.Evade) >= 0 && rand(100) < 10) {
 				outputText("You pull your weapon back evasively and the webbing goes wide, missing entirely.", false);
 			}
 			//("Misdirection"
-			else if (player.hasPerk("Misdirection") >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
+			else if (player.findPerk(PerkLib.Misdirection) >= 0 && rand(100) < 10 && player.armorName == "red, high-society bodysuit") {
 				outputText("Your misleading movements allow you to easily sidestep the webbing!", false);
 			}
 			//Determine if cat'ed
-			else if (player.hasPerk("Flexibility") >= 0 && rand(100) < 6) {
+			else if (player.findPerk(PerkLib.Flexibility) >= 0 && rand(100) < 6) {
 				outputText("You throw yourself out of the way with cat-like agility at the last moment, avoiding " + mf("his", "her") + " attack.\n", false);
 			}
 			else {
 				outputText("They hit you before you can move, covering most of your nose and mouth and making it hard to breathe.  You'll be unable to use your magic while you're constantly struggling just to draw air!\n", false);
-				player.createStatusAffect("Web-Silence", 0, 0, 0, 0);
+				player.createStatusAffect(StatusAffects.WebSilence, 0, 0, 0, 0);
 			}
 			combatRoundOver();
 		}
